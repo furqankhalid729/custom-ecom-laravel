@@ -1,6 +1,7 @@
 <?php
 
 use App\Providers\AppServiceProvider;
+use Custom\StorePolicy\Providers\StorePolicyServiceProvider;
 use Webkul\Admin\Providers\AdminServiceProvider;
 use Webkul\Attribute\Providers\AttributeServiceProvider;
 use Webkul\BookingProduct\Providers\BookingProductServiceProvider;
@@ -79,4 +80,9 @@ return [
     TaxServiceProvider::class,
     ThemeServiceProvider::class,
     UserServiceProvider::class,
+
+    /**
+     * Custom service providers.
+     */
+    StorePolicyServiceProvider::class,
 ];

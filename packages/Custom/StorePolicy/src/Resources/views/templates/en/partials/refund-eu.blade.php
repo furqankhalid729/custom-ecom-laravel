@@ -1,0 +1,4 @@
+@php($returns = $region['returns'])
+<h3>Refunds after withdrawal</h3>
+<p>If you withdraw from your purchase, we will reimburse all payments received from you, including the cost of standard delivery (except any extra cost from choosing a delivery option other than the least expensive standard delivery we offer), without undue delay and no later than {{ (int) $returns['refund_days'] }} days from the day we are informed of your decision to withdraw.</p>
+<p>We will make the reimbursement using the same means of payment you used for the original transaction, unless you have expressly agreed otherwise; in any event, you will not incur any fees as a result of the reimbursement. We may withhold reimbursement until we have received the goods back or you have supplied evidence of having sent them back, whichever is earliest.</p>

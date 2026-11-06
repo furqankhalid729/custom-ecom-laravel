@@ -26,6 +26,11 @@
             <directory suffix="Test.php">packages/Webkul/Installer/tests/Feature</directory>
         </testsuite>
 
+        <!-- StorePolicy package testsuites. -->
+        <testsuite name="StorePolicy Feature Test">
+            <directory suffix="Test.php">packages/Custom/StorePolicy/tests/Feature</directory>
+        </testsuite>
+
         <!-- Shop package testsuites. -->
         <testsuite name="Shop Feature Test">
             <directory suffix="Test.php">packages/Webkul/Shop/tests/Feature</directory>
