@@ -107,6 +107,20 @@
         </div>
     </div>
 
+    {{-- Utilities not present in Bagisto's compiled admin CSS (Tailwind only keeps classes it finds in Webkul views). --}}
+    @pushOnce('styles')
+        <style>
+            .text-amber-800 { color: #92400e; }
+            .text-blue-800 { color: #1e40af; }
+            .text-green-700 { color: #15803d; }
+            .text-red-700 { color: #b91c1c; }
+            .w-\[400px\] { width: 400px; }
+            .min-w-\[70px\] { min-width: 70px; }
+            @media (max-width: 1280px) { .max-xl\:w-full { width: 100%; } }
+            @media (max-width: 768px) { .max-md\:grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); } }
+        </style>
+    @endPushOnce
+
     @pushOnce('scripts')
         <script>
             (function () {
