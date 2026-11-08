@@ -141,3 +141,16 @@ it('blocks admins without the sync permission', function () {
 
     Queue::assertNothingPushed();
 });
+
+it('escapes product names, skus and errors in the grid (cells are rendered as html)', function () {
+    $this->loginAsAdmin();
+    $product = simpleProduct(['name' => '<img src=x onerror=alert(1)>']);
+    ($this->ledger)($product, ['offer_id' => '<b>sku</b>', 'last_error' => '<script>x</script>']);
+
+    $record = collect(getJson(route('admin.google_merchant.products.index'), ['X-Requested-With' => 'XMLHttpRequest'])->json('records'))
+        ->firstWhere('id', GmcProduct::where('product_id', $product->id)->value('id'));
+
+    expect($record['product_name'])->not->toContain('<img')
+        ->and($record['offer_id'])->not->toContain('<b>')
+        ->and($record['last_error'])->not->toContain('<script>');
+});
