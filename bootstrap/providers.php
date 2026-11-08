@@ -1,6 +1,7 @@
 <?php
 
 use App\Providers\AppServiceProvider;
+use Custom\GoogleCore\Providers\GoogleCoreServiceProvider;
 use Custom\StorePolicy\Providers\StorePolicyServiceProvider;
 use Webkul\Admin\Providers\AdminServiceProvider;
 use Webkul\Attribute\Providers\AttributeServiceProvider;
@@ -85,4 +86,5 @@ return [
      * Custom service providers.
      */
     StorePolicyServiceProvider::class,
+    GoogleCoreServiceProvider::class,
 ];

@@ -46,6 +46,7 @@ return [
         Webkul\Theme\Providers\ModuleServiceProvider::class,
         Webkul\User\Providers\ModuleServiceProvider::class,
         Custom\StorePolicy\Providers\ModuleServiceProvider::class,
+        Custom\GoogleCore\Providers\ModuleServiceProvider::class,
     ],
 
 ];

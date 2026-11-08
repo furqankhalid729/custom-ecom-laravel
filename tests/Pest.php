@@ -25,6 +25,7 @@ uses(DataGridTestCase::class)->in('../packages/Webkul/DataGrid/tests');
 uses(InstallerTestCase::class)->in('../packages/Webkul/Installer/tests');
 uses(ShopTestCase::class)->in('../packages/Webkul/Shop/tests');
 uses(AdminTestCase::class)->in('../packages/Custom/StorePolicy/tests');
+uses(AdminTestCase::class)->in('../packages/Custom/GoogleCore/tests');
 
 /*
 |--------------------------------------------------------------------------

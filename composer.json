@@ -97,7 +97,9 @@
             "Webkul\\Tax\\": "packages/Webkul/Tax/src",
             "Webkul\\Theme\\": "packages/Webkul/Theme/src",
             "Webkul\\User\\": "packages/Webkul/User/src",
-            "Custom\\StorePolicy\\": "packages/Custom/StorePolicy/src"
+            "Custom\\StorePolicy\\": "packages/Custom/StorePolicy/src",
+            "Custom\\GoogleCore\\": "packages/Custom/GoogleCore/src",
+            "Custom\\GoogleMerchant\\": "packages/Custom/GoogleMerchant/src"
         }
     },
     "autoload-dev": {
@@ -108,7 +110,9 @@
             "Webkul\\DataGrid\\Tests\\": "packages/Webkul/DataGrid/tests",
             "Webkul\\Installer\\Tests\\": "packages/Webkul/Installer/tests",
             "Webkul\\Shop\\Tests\\": "packages/Webkul/Shop/tests",
-            "Custom\\StorePolicy\\Tests\\": "packages/Custom/StorePolicy/tests"
+            "Custom\\StorePolicy\\Tests\\": "packages/Custom/StorePolicy/tests",
+            "Custom\\GoogleCore\\Tests\\": "packages/Custom/GoogleCore/tests",
+            "Custom\\GoogleMerchant\\Tests\\": "packages/Custom/GoogleMerchant/tests"
         }
     },
     "scripts": {
