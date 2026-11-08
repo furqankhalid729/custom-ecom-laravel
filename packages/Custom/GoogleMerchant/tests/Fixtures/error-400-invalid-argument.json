@@ -1,0 +1,1 @@
+{"error":{"code":400,"message":"[productAttributes.gtins] Invalid GTIN value.","status":"INVALID_ARGUMENT","details":[{"@type":"type.googleapis.com/google.rpc.BadRequest","fieldViolations":[{"field":"productAttributes.gtins","description":"Invalid GTIN value."}]}]}}
