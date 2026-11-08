@@ -18,8 +18,8 @@ beforeEach(function () {
 });
 
 it('dispatches one unique job per root and target', function () {
-    Queue::fake();
     $product = simpleProduct();
+    Queue::fake();
 
     $count = app(SyncDispatcher::class)->queue([$product->id, $product->id, $product->id], 'save');
 
@@ -36,9 +36,9 @@ it('dispatches one unique job per root and target', function () {
 });
 
 it('uses the configured debounce delay and no delay for manual syncs', function () {
-    Queue::fake();
     gmcConfig(['settings.sync_delay' => 90]);
     $product = simpleProduct();
+    Queue::fake();
 
     app(SyncDispatcher::class)->queue([$product->id], 'save');
     app(SyncDispatcher::class)->queue([$product->id], 'manual', 0, true);
@@ -48,8 +48,8 @@ it('uses the configured debounce delay and no delay for manual syncs', function 
 });
 
 it('resolves variants to their parent', function () {
-    Queue::fake();
     $parent = configurableProduct(2);
+    Queue::fake();
 
     app(SyncDispatcher::class)->queue([$parent->variants()->first()->id], 'stock');
 
@@ -78,8 +78,8 @@ it('resolves grouped products to their children', function () {
 });
 
 it('does nothing when disabled, auto-sync is off, or disconnected', function () {
-    Queue::fake();
     $product = simpleProduct();
+    Queue::fake();
 
     gmcConfig(['settings.enabled' => 0]);
     expect(app(SyncDispatcher::class)->queue([$product->id], 'save'))->toBe(0);
@@ -115,8 +115,8 @@ it('drops duplicates while pending but allows one after processing starts', func
 });
 
 it('bumps the revision on every change, even when the job is deduplicated', function () {
-    Queue::fake();
     $product = simpleProduct();
+    Queue::fake();
 
     app(SyncDispatcher::class)->queue([$product->id], 'save');
     app(SyncDispatcher::class)->queue([$product->id], 'save');

@@ -105,6 +105,26 @@ if (! function_exists('fixture')) {
             });
     }
 
+    /**
+     * Building fixtures fires Bagisto product events, which our listeners turn into
+     * ledger rows, queued jobs and unique locks. Tests start from a clean slate.
+     */
+    function forgetGmcSideEffects(array $productIds): void
+    {
+        $rows = DB::table('gmc_products')->whereIn('product_id', $productIds)->orWhereIn('root_product_id', $productIds)->pluck('id');
+
+        DB::table('gmc_sync_logs')->whereIn('gmc_product_id', $rows)->delete();
+        DB::table('gmc_products')->whereIn('id', $rows)->delete();
+        DB::table('jobs')->where('queue', 'gmc')->delete();
+
+        \Illuminate\Support\Facades\Cache::flush();
+
+        // ArrayStore::flush() keeps locks (incl. unique-job locks); clear them as a fresh process would.
+        if (($store = \Illuminate\Support\Facades\Cache::getStore()) instanceof \Illuminate\Cache\ArrayStore) {
+            $store->locks = [];
+        }
+    }
+
     function setStock(Product $product, int $qty): void
     {
         DB::table('product_inventory_indices')->updateOrInsert(
@@ -156,6 +176,8 @@ if (! function_exists('fixture')) {
         setStock($product, 10);
         reindexPrices($product);
 
+        forgetGmcSideEffects([$product->id]);
+
         return $product->fresh();
     }
 
@@ -197,6 +219,8 @@ if (! function_exists('fixture')) {
         }
 
         reindexPrices($parent);
+
+        forgetGmcSideEffects([$parent->id, ...$parent->variants()->pluck('id')->all()]);
 
         return $parent->fresh();
     }
