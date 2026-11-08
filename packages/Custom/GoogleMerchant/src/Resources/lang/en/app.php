@@ -72,6 +72,26 @@ return [
         'scheduler-fix'              => 'Run `php artisan schedule:run` every minute from cron (Linux) or Task Scheduler (Windows).',
     ],
 
+    'validation' => [
+        'sku-missing'              => 'The product has no SKU.',
+        'sku-too-long'             => 'Google allows SKUs of at most :limit characters; ":sku" is longer. Shorten the SKU (it is never cut automatically, to keep the Google identity stable).',
+        'sku-whitespace'           => 'The SKU ":sku" starts or ends with spaces or contains control characters. Correct the SKU.',
+        'title-missing'            => 'Add a product name.',
+        'description-missing'      => 'Add a description (or short description).',
+        'link-missing'             => 'The product has no URL key, so Google has no page to link to.',
+        'image-missing'            => 'Upload at least one product image.',
+        'public-https'             => 'Google can only open public https addresses, but the store address is :url. Set a public https hostname for the channel or "Public website URL" in Configure → Google Merchant Center.',
+        'price-missing'            => 'Set a price above 0.',
+        'brand-missing'            => 'Choose a brand, or set a fallback brand in Configure → Google Merchant Center.',
+        'gtin-invalid'             => 'The GTIN ":gtin" is not valid (wrong length or check digit). Correct it under Google Shopping → GTIN.',
+        'identifiers-missing'      => 'Add a GTIN, or a brand and MPN (product number). If this item is custom-made, vintage or has no manufacturer identifiers, set Google Shopping → Identifier exists to No.',
+        'identifier-contradiction' => 'This product has a GTIN — set Identifier exists to Yes or remove the GTIN.',
+        'apparel-color'            => 'Clothing sold in the US needs a colour.',
+        'apparel-size'             => 'Clothing sold in the US needs a size.',
+        'apparel-gender'           => 'Clothing sold in the US needs a gender (Google Shopping → Gender).',
+        'apparel-ageGroup'         => 'Clothing sold in the US needs an age group (Google Shopping → Age group).',
+    ],
+
     'acl' => [
         'google-merchant'   => 'Google Merchant Center',
         'overview'          => 'Overview',
