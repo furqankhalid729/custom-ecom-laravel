@@ -34,6 +34,7 @@ Route::prefix('google-merchant')->name('admin.google_merchant.')->group(function
     Route::controller(RunController::class)->group(function () {
         Route::get('runs', 'index')->name('runs.index');
         Route::post('runs', 'store')->name('runs.store');
+        Route::post('runs/delete-all', 'deleteAll')->name('runs.delete_all');
         Route::get('runs/{run}', 'show')->name('runs.show');
         Route::post('runs/{run}/pause', 'pause')->name('runs.pause');
         Route::post('runs/{run}/resume', 'resume')->name('runs.resume');

@@ -28,6 +28,7 @@ return [
     ['key' => "$p.runs.create", 'name' => "$t.start-run", 'route' => "$r.runs.store", 'sort' => 2],
     ['key' => "$p.runs.pause", 'name' => "$t.pause-run", 'route' => "$r.runs.pause", 'sort' => 3],
     ['key' => "$p.runs.resume", 'name' => "$t.resume-run", 'route' => "$r.runs.resume", 'sort' => 4],
+    ['key' => "$p.runs.delete_all", 'name' => "$t.delete-all", 'route' => "$r.runs.delete_all", 'sort' => 5],
 
     ['key' => "$p.connection", 'name' => "$t.connection", 'route' => "$r.connection.index", 'sort' => 4],
     ['key' => "$p.connection.oauth", 'name' => "$t.connect-google", 'route' => "$r.oauth.start", 'sort' => 1],
