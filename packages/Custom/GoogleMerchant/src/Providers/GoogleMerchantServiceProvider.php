@@ -3,6 +3,8 @@
 namespace Custom\GoogleMerchant\Providers;
 
 use Custom\GoogleCore\Integrations\IntegrationRegistry;
+use Custom\GoogleMerchant\Auth\AccessTokenProvider;
+use Custom\GoogleMerchant\Auth\TokenManager;
 use Custom\GoogleMerchant\MerchantIntegration;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -19,6 +21,8 @@ class GoogleMerchantServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../Config/acl.php', 'acl');
 
         $this->mergeConfigFrom(__DIR__.'/../Config/system.php', 'core');
+
+        $this->app->bind(AccessTokenProvider::class, TokenManager::class);
     }
 
     public function boot(): void
