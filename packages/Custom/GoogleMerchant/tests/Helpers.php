@@ -145,6 +145,11 @@ if (! function_exists('fixture')) {
     function reindexPrices(Product ...$products): void
     {
         app(PriceIndexer::class)->reindexBatch(array_map(fn ($p) => $p->fresh(), $products));
+
+        // product_flat (admin grids, storefront) as Bagisto's own save would.
+        foreach ($products as $product) {
+            app(\Webkul\Product\Helpers\Indexers\Flat::class)->refresh($product->fresh());
+        }
     }
 
     /**

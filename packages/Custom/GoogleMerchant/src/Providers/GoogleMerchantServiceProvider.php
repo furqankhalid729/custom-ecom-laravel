@@ -12,6 +12,7 @@ use Custom\GoogleMerchant\Console\Commands\SyncCommand;
 use Custom\GoogleMerchant\Console\GmcSchedule;
 use Custom\GoogleMerchant\Listeners\ImportListener;
 use Illuminate\Console\Scheduling\Schedule;
+use Webkul\Theme\ViewRenderEventManager;
 use Custom\GoogleMerchant\Listeners\InventoryListener;
 use Custom\GoogleMerchant\Listeners\ProductListener;
 use Custom\GoogleMerchant\MerchantIntegration;
@@ -82,5 +83,17 @@ class GoogleMerchantServiceProvider extends ServiceProvider
         }
 
         Event::listen('data_transfer.imports.batch.import.after', [ImportListener::class, 'handle']);
+
+        Event::listen('bagisto.admin.catalog.product.edit.after', static function (ViewRenderEventManager $manager) {
+            if (bouncer()->hasPermission('marketing.google_merchant.products')) {
+                $manager->addTemplate('google_merchant::admin.partials.product-panel');
+            }
+        });
+
+        Event::listen('bagisto.shop.products.view.after', static function (ViewRenderEventManager $manager) {
+            if (($manager->getParam('product')?->type) === 'configurable' && request()->query('variant')) {
+                $manager->addTemplate('google_merchant::shop.variant-preselect');
+            }
+        });
     }
 }
