@@ -90,6 +90,7 @@ return [
         'apparel-size'             => 'Clothing sold in the US needs a size.',
         'apparel-gender'           => 'Clothing sold in the US needs a gender (Google Shopping → Gender).',
         'apparel-ageGroup'         => 'Clothing sold in the US needs an age group (Google Shopping → Age group).',
+        'identity-conflict'        => 'SKU :sku is already used in Google by product #:id. Give one of the two products a different SKU.',
     ],
 
     'acl' => [
