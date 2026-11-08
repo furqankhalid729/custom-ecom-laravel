@@ -36,6 +36,12 @@
             <directory suffix="Test.php">packages/Custom/GoogleCore/tests/Feature</directory>
         </testsuite>
 
+        <!-- GoogleMerchant package testsuites. -->
+        <testsuite name="GoogleMerchant Test">
+            <directory suffix="Test.php">packages/Custom/GoogleMerchant/tests/Feature</directory>
+            <directory suffix="Test.php">packages/Custom/GoogleMerchant/tests/Unit</directory>
+        </testsuite>
+
         <!-- Shop package testsuites. -->
         <testsuite name="Shop Feature Test">
             <directory suffix="Test.php">packages/Webkul/Shop/tests/Feature</directory>

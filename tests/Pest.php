@@ -26,6 +26,9 @@ uses(InstallerTestCase::class)->in('../packages/Webkul/Installer/tests');
 uses(ShopTestCase::class)->in('../packages/Webkul/Shop/tests');
 uses(AdminTestCase::class)->in('../packages/Custom/StorePolicy/tests');
 uses(AdminTestCase::class)->in('../packages/Custom/GoogleCore/tests');
+uses(AdminTestCase::class)
+    ->beforeEach(fn () => \Illuminate\Support\Facades\Http::preventStrayRequests())
+    ->in('../packages/Custom/GoogleMerchant/tests');
 
 /*
 |--------------------------------------------------------------------------

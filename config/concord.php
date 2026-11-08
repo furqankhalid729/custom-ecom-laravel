@@ -47,6 +47,7 @@ return [
         Webkul\User\Providers\ModuleServiceProvider::class,
         Custom\StorePolicy\Providers\ModuleServiceProvider::class,
         Custom\GoogleCore\Providers\ModuleServiceProvider::class,
+        Custom\GoogleMerchant\Providers\ModuleServiceProvider::class,
     ],
 
 ];
