@@ -150,8 +150,14 @@ class SyncService
         $errors = $this->validator->validate($offer, $target);
 
         if ($errors) {
+            // An offer Google still shows would keep stale data (e.g. an old price): take it down until fixed.
+            if ($row->last_synced_at && $row->product_input_name) {
+                $this->removeFromGoogle($row, $target, SyncState::Invalid, null, $runId);
+            }
+
             $row->forceFill([
                 'state'             => SyncState::Invalid->value,
+                'payload_hash'      => $offer->hash, // lets the nightly refresh skip unchanged invalid offers
                 'validation_errors' => $errors,
                 'last_error'        => implode(' ', $errors),
                 'error_kind'        => null,

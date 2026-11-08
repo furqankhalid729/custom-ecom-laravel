@@ -34,4 +34,9 @@ class GmcRun extends Model implements GmcRunContract
         'failed'      => 'integer',
         'cursor'      => 'integer',
     ];
+
+    public function target(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(GmcTargetProxy::modelClass(), 'gmc_target_id');
+    }
 }

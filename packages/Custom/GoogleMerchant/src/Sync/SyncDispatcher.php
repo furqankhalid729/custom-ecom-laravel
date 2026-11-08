@@ -69,6 +69,25 @@ class SyncDispatcher
         SyncProductJob::dispatch($rootId, $targetId, $force, $runId)->delay($delay)->afterCommit();
     }
 
+    /**
+     * After (re)connecting: everything that waited while the account was unavailable.
+     */
+    public function requeuePending(): int
+    {
+        $rows = $this->ledger->query()
+            ->whereIn('state', ['pending', 'deleting'])
+            ->whereNotNull('root_product_id')
+            ->get(['id', 'root_product_id', 'gmc_target_id', 'state']);
+
+        $rows->where('state', 'deleting')->each(fn ($row) => $this->queueDelete($row->id));
+
+        $roots = $rows->where('state', 'pending')->unique(fn ($row) => $row->gmc_target_id.':'.$row->root_product_id);
+
+        $roots->each(fn ($row) => $this->dispatchJob($row->root_product_id, $row->gmc_target_id, 0));
+
+        return $roots->count();
+    }
+
     public function queueDelete(int $gmcProductId): void
     {
         DeleteOfferJob::dispatch($gmcProductId)->afterCommit();

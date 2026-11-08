@@ -107,6 +107,26 @@ it('does not call google for invalid offers', function () {
     Http::assertNothingSent();
 });
 
+it('removes a previously synced offer from google when it becomes invalid', function () {
+    ($this->fakeGoogle)();
+    $product = simpleProduct();
+
+    ($this->sync)($product->id);
+
+    setProductAttribute($product, 'price', 0);
+
+    expect(($this->sync)($product->id)->outcome)->toBe(SyncOutcome::Invalid)
+        ->and(deletes())->toHaveCount(1)
+        ->and(($this->row)($product->sku)->state)->toBe('invalid')
+        ->and(($this->row)($product->sku)->last_synced_at)->toBeNull();
+
+    // Fixed again → inserted again.
+    setProductAttribute($product, 'price', 21);
+
+    expect(($this->sync)($product->id)->outcome)->toBe(SyncOutcome::Synced)
+        ->and(inserts())->toHaveCount(2);
+});
+
 it('records permanent errors as failed with the field message', function () {
     ($this->fakeGoogle)(400, 200, 'error-400-invalid-argument');
     $product = simpleProduct();

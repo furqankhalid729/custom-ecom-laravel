@@ -14,6 +14,7 @@ use Custom\GoogleMerchant\Auth\TokenManager;
 use Custom\GoogleMerchant\Enums\AccountStatus;
 use Custom\GoogleMerchant\Models\GmcAccount;
 use Custom\GoogleMerchant\Models\GmcAccountProxy;
+use Custom\GoogleMerchant\Sync\SyncDispatcher;
 use Illuminate\Support\Str;
 
 class ConnectionService
@@ -197,11 +198,17 @@ class ConnectionService
     {
         $account = $this->current() ?? GmcAccountProxy::modelClass()::make();
 
+        $wasConnected = $account->exists && $account->isConnected();
+
         $account->forceFill(array_merge($attributes, [
             'status'       => AccountStatus::Connected->value,
             'last_error'   => null,
             'connected_by' => auth()->guard('admin')->id(),
         ]))->save();
+
+        if (! $wasConnected) {
+            app(SyncDispatcher::class)->requeuePending();
+        }
 
         return $account;
     }

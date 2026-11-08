@@ -5,7 +5,13 @@ namespace Custom\GoogleMerchant\Providers;
 use Custom\GoogleCore\Integrations\IntegrationRegistry;
 use Custom\GoogleMerchant\Auth\AccessTokenProvider;
 use Custom\GoogleMerchant\Auth\TokenManager;
+use Custom\GoogleMerchant\Console\Commands\QueueRunCommand;
+use Custom\GoogleMerchant\Console\Commands\RefreshCommand;
+use Custom\GoogleMerchant\Console\Commands\RetryFailedCommand;
+use Custom\GoogleMerchant\Console\Commands\SyncCommand;
+use Custom\GoogleMerchant\Console\GmcSchedule;
 use Custom\GoogleMerchant\Listeners\ImportListener;
+use Illuminate\Console\Scheduling\Schedule;
 use Custom\GoogleMerchant\Listeners\InventoryListener;
 use Custom\GoogleMerchant\Listeners\ProductListener;
 use Custom\GoogleMerchant\MerchantIntegration;
@@ -51,6 +57,17 @@ class GoogleMerchantServiceProvider extends ServiceProvider
         $this->app->make(IntegrationRegistry::class)->register($this->app->make(MerchantIntegration::class));
 
         $this->registerListeners();
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                QueueRunCommand::class,
+                SyncCommand::class,
+                RefreshCommand::class,
+                RetryFailedCommand::class,
+            ]);
+        }
+
+        $this->callAfterResolving(Schedule::class, fn (Schedule $schedule) => $this->app->make(GmcSchedule::class)->define($schedule));
     }
 
     protected function registerListeners(): void
