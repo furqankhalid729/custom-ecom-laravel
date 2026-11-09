@@ -2,6 +2,7 @@
 
 use Custom\GoogleMerchant\Http\Controllers\Admin\ConnectionController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\LogController;
+use Custom\GoogleMerchant\Http\Controllers\Admin\MappingController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\OverviewController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\ProductSyncController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\RunController;
@@ -30,6 +31,14 @@ Route::prefix('google-merchant')->name('admin.google_merchant.')->group(function
         Route::post('products/{gmcProduct}/include', 'include')->name('products.include');
         Route::delete('products/{gmcProduct}/google', 'remove')->name('products.remove');
         Route::post('product/{product}/sync', 'syncStoreProduct')->name('product.sync');
+    });
+
+    Route::controller(MappingController::class)->prefix('mapping')->name('mapping.')->group(function () {
+        Route::get('attributes', 'attributes')->name('attributes');
+        Route::put('attributes', 'updateAttributes')->name('attributes.update');
+        Route::get('categories', 'categories')->name('categories');
+        Route::put('categories', 'updateCategories')->name('categories.update');
+        Route::get('taxonomy', 'taxonomy')->name('taxonomy');
     });
 
     Route::controller(LogController::class)->group(function () {

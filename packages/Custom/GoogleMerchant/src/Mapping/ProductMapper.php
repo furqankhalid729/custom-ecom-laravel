@@ -188,10 +188,8 @@ class ProductMapper
         $gtin = $this->attr($product, 'gtin');
         $mpn = $this->attr($product, 'mpn');
 
-        $source = $this->mapping->sourceFor('identifierExists', $this->target)['value'];
-
-        // Only an explicit "No" from the admin is sent; the variant inherits the parent's explicit choice.
-        $identifierExists = $this->data->own($product, $source) ?? ($parent ? $this->data->own($parent, $source) : null);
+        // Only an explicit "No" is sent; the variant inherits the parent's explicit choice.
+        $identifierExists = $this->rawSource($product, 'identifierExists') ?? ($parent ? $this->rawSource($parent, 'identifierExists') : null);
 
         return [
             'brand'            => $brand,
@@ -206,10 +204,15 @@ class ProductMapper
         $inherit = fn (string $field) => $this->attr($product, $field) ?? ($parent ? $this->attr($parent, $field) : null);
 
         $enum = function (string $field) use ($product, $parent) {
-            $code = $this->mapping->sourceFor($field, $this->target)['value'];
-            $value = $this->data->optionCode($product, $code) ?? ($parent ? $this->data->optionCode($parent, $code) : null);
+            $source = $this->mapping->sourceFor($field, $this->target);
 
-            $value ??= $this->mapping->fallbackFor($field);
+            $value = match ($source['type']) {
+                'static'    => $source['value'],
+                'attribute' => $this->data->optionCode($product, $source['value']) ?? ($parent ? $this->data->optionCode($parent, $source['value']) : null),
+                default     => null,
+            };
+
+            $value ??= $this->mapping->fallbackFor($field, $this->target);
 
             return $value ? strtoupper($value) : null;
         };
@@ -265,9 +268,25 @@ class ProductMapper
 
     protected function labelAttr(Product $product, string $googleField): ?string
     {
-        $code = $this->mapping->sourceFor($googleField, $this->target)['value'];
+        $source = $this->mapping->sourceFor($googleField, $this->target);
 
-        return $code ? $this->data->label($product, $code) : null;
+        return match ($source['type']) {
+            'static'    => $source['value'] !== '' ? $source['value'] : null,
+            'attribute' => $source['value'] ? $this->data->label($product, $source['value']) : null,
+            default     => null,
+        };
+    }
+
+    /** Stored value of the mapped attribute (no default), the static value, or null for "none". */
+    protected function rawSource(Product $product, string $googleField): mixed
+    {
+        $source = $this->mapping->sourceFor($googleField, $this->target);
+
+        return match ($source['type']) {
+            'static'    => $source['value'],
+            'attribute' => $source['value'] ? $this->data->own($product, $source['value']) : null,
+            default     => null,
+        };
     }
 
     /** @return string[] */

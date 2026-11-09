@@ -26,6 +26,9 @@ return [
         'email',
     ],
 
+    /* Downloaded by `php artisan gmc:taxonomy`. */
+    'taxonomy_path' => storage_path('app/google-merchant/taxonomy-with-ids.en-US.txt'),
+
     /* Google taxonomy ids treated as apparel (Apparel & Accessories). */
     'apparel_category_ids' => ['166', '1604'],
 ];

@@ -1,0 +1,7 @@
+# Google_Product_Taxonomy_Version: 2021-09-21 (test excerpt)
+166 - Apparel & Accessories
+1604 - Apparel & Accessories > Clothing
+212 - Apparel & Accessories > Clothing > Shirts & Tops
+5598 - Apparel & Accessories > Clothing > Outerwear > Coats & Jackets
+173 - Apparel & Accessories > Clothing Accessories > Hats
+536 - Home & Garden

@@ -2,14 +2,18 @@
 
 namespace Custom\GoogleMerchant\Mapping;
 
+use Custom\GoogleMerchant\Models\GmcAttributeMappingProxy;
 use Custom\GoogleMerchant\Models\GmcTarget;
 
 /**
- * Where each Google field comes from. Phase 1 uses these defaults only;
- * gmc_attribute_mappings overrides plug in here later.
+ * Where each Google field comes from: an admin mapping (target-specific,
+ * then global) or the built-in default. Resolved once per instance; the
+ * mapper is created per job, so admin changes apply to the next sync.
  */
 class MappingRegistry
 {
+    public const SOURCE_TYPES = ['attribute', 'static', 'none'];
+
     /** google field => [source type, source value] */
     public const DEFAULTS = [
         'title'                 => ['attribute', 'name'],
@@ -34,23 +38,56 @@ class MappingRegistry
         'customLabel4'          => ['attribute', 'gmc_custom_label_4'],
     ];
 
-    /** Used when the mapped source is empty. */
+    /** Used when an attribute-sourced field is empty on the product. */
     public const STATIC_FALLBACKS = [
         'condition' => 'new',
     ];
 
+    /** @var array<string, array<string, array{type: string, value: ?string}>> target key => field => source */
+    protected array $resolved = [];
+
     /**
-     * @return array{type: 'attribute'|'category'|'static'|'none', value: ?string}
+     * @return array{type: 'attribute'|'static'|'none', value: ?string}
      */
     public function sourceFor(string $googleField, GmcTarget $target): array
     {
-        [$type, $value] = self::DEFAULTS[$googleField] ?? ['none', null];
+        $key = (string) $target->id;
 
-        return ['type' => $type, 'value' => $value];
+        if (! isset($this->resolved[$key])) {
+            $this->resolved[$key] = $this->load($target);
+        }
+
+        return $this->resolved[$key][$googleField] ?? ['type' => 'none', 'value' => null];
     }
 
-    public function fallbackFor(string $googleField): ?string
+    /** Fallback only applies to attribute-sourced fields (an explicit "none" stays empty). */
+    public function fallbackFor(string $googleField, ?GmcTarget $target = null): ?string
     {
+        if ($target && $this->sourceFor($googleField, $target)['type'] !== 'attribute') {
+            return null;
+        }
+
         return self::STATIC_FALLBACKS[$googleField] ?? null;
+    }
+
+    /** @return array<string, array{type: string, value: ?string}> */
+    protected function load(GmcTarget $target): array
+    {
+        $sources = array_map(fn ($d) => ['type' => $d[0], 'value' => $d[1]], self::DEFAULTS);
+
+        $rows = GmcAttributeMappingProxy::modelClass()::query()
+            ->where(fn ($q) => $q->whereNull('gmc_target_id')->orWhere('gmc_target_id', $target->id))
+            ->whereIn('google_field', array_keys(self::DEFAULTS))
+            ->orderByRaw('gmc_target_id IS NULL DESC') // global first, target-specific overrides it
+            ->get();
+
+        foreach ($rows as $row) {
+            $sources[$row->google_field] = [
+                'type'  => in_array($row->source_type, self::SOURCE_TYPES, true) ? $row->source_type : 'none',
+                'value' => $row->source_value,
+            ];
+        }
+
+        return $sources;
     }
 }

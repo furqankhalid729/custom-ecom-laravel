@@ -9,6 +9,7 @@ use Custom\GoogleMerchant\Console\Commands\QueueRunCommand;
 use Custom\GoogleMerchant\Console\Commands\RefreshCommand;
 use Custom\GoogleMerchant\Console\Commands\RetryFailedCommand;
 use Custom\GoogleMerchant\Console\Commands\SyncCommand;
+use Custom\GoogleMerchant\Console\Commands\TaxonomyCommand;
 use Custom\GoogleMerchant\Console\GmcSchedule;
 use Custom\GoogleMerchant\Listeners\ImportListener;
 use Illuminate\Console\Scheduling\Schedule;
@@ -65,6 +66,7 @@ class GoogleMerchantServiceProvider extends ServiceProvider
                 SyncCommand::class,
                 RefreshCommand::class,
                 RetryFailedCommand::class,
+                TaxonomyCommand::class,
             ]);
         }
 

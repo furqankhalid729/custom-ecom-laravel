@@ -30,6 +30,12 @@ return [
     ['key' => "$p.runs.resume", 'name' => "$t.resume-run", 'route' => "$r.runs.resume", 'sort' => 4],
     ['key' => "$p.runs.delete_all", 'name' => "$t.delete-all", 'route' => "$r.runs.delete_all", 'sort' => 5],
 
+    ['key' => "$p.mapping", 'name' => "$t.mapping", 'route' => "$r.mapping.attributes", 'sort' => 6],
+    ['key' => "$p.mapping.attributes_update", 'name' => "$t.edit-mapping", 'route' => "$r.mapping.attributes.update", 'sort' => 1],
+    ['key' => "$p.mapping.categories", 'name' => "$t.category-mapping", 'route' => "$r.mapping.categories", 'sort' => 2],
+    ['key' => "$p.mapping.categories_update", 'name' => "$t.edit-category-mapping", 'route' => "$r.mapping.categories.update", 'sort' => 3],
+    ['key' => "$p.mapping.taxonomy", 'name' => "$t.category-mapping", 'route' => "$r.mapping.taxonomy", 'sort' => 4],
+
     ['key' => "$p.logs", 'name' => "$t.logs", 'route' => "$r.logs.index", 'sort' => 5],
     ['key' => "$p.logs.show", 'name' => "$t.view-log", 'route' => "$r.logs.show", 'sort' => 1],
 

@@ -107,7 +107,16 @@ class ProductDataResolver
     {
         $value = $this->own($product, $code);
 
-        return $value === null ? null : DB::table('attribute_options')->where('id', (int) $value)->value('admin_name');
+        if ($value === null) {
+            return null;
+        }
+
+        // A select stores an option id; any other attribute type is used as written.
+        if (($this->attribute($code)?->type) !== 'select') {
+            return trim((string) $value) ?: null;
+        }
+
+        return DB::table('attribute_options')->where('id', (int) $value)->value('admin_name');
     }
 
     /** @return string[] absolute image URLs, by position */

@@ -7,6 +7,7 @@ return [
         'products'        => 'Products',
         'runs'            => 'Bulk sync',
         'logs'            => 'Activity log',
+        'mapping'         => 'Field mapping',
         'connection'      => 'Connection',
     ],
 
@@ -138,6 +139,34 @@ return [
         'delete-all-button'     => 'Remove all from Google',
         'delete-all-confirm'    => 'Remove every product this store sent from Google Merchant Center? They will stop showing on Google until synced again.',
         'delete-started'        => 'Removal started. Progress updates below.',
+    ],
+
+    'mapping' => [
+        'attributes-title'    => 'Google field mapping',
+        'attributes-intro'    => 'Choose where each Google field gets its value. Leave the default unless your store keeps that information in a different attribute. Saving re-checks every product.',
+        'categories-title'    => 'Category mapping',
+        'categories-intro'    => 'Give store categories a Google product category, or exclude a category from Google entirely. A product\'s own "Google product category" attribute always wins.',
+        'tab-fields'          => 'Fields',
+        'tab-categories'      => 'Categories',
+        'google-field'        => 'Google field',
+        'source'              => 'Take the value from',
+        'value'               => 'Attribute / fixed value',
+        'type-attribute'      => 'Store attribute',
+        'type-static'         => 'Fixed value',
+        'type-none'           => 'Do not send',
+        'default'             => 'Default: :value',
+        'customised'          => 'Changed',
+        'save'                => 'Save mapping',
+        'saved'               => 'Mapping saved. Products are being re-checked in the background.',
+        'unknown-field'       => 'Unknown Google field(s): :fields.',
+        'unknown-attribute'   => 'There is no store attribute with code ":code".',
+        'static-required'     => 'Enter the fixed value to send.',
+        'category'            => 'Store category',
+        'google-category'     => 'Google product category ID',
+        'exclude'             => 'Exclude from Google',
+        'search-placeholder'  => 'Search Google categories, e.g. "jackets", or type the ID',
+        'category-id-invalid' => 'Enter the numeric ID of a Google product category.',
+        'no-taxonomy'         => 'The Google category list is not installed, so search is unavailable; you can still type category IDs. Install it with: php artisan gmc:taxonomy',
     ],
 
     'logs' => [
@@ -307,6 +336,10 @@ return [
         'delete-all'              => 'Remove all products from Google',
         'logs'                    => 'Activity log',
         'view-log'                => 'View log entry',
+        'mapping'                 => 'Field mapping',
+        'edit-mapping'            => 'Edit field mapping',
+        'category-mapping'        => 'Category mapping',
+        'edit-category-mapping'   => 'Edit category mapping',
     ],
 
     'configuration' => [

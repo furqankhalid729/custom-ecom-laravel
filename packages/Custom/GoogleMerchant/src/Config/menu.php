@@ -26,6 +26,12 @@ return [
         'sort'  => 3,
         'icon'  => '',
     ], [
+        'key'   => 'marketing.google_merchant.mapping',
+        'name'  => 'google_merchant::app.menu.mapping',
+        'route' => 'admin.google_merchant.mapping.attributes',
+        'sort'  => 4,
+        'icon'  => '',
+    ], [
         'key'   => 'marketing.google_merchant.logs',
         'name'  => 'google_merchant::app.menu.logs',
         'route' => 'admin.google_merchant.logs.index',
