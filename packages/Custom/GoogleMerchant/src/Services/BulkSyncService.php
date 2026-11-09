@@ -10,6 +10,7 @@ use Custom\GoogleMerchant\Jobs\StartBulkRunJob;
 use Custom\GoogleMerchant\Models\GmcAccount;
 use Custom\GoogleMerchant\Models\GmcRun;
 use Custom\GoogleMerchant\Models\GmcRunProxy;
+use Custom\GoogleMerchant\Models\GmcTarget;
 use Custom\GoogleMerchant\Models\GmcTargetProxy;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
@@ -53,21 +54,25 @@ class BulkSyncService
     /** @return GmcRun[] */
     public function startDeleteAll(GmcAccount $account, ?int $adminId): array
     {
-        return $account->targets()->get()->map(function ($target) use ($adminId) {
-            $run = GmcRunProxy::modelClass()::create([
-                'type'          => RunType::DeleteAll->value,
-                'status'        => RunStatus::Running->value,
-                'gmc_target_id' => $target->id,
-                'options'       => ['mode' => 'delete'],
-                'total'         => $this->deletableQuery($target->id)->count(),
-                'started_by'    => $adminId,
-                'started_at'    => now(),
-            ]);
+        return $account->targets()->get()->flatMap(fn ($target) => $this->startDeleteAllForTarget($target, $adminId))->all();
+    }
 
-            StartBulkRunJob::dispatch($run->id);
+    /** @return GmcRun[] */
+    public function startDeleteAllForTarget(GmcTarget $target, ?int $adminId): array
+    {
+        $run = GmcRunProxy::modelClass()::create([
+            'type'          => RunType::DeleteAll->value,
+            'status'        => RunStatus::Running->value,
+            'gmc_target_id' => $target->id,
+            'options'       => ['mode' => 'delete'],
+            'total'         => $this->deletableQuery($target->id)->count(),
+            'started_by'    => $adminId,
+            'started_at'    => now(),
+        ]);
 
-            return $run;
-        })->all();
+        StartBulkRunJob::dispatch($run->id);
+
+        return [$run];
     }
 
     public function pause(GmcRun $run): void

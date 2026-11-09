@@ -6,6 +6,7 @@ use Custom\GoogleMerchant\Http\Controllers\Admin\MappingController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\OverviewController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\ProductSyncController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\RunController;
+use Custom\GoogleMerchant\Http\Controllers\Admin\StoreSettingsController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('google-merchant')->name('admin.google_merchant.')->group(function () {
@@ -39,6 +40,11 @@ Route::prefix('google-merchant')->name('admin.google_merchant.')->group(function
         Route::get('categories', 'categories')->name('categories');
         Route::put('categories', 'updateCategories')->name('categories.update');
         Route::get('taxonomy', 'taxonomy')->name('taxonomy');
+    });
+
+    Route::controller(StoreSettingsController::class)->group(function () {
+        Route::get('store', 'edit')->name('store.edit');
+        Route::put('store', 'update')->name('store.update');
     });
 
     Route::controller(LogController::class)->group(function () {

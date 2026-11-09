@@ -36,6 +36,9 @@ return [
     ['key' => "$p.mapping.categories_update", 'name' => "$t.edit-category-mapping", 'route' => "$r.mapping.categories.update", 'sort' => 3],
     ['key' => "$p.mapping.taxonomy", 'name' => "$t.category-mapping", 'route' => "$r.mapping.taxonomy", 'sort' => 4],
 
+    ['key' => "$p.store", 'name' => "$t.store", 'route' => "$r.store.edit", 'sort' => 7],
+    ['key' => "$p.store.update", 'name' => "$t.edit-store", 'route' => "$r.store.update", 'sort' => 1],
+
     ['key' => "$p.logs", 'name' => "$t.logs", 'route' => "$r.logs.index", 'sort' => 5],
     ['key' => "$p.logs.show", 'name' => "$t.view-log", 'route' => "$r.logs.show", 'sort' => 1],
 

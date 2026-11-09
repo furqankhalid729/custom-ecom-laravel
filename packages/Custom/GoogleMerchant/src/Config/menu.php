@@ -38,10 +38,16 @@ return [
         'sort'  => 4,
         'icon'  => '',
     ], [
+        'key'   => 'marketing.google_merchant.store',
+        'name'  => 'google_merchant::app.menu.store',
+        'route' => 'admin.google_merchant.store.edit',
+        'sort'  => 5,
+        'icon'  => '',
+    ], [
         'key'   => 'marketing.google_merchant.connection',
         'name'  => 'google_merchant::app.menu.connection',
         'route' => 'admin.google_merchant.connection.index',
-        'sort'  => 5,
+        'sort'  => 6,
         'icon'  => '',
     ],
 ];
