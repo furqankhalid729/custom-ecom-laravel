@@ -1,6 +1,7 @@
 <?php
 
 use Custom\GoogleMerchant\Http\Controllers\Admin\ConnectionController;
+use Custom\GoogleMerchant\Http\Controllers\Admin\LogController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\OverviewController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\ProductSyncController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\RunController;
@@ -29,6 +30,11 @@ Route::prefix('google-merchant')->name('admin.google_merchant.')->group(function
         Route::post('products/{gmcProduct}/include', 'include')->name('products.include');
         Route::delete('products/{gmcProduct}/google', 'remove')->name('products.remove');
         Route::post('product/{product}/sync', 'syncStoreProduct')->name('product.sync');
+    });
+
+    Route::controller(LogController::class)->group(function () {
+        Route::get('logs', 'index')->name('logs.index');
+        Route::get('logs/{log}', 'show')->whereNumber('log')->name('logs.show');
     });
 
     Route::controller(RunController::class)->group(function () {

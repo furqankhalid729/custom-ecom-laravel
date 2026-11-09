@@ -6,6 +6,7 @@ return [
         'overview'        => 'Overview',
         'products'        => 'Products',
         'runs'            => 'Bulk sync',
+        'logs'            => 'Activity log',
         'connection'      => 'Connection',
     ],
 
@@ -139,6 +140,57 @@ return [
         'delete-started'        => 'Removal started. Progress updates below.',
     ],
 
+    'logs' => [
+        'title'        => 'Google Merchant Center activity log',
+        'intro'        => 'Every attempt to send, update or remove a product, with Google’s answer. Open an entry to see what went wrong and how to fix it.',
+        'detail-title' => 'Log entry #:id',
+        'back'         => 'Back to the log',
+        'view'         => 'View',
+        'response'     => 'Google response (secrets removed)',
+        'operation'    => ['upsert' => 'Send / update', 'delete' => 'Remove', 'status' => 'Status check'],
+        'status'       => ['success' => 'Success', 'error' => 'Error', 'skipped' => 'Skipped'],
+        'datagrid'     => [
+            'id'         => 'ID',
+            'time'       => 'Time',
+            'product-id' => 'Product ID',
+            'product'    => 'Product',
+            'offer-id'   => 'SKU / Offer ID',
+            'operation'  => 'Operation',
+            'status'     => 'Result',
+            'http'       => 'HTTP',
+            'message'    => 'Message',
+            'attempt'    => 'Attempt',
+            'duration'   => 'Duration (ms)',
+        ],
+    ],
+
+    'hints' => [
+        'invalid' => ['title' => 'The product needs fixing before it can be sent', 'hint' => ''],
+        'unknown' => ['title' => 'Google rejected the request', 'hint' => 'Google did not give more detail. Try again later; if it keeps failing, check the product in Merchant Center.'],
+        'fields'  => [
+            'sku'          => ['title' => 'SKU problem', 'hint' => 'Google needs a SKU of at most 50 characters without leading or trailing spaces. Edit the SKU on the product.'],
+            'title'        => ['title' => 'Product name problem', 'hint' => 'Give the product a clear name of at most 150 characters, without promotional text such as "free shipping".'],
+            'description'  => ['title' => 'Description problem', 'hint' => 'Add a plain description of the product (no links or promotional text), up to 5,000 characters.'],
+            'link'         => ['title' => 'Product page problem', 'hint' => 'Google could not use the product page address. The store must be on a public https address and the product page must open without login.'],
+            'image'        => ['title' => 'Image problem', 'hint' => 'Upload a clear product photo of at least 100×100 pixels (250×250 for clothing) without watermarks, text or placeholder images.'],
+            'price'        => ['title' => 'Price problem', 'hint' => 'Check the price and special price: they must be above 0 and match the price shoppers see on the product page.'],
+            'availability' => ['title' => 'Stock problem', 'hint' => 'Check the product’s stock and the "Manage stock" setting.'],
+            'brand'        => ['title' => 'Brand problem', 'hint' => 'Choose the brand on the product, or set a fallback brand in Configure → Google Merchant Center.'],
+            'gtin'         => ['title' => 'GTIN problem', 'hint' => 'Enter the GTIN (UPC/EAN/ISBN) printed on the packaging under Google Shopping → GTIN. If the item has none (custom-made), clear the GTIN and set "Identifier exists" to No.'],
+            'identifiers'  => ['title' => 'Product identifier problem', 'hint' => 'Add a GTIN, or a brand and MPN (product number). Only for custom-made items without identifiers set "Identifier exists" to No.'],
+            'category'     => ['title' => 'Google category problem', 'hint' => 'Pick a valid Google product category for the product or its store category.'],
+            'weight'       => ['title' => 'Weight problem', 'hint' => 'Check the product weight; it must be a positive number.'],
+            'apparel'      => ['title' => 'Clothing details missing', 'hint' => 'Clothing needs colour, size, gender and age group. Fill them in the product options and the Google Shopping group.'],
+        ],
+        'http' => [
+            401 => ['title' => 'Google did not accept the connection', 'hint' => 'Reconnect the account under Marketing → Google Merchant Center → Connection. If the message mentions registration, the Merchant Center account must be a production account with a verified website.'],
+            403 => ['title' => 'No permission in Merchant Center', 'hint' => 'Add the connected Google account or service account as a user of this Merchant Center account.'],
+            404 => ['title' => 'Not found in Google', 'hint' => 'Google no longer has this item or data source. Sync the product again; the integration recreates what is missing.'],
+            429 => ['title' => 'Google asked us to slow down', 'hint' => 'Too many requests, or the daily quota was reached. The sync retries automatically later; nothing to do.'],
+            500 => ['title' => 'Google was temporarily unavailable', 'hint' => 'Google had a temporary error. The sync retries automatically; nothing to do.'],
+        ],
+    ],
+
     'panel' => [
         'title'        => 'Google Merchant Center',
         'sync-now'     => 'Sync to Google now',
@@ -253,6 +305,8 @@ return [
         'select-merchant'         => 'Choose Merchant Center account',
         'disconnect'              => 'Disconnect',
         'delete-all'              => 'Remove all products from Google',
+        'logs'                    => 'Activity log',
+        'view-log'                => 'View log entry',
     ],
 
     'configuration' => [

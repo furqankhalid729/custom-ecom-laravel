@@ -4,6 +4,8 @@ namespace Custom\GoogleMerchant\DataGrids;
 
 use Custom\GoogleMerchant\Enums\GoogleStatus;
 use Custom\GoogleMerchant\Enums\SyncState;
+use Custom\GoogleMerchant\Models\GmcProduct;
+use Custom\GoogleMerchant\Support\ErrorExplainer;
 use Illuminate\Support\Facades\DB;
 use Webkul\DataGrid\DataGrid;
 
@@ -109,7 +111,15 @@ class GmcProductDataGrid extends DataGrid
             'index'   => 'last_error',
             'label'   => $t('problem'),
             'type'    => 'string',
-            'closure' => fn ($row) => $row->last_error ? e(mb_strimwidth($row->last_error, 0, 160, '…')) : '',
+            'closure' => function ($row) {
+                if (! $row->last_error) {
+                    return '';
+                }
+
+                $explained = app(ErrorExplainer::class)->explain(new GmcProduct(['state' => $row->state, 'last_error' => $row->last_error]));
+
+                return '<b>'.e($explained['title']).'</b><br>'.e(mb_strimwidth($row->last_error, 0, 160, '…'));
+            },
         ]);
     }
 

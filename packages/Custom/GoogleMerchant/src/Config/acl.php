@@ -30,6 +30,9 @@ return [
     ['key' => "$p.runs.resume", 'name' => "$t.resume-run", 'route' => "$r.runs.resume", 'sort' => 4],
     ['key' => "$p.runs.delete_all", 'name' => "$t.delete-all", 'route' => "$r.runs.delete_all", 'sort' => 5],
 
+    ['key' => "$p.logs", 'name' => "$t.logs", 'route' => "$r.logs.index", 'sort' => 5],
+    ['key' => "$p.logs.show", 'name' => "$t.view-log", 'route' => "$r.logs.show", 'sort' => 1],
+
     ['key' => "$p.connection", 'name' => "$t.connection", 'route' => "$r.connection.index", 'sort' => 4],
     ['key' => "$p.connection.oauth", 'name' => "$t.connect-google", 'route' => "$r.oauth.start", 'sort' => 1],
     ['key' => "$p.connection.callback", 'name' => "$t.connect-google", 'route' => "$r.oauth.callback", 'sort' => 2],

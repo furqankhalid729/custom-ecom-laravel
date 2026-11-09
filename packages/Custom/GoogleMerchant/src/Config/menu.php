@@ -26,10 +26,16 @@ return [
         'sort'  => 3,
         'icon'  => '',
     ], [
+        'key'   => 'marketing.google_merchant.logs',
+        'name'  => 'google_merchant::app.menu.logs',
+        'route' => 'admin.google_merchant.logs.index',
+        'sort'  => 4,
+        'icon'  => '',
+    ], [
         'key'   => 'marketing.google_merchant.connection',
         'name'  => 'google_merchant::app.menu.connection',
         'route' => 'admin.google_merchant.connection.index',
-        'sort'  => 4,
+        'sort'  => 5,
         'icon'  => '',
     ],
 ];
