@@ -31,6 +31,9 @@ use Webkul\Product\Models\ProductProxy;
  */
 class SyncService
 {
+    /** Changes limited to these fields are sent as a partial update (productInputs.patch). */
+    public const PATCHABLE_FIELDS = ['availability', 'price', 'salePrice', 'salePriceEffectiveDate'];
+
     public function __construct(
         protected GmcProductRepository $ledger,
         protected ProductMapper $mapper,
@@ -181,6 +184,15 @@ class SyncService
 
         $started = hrtime(true);
 
+        if (! $force && ($fields = $this->patchableChanges($row, $offer))) {
+            $patched = $this->patch($row, $offer, $target, $fields, $runId);
+
+            if ($patched !== null) {
+                return $patched;
+            }
+            // Google no longer has the offer: fall through to a full insert.
+        }
+
         try {
             $row->forceFill(['last_attempt_at' => now(), 'attempts' => $row->attempts + 1])->save();
 
@@ -200,6 +212,7 @@ class SyncService
         $row->forceFill([
             'state'              => SyncState::Synced->value,
             'payload_hash'       => $offer->hash,
+            'field_hashes'       => $offer->fieldHashes,
             'product_input_name' => ProductInputName::encode($target->account->merchant_id, $target->content_language, $target->feed_label, $offer->offerId),
             'last_synced_at'     => now(),
             'attempts'           => 0,
@@ -210,6 +223,85 @@ class SyncService
         ])->save();
 
         $this->logger->log($row, Operation::Upsert, 'success', durationMs: $this->duration($started), runId: $runId);
+
+        return SyncOutcome::Synced;
+    }
+
+    /**
+     * Price/stock-only change on an offer Google has (and that is not due for a full resubmit).
+     *
+     * @return string[] changed fields, or [] when a full insert is needed
+     */
+    protected function patchableChanges(GmcProduct $row, MappedOffer $offer): array
+    {
+        if ($row->state !== SyncState::Synced->value || ! $row->field_hashes || ! $row->product_input_name
+            || ! $row->last_synced_at?->greaterThan(now()->subDays((int) config('google_merchant.resubmit_days', 25)))) {
+            return [];
+        }
+
+        $changed = $offer->changedFields($row->field_hashes);
+
+        if (! $changed || array_diff($changed, self::PATCHABLE_FIELDS)) {
+            return [];
+        }
+
+        return array_values(array_intersect(self::PATCHABLE_FIELDS, $changed));
+    }
+
+    /**
+     * Sends only the changed fields. Fields in the mask but absent from the body
+     * (e.g. an ended sale price) are removed by Google. Returns null on 404 so
+     * the caller re-inserts the whole offer.
+     */
+    protected function patch(GmcProduct $row, MappedOffer $offer, GmcTarget $target, array $fields, ?int $runId): ?SyncOutcome
+    {
+        $attributes = array_intersect_key($offer->attributes(), array_flip($fields));
+
+        $body = [
+            'offerId'           => $offer->offerId,
+            'contentLanguage'   => $offer->productInput['contentLanguage'],
+            'feedLabel'         => $offer->productInput['feedLabel'],
+            'productAttributes' => $attributes ?: new \stdClass,
+        ];
+
+        $started = hrtime(true);
+
+        try {
+            $row->forceFill(['last_attempt_at' => now(), 'attempts' => $row->attempts + 1])->save();
+
+            $this->client->patchProductInput(
+                $target->account,
+                $row->product_input_name,
+                $target->data_source_name,
+                $body,
+                array_map(fn ($f) => "productAttributes.$f", $fields),
+            );
+        } catch (NotFoundException) {
+            return null;
+        } catch (PermanentApiException|UnregisteredProjectException $e) {
+            $this->fail($row, $e, $this->duration($started), $runId);
+
+            return SyncOutcome::Failed;
+        } catch (GmcApiException $e) {
+            $row->forceFill(['error_kind' => $e->kind()->value, 'last_error' => $e->getMessage()])->save();
+
+            $this->logger->log($row, Operation::Upsert, 'error', $e, $this->duration($started), $runId);
+
+            throw $e;
+        }
+
+        // last_synced_at stays at the last full insert: that is what keeps the offer from expiring.
+        $row->forceFill([
+            'payload_hash'      => $offer->hash,
+            'field_hashes'      => $offer->fieldHashes,
+            'attempts'          => 0,
+            'retry_cycles'      => 0,
+            'last_error'        => null,
+            'error_kind'        => null,
+            'validation_errors' => null,
+        ])->save();
+
+        $this->logger->log($row, Operation::Upsert, 'success', durationMs: $this->duration($started), runId: $runId, message: 'partial update: '.implode(', ', $fields));
 
         return SyncOutcome::Synced;
     }

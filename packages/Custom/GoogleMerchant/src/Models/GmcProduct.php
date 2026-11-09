@@ -25,6 +25,7 @@ class GmcProduct extends Model implements GmcProductContract
         'product_input_name',
         'state',
         'payload_hash',
+        'field_hashes',
         'revision',
         'synced_revision',
         'last_synced_at',
@@ -41,6 +42,7 @@ class GmcProduct extends Model implements GmcProductContract
 
     protected $casts = [
         'validation_errors' => 'array',
+        'field_hashes'      => 'array',
         'google_issues'     => 'array',
         'last_synced_at'    => 'datetime',
         'last_attempt_at'   => 'datetime',
