@@ -35,8 +35,10 @@ it('emails once when the account needs reconnecting, even if it happens twice', 
     $this->account->forceFill(['status' => 'connected'])->save();
     $this->account->forceFill(['status' => 'needs_reauth'])->save();
 
-    Mail::assertSent(ReauthRequired::class, 1);
-    Mail::assertSent(ReauthRequired::class, fn ($mail) => $mail->hasTo('alerts@shop.example.com'));
+    // Queued on the gmc queue: rendering a mail inside an admin request/job breaks Bagisto's theme finder.
+    Mail::assertQueued(ReauthRequired::class, 1);
+    Mail::assertQueued(ReauthRequired::class, fn ($mail) => $mail->hasTo('alerts@shop.example.com')
+        && $mail->queue === config('google_merchant.queue.name'));
 });
 
 it('does not send a digest when nothing new went wrong', function () {
@@ -101,6 +103,7 @@ it('stays quiet when failure notifications are turned off', function () {
     $this->account->forceFill(['status' => 'needs_reauth'])->save();
 
     Mail::assertNothingSent();
+    Mail::assertNothingQueued();
 });
 
 it('prunes sync logs older than the retention period', function () {

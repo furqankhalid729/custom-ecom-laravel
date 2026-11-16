@@ -51,7 +51,7 @@ class Notifier
         }
 
         try {
-            Mail::to($to)->send(new ReauthRequired($account));
+            Mail::to($to)->queue(new ReauthRequired($account));
         } catch (\Throwable $e) {
             Log::warning('Google Merchant: reconnect email could not be sent: '.$e->getMessage());
         }
