@@ -16,6 +16,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Reads one products.list page of Google's processed products and stores each
@@ -84,12 +85,15 @@ class RefreshStatusesJob implements ShouldQueue
             }
 
             $parsed = $parser->parse($product);
+            $status = $parsed['google_status']->value; // enum value: safe to inline below
 
             $updated += GmcProductProxy::modelClass()::query()
                 ->where('gmc_target_id', $target->id)
                 ->where('offer_id', $product['offerId'])
                 ->update([
-                    'google_status'     => $parsed['google_status']->value,
+                    // Must come before google_status: MySQL evaluates SET left to right.
+                    'google_status_changed_at' => DB::raw("CASE WHEN google_status IS NULL OR google_status <> '{$status}' THEN '{$now->toDateTimeString()}' ELSE google_status_changed_at END"),
+                    'google_status'     => $status,
                     'google_issues'     => json_encode($parsed['issues']),
                     'google_checked_at' => $now,
                     'updated_at'        => $now,

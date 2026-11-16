@@ -65,6 +65,28 @@ return [
         'awaiting'    => 'Submitted – awaiting Google review',
     ],
 
+    'mail' => [
+        'reauth' => [
+            'subject' => 'Google Merchant Center needs reconnecting',
+            'title'   => 'Product sync to Google is paused',
+            'body'    => 'Google no longer accepts the store’s connection to Merchant Center account :merchant, so product changes are not being sent. Reconnect the account and the sync resumes where it stopped.',
+            'button'  => 'Reconnect Google',
+        ],
+        'digest' => [
+            'subject'      => 'Google Merchant Center: :count new product problem(s) in the last 24 hours',
+            'title'        => 'Google Merchant Center daily summary',
+            'intro'        => 'New problems in the last 24 hours:',
+            'counts'       => [
+                'failed'      => 'Could not be sent to Google',
+                'invalid'     => 'Need fixing before they can be sent',
+                'disapproved' => 'Disapproved by Google',
+            ],
+            'top-problems' => 'Most common problems',
+            'products'     => ':count product(s)',
+            'button'       => 'Open diagnostics',
+        ],
+    ],
+
     'diagnostics' => [
         'title'              => 'Diagnostics',
         'intro'              => 'What Google thinks of your products and your account, and how to fix it.',

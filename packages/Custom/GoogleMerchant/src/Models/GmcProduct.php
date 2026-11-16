@@ -38,6 +38,7 @@ class GmcProduct extends Model implements GmcProductContract
         'google_status',
         'google_issues',
         'google_checked_at',
+        'google_status_changed_at',
     ];
 
     protected $casts = [
@@ -47,6 +48,7 @@ class GmcProduct extends Model implements GmcProductContract
         'last_synced_at'    => 'datetime',
         'last_attempt_at'   => 'datetime',
         'google_checked_at' => 'datetime',
+        'google_status_changed_at' => 'datetime',
         'revision'          => 'integer',
         'synced_revision'   => 'integer',
         'attempts'          => 'integer',

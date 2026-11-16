@@ -150,3 +150,19 @@ it('does not start a second status refresh while one is running', function () {
     expect(GmcRun::where('type', 'statuses')->count())->toBe(1);
     Queue::assertPushed(RefreshStatusesJob::class, 1);
 });
+
+it('stamps the time a status changes, not every time it is checked', function () {
+    ($this->runStatuses)();
+
+    $first = ($this->row)('SKU-DISAPPROVED')->google_status_changed_at;
+
+    expect($first)->not->toBeNull();
+
+    \Illuminate\Support\Facades\DB::table('gmc_runs')->update(['status' => 'completed']);
+    $this->travel(7)->hours();
+
+    ($this->runStatuses)();
+
+    expect(($this->row)('SKU-DISAPPROVED')->google_status_changed_at->equalTo($first))->toBeTrue()
+        ->and(($this->row)('SKU-DISAPPROVED')->google_checked_at->gt($first))->toBeTrue();
+});

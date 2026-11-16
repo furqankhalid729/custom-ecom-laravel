@@ -3,6 +3,8 @@
 namespace Custom\GoogleMerchant\Console;
 
 use Custom\GoogleMerchant\Jobs\HeartbeatJob;
+use Custom\GoogleMerchant\Jobs\PruneLogsJob;
+use Custom\GoogleMerchant\Jobs\SendDigestJob;
 use Custom\GoogleMerchant\Services\SetupChecklist;
 use Custom\GoogleMerchant\Support\Settings;
 use Illuminate\Console\Scheduling\Schedule;
@@ -66,6 +68,15 @@ class GmcSchedule
             ->cron('0 */6 * * *')
             ->when($enabled)
             ->name('gmc:statuses');
+
+        $schedule->job(new SendDigestJob)
+            ->dailyAt('08:00')
+            ->when($enabled)
+            ->name('gmc:digest');
+
+        $schedule->job(new PruneLogsJob)
+            ->dailyAt('03:00')
+            ->name('gmc:prune-logs');
 
         $schedule->command('gmc:retry-failed')
             ->hourly()

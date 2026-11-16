@@ -4,6 +4,7 @@ namespace Custom\GoogleMerchant\Models;
 
 use Custom\GoogleMerchant\Contracts\GmcAccount as GmcAccountContract;
 use Custom\GoogleMerchant\Enums\AccountStatus;
+use Custom\GoogleMerchant\Support\Notifier;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -49,5 +50,15 @@ class GmcAccount extends Model implements GmcAccountContract
     public function isConnected(): bool
     {
         return $this->status === AccountStatus::Connected->value;
+    }
+
+    /** Whatever path marks the account as needing a reconnect, the admin is told (once a day). */
+    protected static function booted(): void
+    {
+        static::updated(function (GmcAccount $account) {
+            if ($account->wasChanged('status') && $account->status === AccountStatus::NeedsReauth->value) {
+                app(Notifier::class)->reauthRequired($account);
+            }
+        });
     }
 }
