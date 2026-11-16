@@ -119,12 +119,12 @@ it('rejects a key file that is not a service account key', function () {
 
 it('selects merchant, registers once and provisions the data source', function () {
     Http::fake([
-        'merchantapi.googleapis.com/accounts/v1/accounts?*'                            => Http::response(fixture('accounts-list')),
+        'merchantapi.googleapis.com/accounts/v1/accounts?*' => Http::response(fixture('accounts-list')),
         'merchantapi.googleapis.com/accounts/v1/accounts/123456/developerRegistration*' => Http::response(fixture('developer-registration')),
-        'merchantapi.googleapis.com/datasources/v1/accounts/123456/dataSources?*'       => Http::sequence()
+        'merchantapi.googleapis.com/datasources/v1/accounts/123456/dataSources?*' => Http::sequence()
             ->push(fixture('datasources-list'))
             ->whenEmpty(Http::response(['dataSources' => [...fixture('datasources-list')['dataSources'], fixture('datasource-create')]])),
-        'merchantapi.googleapis.com/datasources/v1/accounts/123456/dataSources'         => Http::response(fixture('datasource-create')),
+        'merchantapi.googleapis.com/datasources/v1/accounts/123456/dataSources' => Http::response(fixture('datasource-create')),
     ]);
 
     $this->loginAsAdmin();

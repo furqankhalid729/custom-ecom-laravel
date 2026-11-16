@@ -6,6 +6,7 @@ use Custom\GoogleMerchant\Jobs\PushAccountPoliciesJob;
 use Custom\GoogleMerchant\Services\AccountPolicySync;
 use Custom\StorePolicy\Repositories\PolicySettingRepository;
 use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Webkul\User\Models\Admin;
@@ -28,23 +29,23 @@ beforeEach(function () {
     $settings['regions']['US']['shipping'] = array_merge($settings['regions']['US']['shipping'], [
         'handling_min_days' => 1,
         'handling_max_days' => 3,
-        'methods'           => [['name' => 'Standard', 'carrier' => 'USPS', 'cost' => 5.99, 'free_over' => 50.0, 'min_days' => 3, 'max_days' => 5]],
+        'methods' => [['name' => 'Standard', 'carrier' => 'USPS', 'cost' => 5.99, 'free_over' => 50.0, 'min_days' => 3, 'max_days' => 5]],
     ]);
     $settings['regions']['US']['returns'] = array_merge($settings['regions']['US']['returns'], [
-        'accepted'                => true,
-        'window_days'             => 30,
-        'method'                  => 'mail',
+        'accepted' => true,
+        'window_days' => 30,
+        'method' => 'mail',
         'return_shipping_paid_by' => 'customer',
-        'restocking_fee_percent'  => 10,
-        'refund_days'             => 10,
-        'exchanges'               => true,
+        'restocking_fee_percent' => 10,
+        'refund_days' => 10,
+        'exchanges' => true,
     ]);
     $this->policies->saveForChannel($this->channelId, $settings);
 
     $this->sync = app(AccountPolicySync::class);
 
     // The job is unique per account: release the lock taken by the save above.
-    $this->releasePushLock = fn () => \Illuminate\Support\Facades\Cache::lock('laravel_unique_job:'.PushAccountPoliciesJob::class.':'.$this->account->id)->forceRelease();
+    $this->releasePushLock = fn () => Cache::lock('laravel_unique_job:'.PushAccountPoliciesJob::class.':'.$this->account->id)->forceRelease();
     ($this->releasePushLock)();
 
     $this->requests = [];
@@ -53,9 +54,9 @@ beforeEach(function () {
         $this->requests[] = [$request->method(), $request->url(), $request->data()];
 
         return match (true) {
-            $request->method() === 'GET' && str_contains($request->url(), '/shippingSettings')       => Http::response(fixture('shipping-settings-get')),
-            $request->method() === 'GET' && str_contains($request->url(), '/onlineReturnPolicies')   => Http::response(fixture('return-policies-list')),
-            default                                                                                   => Http::response([]),
+            $request->method() === 'GET' && str_contains($request->url(), '/shippingSettings') => Http::response(fixture('shipping-settings-get')),
+            $request->method() === 'GET' && str_contains($request->url(), '/onlineReturnPolicies') => Http::response(fixture('return-policies-list')),
+            default => Http::response([]),
         };
     });
 });
@@ -63,14 +64,14 @@ beforeEach(function () {
 it('builds a shipping service per method for the target market', function () {
     expect($this->sync->shippingBody($this->target))->toBe([
         'services' => [[
-            'serviceName'       => 'Standard',
-            'active'            => true,
+            'serviceName' => 'Standard',
+            'active' => true,
             'deliveryCountries' => ['US'],
-            'currencyCode'      => 'USD',
-            'deliveryTime'      => ['minHandlingDays' => 1, 'maxHandlingDays' => 3, 'minTransitDays' => 3, 'maxTransitDays' => 5],
-            'rateGroups'        => [[
+            'currencyCode' => 'USD',
+            'deliveryTime' => ['minHandlingDays' => 1, 'maxHandlingDays' => 3, 'minTransitDays' => 3, 'maxTransitDays' => 5],
+            'rateGroups' => [[
                 'applicableShippingLabels' => [],
-                'mainTable'                => [
+                'mainTable' => [
                     'rowHeaders' => ['prices' => [
                         ['amountMicros' => '50000000', 'currencyCode' => 'USD'],
                         ['amountMicros' => '-1', 'currencyCode' => 'USD'],
@@ -92,22 +93,22 @@ it('uses a single flat rate when there is no free-shipping threshold', function 
 
     expect($this->sync->shippingBody($this->target)['services'][0]['rateGroups'])->toBe([[
         'applicableShippingLabels' => [],
-        'singleValue'              => ['flatRate' => ['amountMicros' => '5990000', 'currencyCode' => 'USD']],
+        'singleValue' => ['flatRate' => ['amountMicros' => '5990000', 'currencyCode' => 'USD']],
     ]]);
 });
 
 it('builds the return policy with the https policy page', function () {
     expect($this->sync->returnPolicyBody($this->target))->toBe([
-        'label'             => 'store-sync-US',
-        'countries'         => ['US'],
-        'policy'            => ['type' => 'NUMBER_OF_DAYS_AFTER_DELIVERY', 'days' => '30'],
-        'returnMethods'     => ['BY_MAIL'],
-        'itemConditions'    => ['NEW'],
-        'restockingFee'     => ['microPercent' => 10000000],
+        'label' => 'store-sync-US',
+        'countries' => ['US'],
+        'policy' => ['type' => 'NUMBER_OF_DAYS_AFTER_DELIVERY', 'days' => '30'],
+        'returnMethods' => ['BY_MAIL'],
+        'itemConditions' => ['NEW'],
+        'restockingFee' => ['microPercent' => 10000000],
         'returnShippingFee' => ['type' => 'CUSTOMER_PAYING_ACTUAL_FEE'],
-        'returnPolicyUri'   => 'https://shop.example.com/returns',
+        'returnPolicyUri' => 'https://shop.example.com/returns',
         'processRefundDays' => 10,
-        'acceptExchange'    => true,
+        'acceptExchange' => true,
     ]);
 });
 

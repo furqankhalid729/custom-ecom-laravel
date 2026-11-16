@@ -9,7 +9,6 @@ use Custom\GoogleMerchant\Api\Exceptions\TransientApiException;
 use Custom\GoogleMerchant\Api\MerchantApiClient;
 use Custom\GoogleMerchant\Enums\Operation;
 use Custom\GoogleMerchant\Enums\RunStatus;
-use Custom\GoogleMerchant\Enums\SyncState;
 use Custom\GoogleMerchant\Jobs\Concerns\RunsOnGmcQueue;
 use Custom\GoogleMerchant\Jobs\Middleware\EnsureAccountReady;
 use Custom\GoogleMerchant\Models\GmcProductProxy;
@@ -148,17 +147,17 @@ class ReconcileJob implements ShouldQueue
         }
 
         GmcSyncLogProxy::modelClass()::create([
-            'gmc_target_id'    => $target->id,
-            'offer_id'         => $product['offerId'],
-            'operation'        => Operation::Delete->value,
-            'context'          => 'orphan',
-            'status'           => $error ? 'error' : 'success',
-            'http_status'      => $error?->httpStatus,
+            'gmc_target_id' => $target->id,
+            'offer_id' => $product['offerId'],
+            'operation' => Operation::Delete->value,
+            'context' => 'orphan',
+            'status' => $error ? 'error' : 'success',
+            'http_status' => $error?->httpStatus,
             'response_excerpt' => $error?->excerpt,
-            'error_message'    => $error ? mb_strcut($error->getMessage(), 0, 1000) : null,
-            'attempt'          => 1,
-            'duration_ms'      => (int) round((microtime(true) - $started) * 1000),
-            'gmc_run_id'       => $this->runId,
+            'error_message' => $error ? mb_strcut($error->getMessage(), 0, 1000) : null,
+            'attempt' => 1,
+            'duration_ms' => (int) round((microtime(true) - $started) * 1000),
+            'gmc_run_id' => $this->runId,
         ]);
 
         return ! $error;

@@ -15,12 +15,12 @@ enum SyncOutcome: string
     public function severity(): int
     {
         return match ($this) {
-            self::Skipped  => 0,
-            self::Deleted  => 1,
+            self::Skipped => 0,
+            self::Deleted => 1,
             self::Excluded => 1,
-            self::Synced   => 2,
-            self::Invalid  => 3,
-            self::Failed   => 4,
+            self::Synced => 2,
+            self::Invalid => 3,
+            self::Failed => 4,
         };
     }
 }

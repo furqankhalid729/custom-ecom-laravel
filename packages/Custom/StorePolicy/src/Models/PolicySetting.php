@@ -18,10 +18,10 @@ class PolicySetting extends Model implements PolicySettingContract
 
     protected $casts = [
         'business' => 'array',
-        'payment'  => 'array',
-        'privacy'  => 'array',
-        'terms'    => 'array',
-        'regions'  => 'array',
+        'payment' => 'array',
+        'privacy' => 'array',
+        'terms' => 'array',
+        'regions' => 'array',
     ];
 
     /**

@@ -36,11 +36,11 @@ class Quotas
             $limit = (int) ($group['quotaLimit'] ?? 0);
 
             return [
-                'name'         => basename((string) ($group['name'] ?? '')),
-                'usage'        => $usage,
-                'limit'        => $limit,
+                'name' => basename((string) ($group['name'] ?? '')),
+                'usage' => $usage,
+                'limit' => $limit,
                 'minute_limit' => (int) ($group['quotaMinuteLimit'] ?? 0),
-                'percent'      => $limit > 0 ? (int) min(100, round($usage / $limit * 100)) : 0,
+                'percent' => $limit > 0 ? (int) min(100, round($usage / $limit * 100)) : 0,
             ];
         }, $groups);
 

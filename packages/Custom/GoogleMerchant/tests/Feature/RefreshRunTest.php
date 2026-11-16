@@ -4,8 +4,11 @@ require_once __DIR__.'/../Helpers.php';
 
 use Custom\GoogleMerchant\Jobs\RefreshRunJob;
 use Custom\GoogleMerchant\Jobs\SyncProductJob;
+use Custom\GoogleMerchant\Mapping\ProductMapper;
 use Custom\GoogleMerchant\Models\GmcProduct;
 use Custom\GoogleMerchant\Models\GmcRun;
+use Custom\GoogleMerchant\Sync\Eligibility;
+use Custom\GoogleMerchant\Sync\SyncDispatcher;
 use Custom\GoogleMerchant\Sync\SyncService;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +34,7 @@ beforeEach(function () {
         // Execute the chunked refresh run synchronously, chunk after chunk.
         while ($job = Queue::pushed(RefreshRunJob::class)->first(fn ($j) => ! isset($j->ran))) {
             $job->ran = true;
-            $job->handle(app(\Custom\GoogleMerchant\Mapping\ProductMapper::class), app(\Custom\GoogleMerchant\Sync\Eligibility::class), app(\Custom\GoogleMerchant\Sync\SyncDispatcher::class));
+            $job->handle(app(ProductMapper::class), app(Eligibility::class), app(SyncDispatcher::class));
         }
 
         return Queue::pushed(SyncProductJob::class)->pluck('rootProductId')->all();

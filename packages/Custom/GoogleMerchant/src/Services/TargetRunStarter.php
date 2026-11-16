@@ -47,10 +47,10 @@ abstract class TargetRunStarter
             }
 
             $run = GmcRunProxy::modelClass()::create([
-                'type'          => $this->type()->value,
-                'status'        => RunStatus::Running->value,
+                'type' => $this->type()->value,
+                'status' => RunStatus::Running->value,
                 'gmc_target_id' => $target->id,
-                'started_at'    => now(),
+                'started_at' => now(),
             ]);
 
             $this->dispatch($target, $run);

@@ -32,14 +32,14 @@ class StoreSettingsController extends Controller
         $channel = core()->getDefaultChannel();
 
         return view('google_merchant::admin.settings.store', [
-            'values'     => $this->store->current(),
-            'locales'    => $channel->locales->pluck('code')->all(),
+            'values' => $this->store->current(),
+            'locales' => $channel->locales->pluck('code')->all(),
             'currencies' => $channel->currencies->pluck('code')->all(),
-            'report'     => session('gmc_url_report', []),
-            'target'     => $this->connection->current()?->targets()->where('enabled', true)->orderBy('id')->first(),
+            'report' => session('gmc_url_report', []),
+            'target' => $this->connection->current()?->targets()->where('enabled', true)->orderBy('id')->first(),
 
             'policiesAvailable' => AccountPolicySync::available(),
-            'policyResult'      => ($account = $this->connection->current()) ? app(AccountPolicySync::class)->lastResult($account) : null,
+            'policyResult' => ($account = $this->connection->current()) ? app(AccountPolicySync::class)->lastResult($account) : null,
         ]);
     }
 
@@ -70,17 +70,17 @@ class StoreSettingsController extends Controller
         };
 
         $data = $request->validate([
-            'website_url'       => ['nullable', 'url', $https],
-            'country'           => ['required', 'string', 'size:2', Rule::exists('countries', 'code')],
-            'language'          => ['required', Rule::in($channel->locales->pluck('code')->all())],
-            'currency'          => ['required', Rule::in($channel->currencies->pluck('code')->all())],
+            'website_url' => ['nullable', 'url', $https],
+            'country' => ['required', 'string', 'size:2', Rule::exists('countries', 'code')],
+            'language' => ['required', Rule::in($channel->locales->pluck('code')->all())],
+            'currency' => ['required', Rule::in($channel->currencies->pluck('code')->all())],
             'return_policy_url' => ['nullable', 'url', $https],
             'refund_policy_url' => ['nullable', 'url', $https],
-            'terms_url'         => ['nullable', 'url', $https],
-            'privacy_url'       => ['nullable', 'url', $https],
-            'shipping_note'     => ['nullable', 'string', 'max:2000'],
-            'tax_note'          => ['nullable', 'string', 'max:2000'],
-            'confirm_resync'    => ['nullable', 'boolean'],
+            'terms_url' => ['nullable', 'url', $https],
+            'privacy_url' => ['nullable', 'url', $https],
+            'shipping_note' => ['nullable', 'string', 'max:2000'],
+            'tax_note' => ['nullable', 'string', 'max:2000'],
+            'confirm_resync' => ['nullable', 'boolean'],
         ], [
             'language.in' => trans('google_merchant::app.store.language-not-in-channel'),
             'currency.in' => trans('google_merchant::app.store.currency-not-in-channel'),
@@ -108,9 +108,9 @@ class StoreSettingsController extends Controller
             ->all();
 
         $this->audit->record(ConnectionService::AUDIT, 'store_settings', [
-            'country'        => $data['country'],
-            'language'       => $data['language'],
-            'currency'       => $data['currency'],
+            'country' => $data['country'],
+            'language' => $data['language'],
+            'currency' => $data['currency'],
             'market_changed' => $result['market_changed'],
         ]);
 

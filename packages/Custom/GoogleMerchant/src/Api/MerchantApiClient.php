@@ -3,7 +3,6 @@
 namespace Custom\GoogleMerchant\Api;
 
 use Custom\GoogleMerchant\Api\Exceptions\AuthException;
-use Custom\GoogleMerchant\Api\Exceptions\GmcApiException;
 use Custom\GoogleMerchant\Api\Exceptions\UnregisteredProjectException;
 use Custom\GoogleMerchant\Auth\AccessTokenProvider;
 use Custom\GoogleMerchant\Models\GmcAccount;

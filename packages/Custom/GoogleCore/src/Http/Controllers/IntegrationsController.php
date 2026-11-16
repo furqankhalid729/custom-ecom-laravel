@@ -16,10 +16,10 @@ class IntegrationsController extends Controller
     public function index(IntegrationRegistry $registry): View
     {
         $integrations = collect($registry->all())->map(fn (GoogleIntegration $integration) => [
-            'key'       => $integration->key(),
-            'label'     => $integration->label(),
+            'key' => $integration->key(),
+            'label' => $integration->label(),
             'connected' => $integration->isConnected(),
-            'url'       => ($route = $integration->adminRoute()) && Route::has($route) ? route($route) : null,
+            'url' => ($route = $integration->adminRoute()) && Route::has($route) ? route($route) : null,
         ])->values();
 
         return view('google_core::admin.integrations', ['integrations' => $integrations]);

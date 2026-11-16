@@ -2,14 +2,18 @@
 
 require_once __DIR__.'/../Helpers.php';
 
+use Custom\GoogleMerchant\Api\MerchantApiClient;
+use Custom\GoogleMerchant\Console\GmcSchedule;
 use Custom\GoogleMerchant\Diagnostics\IssueHints;
 use Custom\GoogleMerchant\Diagnostics\StatusParser;
 use Custom\GoogleMerchant\Enums\GoogleStatus;
 use Custom\GoogleMerchant\Jobs\RefreshStatusesJob;
 use Custom\GoogleMerchant\Models\GmcProduct;
 use Custom\GoogleMerchant\Models\GmcRun;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 
@@ -40,7 +44,7 @@ beforeEach(function () {
 
         while ($job = Queue::pushed(RefreshStatusesJob::class)->first(fn ($j) => ! isset($j->ran))) {
             $job->ran = true;
-            $job->handle(app(\Custom\GoogleMerchant\Api\MerchantApiClient::class), app(StatusParser::class));
+            $job->handle(app(MerchantApiClient::class), app(StatusParser::class));
             $ran++;
         }
 
@@ -68,13 +72,13 @@ it('marks an offer disapproved everywhere as disapproved with google\'s issue te
     expect($row->google_status)->toBe('disapproved')
         ->and($row->google_issues)->toHaveCount(1)
         ->and($row->google_issues[0])->toMatchArray([
-            'code'          => 'image_too_small',
-            'severity'      => 'DISAPPROVED',
-            'attribute'     => 'image_link',
-            'description'   => 'Image too small',
-            'detail'        => 'Use a larger image (at least 100 x 100 pixels)',
+            'code' => 'image_too_small',
+            'severity' => 'DISAPPROVED',
+            'attribute' => 'image_link',
+            'description' => 'Image too small',
+            'detail' => 'Use a larger image (at least 100 x 100 pixels)',
             'documentation' => 'https://support.google.com/merchants/answer/6098289',
-            'resolution'    => 'merchant_action',
+            'resolution' => 'merchant_action',
         ]);
 });
 
@@ -111,13 +115,13 @@ it('parses status rules', function (array $destinations, GoogleStatus $expected)
 
     expect($parsed['google_status'])->toBe($expected);
 })->with([
-    'no destinations yet'           => [[], GoogleStatus::Pending],
-    'all approved'                  => [[['approvedCountries' => ['US', 'CA']]], GoogleStatus::Approved],
-    'one country disapproved'       => [[['approvedCountries' => ['US'], 'disapprovedCountries' => ['CA']]], GoogleStatus::Partial],
-    'pending and disapproved'       => [[['pendingCountries' => ['US'], 'disapprovedCountries' => ['CA']]], GoogleStatus::Partial],
-    'pending, nothing approved'     => [[['pendingCountries' => ['US']]], GoogleStatus::Pending],
+    'no destinations yet' => [[], GoogleStatus::Pending],
+    'all approved' => [[['approvedCountries' => ['US', 'CA']]], GoogleStatus::Approved],
+    'one country disapproved' => [[['approvedCountries' => ['US'], 'disapprovedCountries' => ['CA']]], GoogleStatus::Partial],
+    'pending and disapproved' => [[['pendingCountries' => ['US'], 'disapprovedCountries' => ['CA']]], GoogleStatus::Partial],
+    'pending, nothing approved' => [[['pendingCountries' => ['US']]], GoogleStatus::Pending],
     'pending in one, approved other' => [[['pendingCountries' => ['US']], ['approvedCountries' => ['US']]], GoogleStatus::Approved],
-    'disapproved everywhere'        => [[['disapprovedCountries' => ['US']], ['disapprovedCountries' => ['US']]], GoogleStatus::Disapproved],
+    'disapproved everywhere' => [[['disapprovedCountries' => ['US']], ['disapprovedCountries' => ['US']]], GoogleStatus::Disapproved],
 ]);
 
 it('suggests a fix that names the store field', function () {
@@ -131,9 +135,9 @@ it('falls back to google\'s own text for unknown issues', function () {
 });
 
 it('refreshes statuses every six hours while sync is enabled', function () {
-    $schedule = new \Illuminate\Console\Scheduling\Schedule;
+    $schedule = new Schedule;
 
-    app(\Custom\GoogleMerchant\Console\GmcSchedule::class)->define($schedule);
+    app(GmcSchedule::class)->define($schedule);
 
     $event = collect($schedule->events())->firstWhere('description', 'gmc:statuses');
 
@@ -158,7 +162,7 @@ it('stamps the time a status changes, not every time it is checked', function ()
 
     expect($first)->not->toBeNull();
 
-    \Illuminate\Support\Facades\DB::table('gmc_runs')->update(['status' => 'completed']);
+    DB::table('gmc_runs')->update(['status' => 'completed']);
     $this->travel(7)->hours();
 
     ($this->runStatuses)();

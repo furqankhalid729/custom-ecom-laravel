@@ -4,29 +4,29 @@ $t = 'google_merchant::app.configuration';
 
 return [
     [
-        'key'  => 'google_merchant',
+        'key' => 'google_merchant',
         'name' => "$t.title",
         'info' => "$t.info",
         'sort' => 9,
     ], [
-        'key'  => 'google_merchant.general',
+        'key' => 'google_merchant.general',
         'name' => "$t.general.title",
         'info' => "$t.general.info",
         'icon' => 'settings/store.svg',
         'sort' => 1,
     ], [
-        'key'    => 'google_merchant.general.settings',
-        'name'   => "$t.settings.title",
-        'info'   => "$t.settings.info",
-        'sort'   => 1,
+        'key' => 'google_merchant.general.settings',
+        'name' => "$t.settings.title",
+        'info' => "$t.settings.info",
+        'sort' => 1,
         'fields' => [
             ['name' => 'enabled', 'title' => "$t.settings.enabled", 'type' => 'boolean', 'default' => false],
             ['name' => 'auto_sync', 'title' => "$t.settings.auto-sync", 'type' => 'boolean', 'default' => true],
             ['name' => 'sync_delay', 'title' => "$t.settings.sync-delay", 'type' => 'number', 'default' => 30, 'validation' => 'numeric|min:0|max:3600'],
             [
-                'name'    => 'excluded_types',
-                'title'   => "$t.settings.excluded-types",
-                'type'    => 'multiselect',
+                'name' => 'excluded_types',
+                'title' => "$t.settings.excluded-types",
+                'type' => 'multiselect',
                 'default' => 'virtual,downloadable,booking',
                 'options' => [
                     ['title' => "$t.settings.type-virtual", 'value' => 'virtual'],
@@ -37,9 +37,9 @@ return [
             ['name' => 'exclude_disabled', 'title' => "$t.settings.exclude-disabled", 'type' => 'boolean', 'default' => true],
             ['name' => 'exclude_not_visible', 'title' => "$t.settings.exclude-not-visible", 'type' => 'boolean', 'default' => true],
             [
-                'name'    => 'out_of_stock_action',
-                'title'   => "$t.settings.out-of-stock-action",
-                'type'    => 'select',
+                'name' => 'out_of_stock_action',
+                'title' => "$t.settings.out-of-stock-action",
+                'type' => 'select',
                 'default' => 'keep',
                 'options' => [
                     ['title' => "$t.settings.oos-keep", 'value' => 'keep'],
@@ -50,9 +50,9 @@ return [
             ['name' => 'rate_limit_per_minute', 'title' => "$t.settings.rate-limit", 'type' => 'number', 'default' => 60, 'validation' => 'numeric|min:1|max:6000'],
             ['name' => 'reconcile_time', 'title' => "$t.settings.reconcile-time", 'type' => 'text', 'default' => '01:00', 'validation' => 'nullable|date_format:H:i'],
             [
-                'name'    => 'reconcile_frequency',
-                'title'   => "$t.settings.reconcile-frequency",
-                'type'    => 'select',
+                'name' => 'reconcile_frequency',
+                'title' => "$t.settings.reconcile-frequency",
+                'type' => 'select',
                 'default' => 'daily',
                 'options' => [
                     ['title' => "$t.settings.reconcile-daily", 'value' => 'daily'],
@@ -64,10 +64,10 @@ return [
             ['name' => 'notify_on_failure', 'title' => "$t.settings.notify-on-failure", 'type' => 'boolean', 'default' => true],
         ],
     ], [
-        'key'    => 'google_merchant.general.store',
-        'name'   => "$t.store.title",
-        'info'   => "$t.store.info",
-        'sort'   => 2,
+        'key' => 'google_merchant.general.store',
+        'name' => "$t.store.title",
+        'info' => "$t.store.info",
+        'sort' => 2,
         'fields' => [
             ['name' => 'website_url', 'title' => "$t.store.website-url", 'type' => 'text', 'default' => '', 'validation' => 'nullable|url'],
             ['name' => 'country', 'title' => "$t.store.country", 'type' => 'text', 'default' => 'US', 'validation' => 'required|size:2'],

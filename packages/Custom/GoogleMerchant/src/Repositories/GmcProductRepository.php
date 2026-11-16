@@ -29,9 +29,9 @@ class GmcProductRepository
         $type = DB::table('products')->where('id', $rootId)->value('type');
 
         $offers = match ($type) {
-            null, 'grouped'  => collect(),
-            'configurable'   => DB::table('products')->where('parent_id', $rootId)->get(['id', 'sku']),
-            default          => DB::table('products')->where('id', $rootId)->get(['id', 'sku']),
+            null, 'grouped' => collect(),
+            'configurable' => DB::table('products')->where('parent_id', $rootId)->get(['id', 'sku']),
+            default => DB::table('products')->where('id', $rootId)->get(['id', 'sku']),
         };
 
         $now = now();
@@ -39,14 +39,14 @@ class GmcProductRepository
 
         if ($offers->isNotEmpty()) {
             DB::table('gmc_products')->insertOrIgnore($offers->map(fn ($p) => [
-                'gmc_target_id'   => $targetId,
-                'offer_id'        => $p->sku,
-                'product_id'      => $p->id,
+                'gmc_target_id' => $targetId,
+                'offer_id' => $p->sku,
+                'product_id' => $p->id,
                 'root_product_id' => $rootId,
-                'channel_id'      => $channelId,
-                'state'           => SyncState::Pending->value,
-                'created_at'      => $now,
-                'updated_at'      => $now,
+                'channel_id' => $channelId,
+                'state' => SyncState::Pending->value,
+                'created_at' => $now,
+                'updated_at' => $now,
             ])->all());
         }
 
@@ -54,8 +54,8 @@ class GmcProductRepository
             ->where('root_product_id', $rootId)
             ->where('gmc_target_id', $targetId)
             ->update([
-                'revision'   => DB::raw('revision + 1'),
-                'state'      => DB::raw("CASE WHEN state = 'deleting' THEN state ELSE 'pending' END"),
+                'revision' => DB::raw('revision + 1'),
+                'state' => DB::raw("CASE WHEN state = 'deleting' THEN state ELSE 'pending' END"),
                 'updated_at' => $now,
             ]);
     }
@@ -101,12 +101,12 @@ class GmcProductRepository
 
             if (! $row) {
                 return $this->query()->create([
-                    'gmc_target_id'   => $targetId,
-                    'offer_id'        => $offerId,
-                    'product_id'      => $productId,
+                    'gmc_target_id' => $targetId,
+                    'offer_id' => $offerId,
+                    'product_id' => $productId,
                     'root_product_id' => $rootId,
-                    'channel_id'      => $channelId,
-                    'state'           => SyncState::Pending->value,
+                    'channel_id' => $channelId,
+                    'state' => SyncState::Pending->value,
                 ]);
             }
 
@@ -117,9 +117,9 @@ class GmcProductRepository
             $reclaimed = $row->product_id !== $productId || in_array($row->state, [SyncState::Deleting->value, SyncState::Deleted->value]);
 
             $row->forceFill([
-                'product_id'      => $productId,
+                'product_id' => $productId,
                 'root_product_id' => $rootId,
-                'channel_id'      => $channelId,
+                'channel_id' => $channelId,
             ] + ($reclaimed ? ['state' => SyncState::Pending->value] : []))->save();
 
             return $row;

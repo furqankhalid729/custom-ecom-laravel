@@ -37,13 +37,13 @@ class ConnectionController extends Controller
         }
 
         return view('google_merchant::admin.connection.index', [
-            'account'        => $account,
-            'target'         => $account?->targets()->orderBy('id')->first(),
-            'checks'         => $this->checklist->run($account),
-            'merchants'      => $merchants,
-            'merchantError'  => $merchantError,
+            'account' => $account,
+            'target' => $account?->targets()->orderBy('id')->first(),
+            'checks' => $this->checklist->run($account),
+            'merchants' => $merchants,
+            'merchantError' => $merchantError,
             'oauthAvailable' => $this->connection->hasOAuthCredentials(),
-            'redirectUri'    => $this->connection->redirectUri(),
+            'redirectUri' => $this->connection->redirectUri(),
         ]);
     }
 
@@ -91,7 +91,7 @@ class ConnectionController extends Controller
     public function selectMerchant(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'merchant_id'     => ['required', 'regex:/^\d{1,20}$/'],
+            'merchant_id' => ['required', 'regex:/^\d{1,20}$/'],
             'developer_email' => ['nullable', 'email'],
         ]);
 

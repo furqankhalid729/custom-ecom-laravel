@@ -12,9 +12,9 @@ it('signs a service account JWT', function () {
     Http::fake(['oauth2.googleapis.com/token' => Http::response(['access_token' => 'sa-token', 'expires_in' => 3600, 'token_type' => 'Bearer'])]);
 
     $token = app(ServiceAccountTokenFetcher::class)->fetch([
-        'type'         => 'service_account',
+        'type' => 'service_account',
         'client_email' => 'sync@project.iam.gserviceaccount.com',
-        'private_key'  => $privatePem,
+        'private_key' => $privatePem,
     ], ['https://www.googleapis.com/auth/content']);
 
     expect($token->accessToken)->toBe('sa-token')->and($token->refreshToken)->toBeNull();

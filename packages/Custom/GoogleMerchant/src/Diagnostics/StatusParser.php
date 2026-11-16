@@ -21,7 +21,7 @@ class StatusParser
 
         return [
             'google_status' => $this->status($status['destinationStatuses'] ?? []),
-            'issues'        => array_map(
+            'issues' => array_map(
                 fn (array $issue) => array_combine(self::ISSUE_FIELDS, array_map(fn ($f) => $issue[$f] ?? null, self::ISSUE_FIELDS)),
                 array_values($status['itemLevelIssues'] ?? [])
             ),

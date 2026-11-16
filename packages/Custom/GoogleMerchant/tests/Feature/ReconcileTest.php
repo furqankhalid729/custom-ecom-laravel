@@ -2,6 +2,7 @@
 
 require_once __DIR__.'/../Helpers.php';
 
+use Custom\GoogleMerchant\Api\MerchantApiClient;
 use Custom\GoogleMerchant\Console\GmcSchedule;
 use Custom\GoogleMerchant\Jobs\ReconcileJob;
 use Custom\GoogleMerchant\Jobs\RefreshRunJob;
@@ -16,6 +17,7 @@ use Custom\GoogleMerchant\Sync\SyncService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 
@@ -47,17 +49,17 @@ beforeEach(function () {
     $this->products->each(fn ($p) => app(SyncService::class)->syncRoot($p->id, $this->target->id));
 
     $offer = fn (string $offerId, string $dataSource = 'accounts/123456/dataSources/999') => [
-        'name'            => "accounts/123456/products/en~US~$offerId",
-        'offerId'         => $offerId,
+        'name' => "accounts/123456/products/en~US~$offerId",
+        'offerId' => $offerId,
         'contentLanguage' => 'en',
-        'feedLabel'       => 'US',
-        'dataSource'      => $dataSource,
+        'feedLabel' => 'US',
+        'dataSource' => $dataSource,
     ];
 
     // Google has: both store products, a ghost offer, and an offer owned by another data source.
     $this->googlePages = [
-        null     => ['products' => [$offer($this->products[0]->sku), $offer('GHOST-1')], 'nextPageToken' => 'p2'],
-        'p2'     => ['products' => [$offer($this->products[1]->sku), $offer('OTHER-DS-1', 'accounts/123456/dataSources/555')]],
+        null => ['products' => [$offer($this->products[0]->sku), $offer('GHOST-1')], 'nextPageToken' => 'p2'],
+        'p2' => ['products' => [$offer($this->products[1]->sku), $offer('OTHER-DS-1', 'accounts/123456/dataSources/555')]],
     ];
 
     /** Runs gmc:reconcile synchronously (Google pages, then the drift pass). Returns queued product syncs. */
@@ -77,7 +79,7 @@ beforeEach(function () {
             $job->ran = true;
 
             $job instanceof ReconcileJob
-                ? $job->handle(app(\Custom\GoogleMerchant\Api\MerchantApiClient::class))
+                ? $job->handle(app(MerchantApiClient::class))
                 : $job->handle(app(ProductMapper::class), app(Eligibility::class), app(SyncDispatcher::class));
         }
 
@@ -111,7 +113,7 @@ it('never touches offers from another data source', function () {
 });
 
 it('keeps an offer whose store product exists even without a ledger row', function () {
-    \Illuminate\Support\Facades\DB::table('gmc_products')->where('product_id', $this->products[1]->id)->delete();
+    DB::table('gmc_products')->where('product_id', $this->products[1]->id)->delete();
 
     ($this->runReconcile)();
 

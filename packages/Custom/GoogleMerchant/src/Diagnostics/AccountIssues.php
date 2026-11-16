@@ -33,11 +33,11 @@ class AccountIssues
         }
 
         $issues = array_map(fn (array $issue) => [
-            'title'         => (string) ($issue['title'] ?? ''),
-            'severity'      => (string) ($issue['severity'] ?? 'SEVERITY_UNSPECIFIED'),
-            'detail'        => $issue['detail'] ?? null,
+            'title' => (string) ($issue['title'] ?? ''),
+            'severity' => (string) ($issue['severity'] ?? 'SEVERITY_UNSPECIFIED'),
+            'detail' => $issue['detail'] ?? null,
             'documentation' => $issue['documentationUri'] ?? null,
-            'countries'     => self::countries($issue),
+            'countries' => self::countries($issue),
         ], $issues);
 
         Cache::put($key, $issues, self::TTL);

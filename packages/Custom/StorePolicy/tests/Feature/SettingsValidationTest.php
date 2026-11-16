@@ -7,7 +7,7 @@ use Custom\StorePolicy\Support\Defaults;
 use Custom\StorePolicy\Support\RequiredFields;
 use Illuminate\Support\Facades\Validator;
 
-function validatePolicySettings(array $data): \Illuminate\Validation\Validator
+function validatePolicySettings(array $data): Illuminate\Validation\Validator
 {
     return Validator::make($data, PolicySettingsRequest::rulesFor($data));
 }

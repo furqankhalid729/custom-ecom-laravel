@@ -84,12 +84,12 @@ class ConnectionService
         $email = $this->oauth->emailFromIdToken($token->idToken);
 
         $account = $this->upsert([
-            'auth_type'            => 'oauth',
-            'google_email'         => $email,
-            'developer_email'      => $email,
-            'access_token'         => $token->accessToken,
-            'refresh_token'        => $token->refreshToken,
-            'token_expires_at'     => $token->expiresAt,
+            'auth_type' => 'oauth',
+            'google_email' => $email,
+            'developer_email' => $email,
+            'access_token' => $token->accessToken,
+            'refresh_token' => $token->refreshToken,
+            'token_expires_at' => $token->expiresAt,
             'service_account_json' => null,
         ]);
 
@@ -104,13 +104,13 @@ class ConnectionService
         $token = $this->serviceAccounts->fetch($keyJson, [TokenManager::CONTENT_SCOPE]);
 
         $account = $this->upsert([
-            'auth_type'            => 'service_account',
-            'google_email'         => $keyJson['client_email'],
-            'developer_email'      => $developerEmail ?: $this->current()?->developer_email,
+            'auth_type' => 'service_account',
+            'google_email' => $keyJson['client_email'],
+            'developer_email' => $developerEmail ?: $this->current()?->developer_email,
             'service_account_json' => json_encode($keyJson),
-            'access_token'         => $token->accessToken,
-            'refresh_token'        => null,
-            'token_expires_at'     => $token->expiresAt,
+            'access_token' => $token->accessToken,
+            'refresh_token' => null,
+            'token_expires_at' => $token->expiresAt,
         ]);
 
         $this->audit->record(self::AUDIT, 'connect', ['auth_type' => 'service_account', 'google_email' => $keyJson['client_email']]);
@@ -171,11 +171,11 @@ class ConnectionService
         }
 
         $account->forceFill([
-            'access_token'         => null,
-            'refresh_token'        => null,
+            'access_token' => null,
+            'refresh_token' => null,
             'service_account_json' => null,
-            'token_expires_at'     => null,
-            'status'               => AccountStatus::Disconnected->value,
+            'token_expires_at' => null,
+            'status' => AccountStatus::Disconnected->value,
         ])->save();
 
         $this->audit->record(self::AUDIT, 'disconnect', ['merchant_id' => $account->merchant_id]);
@@ -201,8 +201,8 @@ class ConnectionService
         $wasConnected = $account->exists && $account->isConnected();
 
         $account->forceFill(array_merge($attributes, [
-            'status'       => AccountStatus::Connected->value,
-            'last_error'   => null,
+            'status' => AccountStatus::Connected->value,
+            'last_error' => null,
             'connected_by' => auth()->guard('admin')->id(),
         ]))->save();
 

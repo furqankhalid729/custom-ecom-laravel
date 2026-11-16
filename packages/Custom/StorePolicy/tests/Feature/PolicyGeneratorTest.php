@@ -154,15 +154,15 @@ it('stays up to date after an unchanged CMS editor save', function () {
 
     putJson(route('admin.cms.update', $translation->cms_page_id), [
         'en' => [
-            'url_key'          => $translation->url_key,
-            'page_title'       => $translation->page_title,
-            'html_content'     => $translation->html_content,
-            'meta_title'       => $translation->meta_title,
+            'url_key' => $translation->url_key,
+            'page_title' => $translation->page_title,
+            'html_content' => $translation->html_content,
+            'meta_title' => $translation->meta_title,
             'meta_description' => $translation->meta_description,
-            'meta_keywords'    => $translation->meta_keywords,
+            'meta_keywords' => $translation->meta_keywords,
         ],
         'channels' => [channelId()],
-        'locale'   => 'en',
+        'locale' => 'en',
     ])->assertRedirect();
 
     expect(statusOf('privacy-policy'))->toBe(PageStatus::UpToDate);

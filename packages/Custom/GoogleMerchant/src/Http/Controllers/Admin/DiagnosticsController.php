@@ -27,14 +27,14 @@ class DiagnosticsController extends Controller
         $live = $account?->status === AccountStatus::Connected->value && $account->merchant_id;
 
         return view('google_merchant::admin.diagnostics.index', [
-            'account'       => $account,
-            'target'        => $target,
-            'targets'       => $targets,
-            'summary'       => $target ? $this->issues->summary($target) : null,
-            'groups'        => $target ? $this->issues->groups($target) : [],
+            'account' => $account,
+            'target' => $target,
+            'targets' => $targets,
+            'summary' => $target ? $this->issues->summary($target) : null,
+            'groups' => $target ? $this->issues->groups($target) : [],
             'accountIssues' => $live ? AccountIssues::get($account) : null,
-            'quotas'        => $live ? Quotas::get($account) : null,
-            'live'          => (bool) $live,
+            'quotas' => $live ? Quotas::get($account) : null,
+            'live' => (bool) $live,
         ]);
     }
 

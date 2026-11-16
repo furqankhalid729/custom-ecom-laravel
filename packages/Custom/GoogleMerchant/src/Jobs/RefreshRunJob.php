@@ -69,9 +69,9 @@ class RefreshRunJob implements ShouldQueue
         $options['queued'] = ($options['queued'] ?? 0) + $queued;
 
         $run->forceFill([
-            'cursor'    => (int) ($ids->last() ?? $run->cursor),
+            'cursor' => (int) ($ids->last() ?? $run->cursor),
             'processed' => $run->processed + $ids->count(),
-            'options'   => $options,
+            'options' => $options,
         ])->save();
 
         if ($ids->count() < self::CHUNK) {

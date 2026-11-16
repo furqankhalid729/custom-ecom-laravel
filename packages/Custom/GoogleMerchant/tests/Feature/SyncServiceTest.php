@@ -22,7 +22,7 @@ beforeEach(function () {
     $this->fakeGoogle = function (int $insertStatus = 200, int $deleteStatus = 200, string $insertFixture = 'productinput-insert') {
         Http::fake([
             'merchantapi.googleapis.com/products/v1/*:insert*' => Http::response($insertStatus === 200 ? fixture('productinput-insert') : fixture($insertFixture), $insertStatus),
-            'merchantapi.googleapis.com/products/v1/*'          => Http::response($deleteStatus === 200 ? '' : fixture('error-404'), $deleteStatus),
+            'merchantapi.googleapis.com/products/v1/*' => Http::response($deleteStatus === 200 ? '' : fixture('error-404'), $deleteStatus),
         ]);
     };
 });

@@ -16,26 +16,26 @@ class MappingRegistry
 
     /** google field => [source type, source value] */
     public const DEFAULTS = [
-        'title'                 => ['attribute', 'name'],
-        'description'           => ['attribute', 'description'],
-        'brand'                 => ['attribute', 'brand'],
-        'gtin'                  => ['attribute', 'gtin'],
-        'mpn'                   => ['attribute', 'product_number'],
-        'identifierExists'      => ['attribute', 'gmc_identifier_exists'],
-        'condition'             => ['attribute', 'gmc_condition'],
+        'title' => ['attribute', 'name'],
+        'description' => ['attribute', 'description'],
+        'brand' => ['attribute', 'brand'],
+        'gtin' => ['attribute', 'gtin'],
+        'mpn' => ['attribute', 'product_number'],
+        'identifierExists' => ['attribute', 'gmc_identifier_exists'],
+        'condition' => ['attribute', 'gmc_condition'],
         'googleProductCategory' => ['attribute', 'gmc_google_category'],
-        'color'                 => ['attribute', 'color'],
-        'size'                  => ['attribute', 'size'],
-        'gender'                => ['attribute', 'gmc_gender'],
-        'ageGroup'              => ['attribute', 'gmc_age_group'],
-        'material'              => ['attribute', 'gmc_material'],
-        'pattern'               => ['attribute', 'gmc_pattern'],
-        'multipack'             => ['attribute', 'gmc_multipack'],
-        'customLabel0'          => ['attribute', 'gmc_custom_label_0'],
-        'customLabel1'          => ['attribute', 'gmc_custom_label_1'],
-        'customLabel2'          => ['attribute', 'gmc_custom_label_2'],
-        'customLabel3'          => ['attribute', 'gmc_custom_label_3'],
-        'customLabel4'          => ['attribute', 'gmc_custom_label_4'],
+        'color' => ['attribute', 'color'],
+        'size' => ['attribute', 'size'],
+        'gender' => ['attribute', 'gmc_gender'],
+        'ageGroup' => ['attribute', 'gmc_age_group'],
+        'material' => ['attribute', 'gmc_material'],
+        'pattern' => ['attribute', 'gmc_pattern'],
+        'multipack' => ['attribute', 'gmc_multipack'],
+        'customLabel0' => ['attribute', 'gmc_custom_label_0'],
+        'customLabel1' => ['attribute', 'gmc_custom_label_1'],
+        'customLabel2' => ['attribute', 'gmc_custom_label_2'],
+        'customLabel3' => ['attribute', 'gmc_custom_label_3'],
+        'customLabel4' => ['attribute', 'gmc_custom_label_4'],
     ];
 
     /** Used when an attribute-sourced field is empty on the product. */
@@ -83,7 +83,7 @@ class MappingRegistry
 
         foreach ($rows as $row) {
             $sources[$row->google_field] = [
-                'type'  => in_array($row->source_type, self::SOURCE_TYPES, true) ? $row->source_type : 'none',
+                'type' => in_array($row->source_type, self::SOURCE_TYPES, true) ? $row->source_type : 'none',
                 'value' => $row->source_value,
             ];
         }

@@ -11,6 +11,7 @@ use Custom\GoogleMerchant\Jobs\SyncProductJob;
 use Custom\GoogleMerchant\Models\GmcProduct;
 use Custom\GoogleMerchant\Repositories\GmcProductRepository;
 use Custom\GoogleMerchant\Services\SetupChecklist;
+use Custom\GoogleMerchant\Sync\SyncDispatcher;
 use Custom\GoogleMerchant\Sync\SyncOutcome;
 use Custom\GoogleMerchant\Sync\SyncResult;
 use Custom\GoogleMerchant\Sync\SyncService;
@@ -44,7 +45,7 @@ it('releases with retry-after plus jitter on transient errors', function () {
     ($this->fakeSync)(fn () => throw new TransientApiException('busy', 429, null, 120));
 
     $job = (new SyncProductJob(5, $this->target->id))->withFakeQueueInteractions();
-    $job->handle(app(SyncService::class), app(\Custom\GoogleMerchant\Sync\SyncDispatcher::class));
+    $job->handle(app(SyncService::class), app(SyncDispatcher::class));
 
     expect($job->job->isReleased())->toBeTrue()
         ->and($job->job->releaseDelay)->toBeGreaterThanOrEqual(120)
@@ -55,7 +56,7 @@ it('releases for the quota reset on quota errors', function () {
     ($this->fakeSync)(fn () => throw new QuotaExhaustedException('quota', 429, null, 3600));
 
     $job = (new SyncProductJob(5, $this->target->id))->withFakeQueueInteractions();
-    $job->handle(app(SyncService::class), app(\Custom\GoogleMerchant\Sync\SyncDispatcher::class));
+    $job->handle(app(SyncService::class), app(SyncDispatcher::class));
 
     expect($job->job->releaseDelay)->toBeGreaterThanOrEqual(3600);
 });
@@ -66,19 +67,25 @@ it('releases while the account needs reauth and deletes when disconnected', func
     $this->target->account->forceFill(['status' => 'needs_reauth'])->save();
     $job = (new SyncProductJob(5, $this->target->id))->withFakeQueueInteractions();
     $ran = false;
-    $middleware->handle($job, function () use (&$ran) { $ran = true; });
+    $middleware->handle($job, function () use (&$ran) {
+        $ran = true;
+    });
 
     expect($ran)->toBeFalse()->and($job->job->releaseDelay)->toBe(900);
 
     $this->target->account->forceFill(['status' => 'disconnected'])->save();
     $job = (new SyncProductJob(5, $this->target->id))->withFakeQueueInteractions();
-    $middleware->handle($job, function () use (&$ran) { $ran = true; });
+    $middleware->handle($job, function () use (&$ran) {
+        $ran = true;
+    });
 
     expect($ran)->toBeFalse()->and($job->job->isDeleted())->toBeTrue();
 
     $this->target->account->forceFill(['status' => 'connected'])->save();
     $job = (new SyncProductJob(5, $this->target->id))->withFakeQueueInteractions();
-    $middleware->handle($job, function () use (&$ran) { $ran = true; });
+    $middleware->handle($job, function () use (&$ran) {
+        $ran = true;
+    });
 
     expect($ran)->toBeTrue();
 });
@@ -88,13 +95,13 @@ it('re-dispatches when the product changed during the job', function () {
     $product = simpleProduct();
 
     ($this->fakeSync)(fn () => new SyncResult(SyncOutcome::Synced, true));
-    (new SyncProductJob($product->id, $this->target->id))->handle(app(SyncService::class), app(\Custom\GoogleMerchant\Sync\SyncDispatcher::class));
+    (new SyncProductJob($product->id, $this->target->id))->handle(app(SyncService::class), app(SyncDispatcher::class));
 
     Queue::assertPushed(SyncProductJob::class, fn ($job) => $job->rootProductId === $product->id && $job->delay === 30);
 
     Queue::fake();
     ($this->fakeSync)(fn () => new SyncResult(SyncOutcome::Synced, false));
-    (new SyncProductJob($product->id, $this->target->id))->handle(app(SyncService::class), app(\Custom\GoogleMerchant\Sync\SyncDispatcher::class));
+    (new SyncProductJob($product->id, $this->target->id))->handle(app(SyncService::class), app(SyncDispatcher::class));
 
     Queue::assertNothingPushed();
 });

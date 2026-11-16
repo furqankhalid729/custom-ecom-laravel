@@ -41,11 +41,11 @@ class ProductMapper
         $this->data->forScope($target->channel_id, $target->locale);
 
         return match ($root->type) {
-            'grouped'      => [],
+            'grouped' => [],
             'configurable' => $root->variants()->orderBy('id')->get()
                 ->map(fn (Product $variant) => $this->offer($variant, $root))
                 ->all(),
-            default        => [$this->offer($root, null)],
+            default => [$this->offer($root, null)],
         };
     }
 
@@ -70,9 +70,9 @@ class ProductMapper
         }
 
         $input = [
-            'offerId'           => (string) $product->sku,
-            'contentLanguage'   => $this->target->content_language,
-            'feedLabel'         => $this->target->feed_label,
+            'offerId' => (string) $product->sku,
+            'contentLanguage' => $this->target->content_language,
+            'feedLabel' => $this->target->feed_label,
             'productAttributes' => $this->clean($attributes),
         ];
 
@@ -106,9 +106,9 @@ class ProductMapper
         }
 
         return [
-            'title'       => Text::plain($name, self::TITLE_LIMIT),
+            'title' => Text::plain($name, self::TITLE_LIMIT),
             'description' => Text::plain($description, self::DESCRIPTION_LIMIT),
-            'link'        => $link,
+            'link' => $link,
         ];
     }
 
@@ -122,9 +122,9 @@ class ProductMapper
         $weight = (float) ($this->data->own($product, 'weight') ?? ($parent ? $this->data->own($parent, 'weight') : 0));
 
         return [
-            'imageLink'            => $images[0] ?? null,
+            'imageLink' => $images[0] ?? null,
             'additionalImageLinks' => array_slice($images, 1, self::MAX_ADDITIONAL_IMAGES),
-            'shippingWeight'       => $weight > 0 ? ['value' => $weight, 'unit' => $this->data->weightUnit()] : null,
+            'shippingWeight' => $weight > 0 ? ['value' => $weight, 'unit' => $this->data->weightUnit()] : null,
         ];
     }
 
@@ -139,8 +139,8 @@ class ProductMapper
             $sale = isset($index->min_price) && (float) $index->min_price < $regular ? (float) $index->min_price : null;
 
             return [
-                'price'        => $regular > 0 ? Micros::price($this->convert($regular), $currency) : null,
-                'salePrice'    => $sale ? Micros::price($this->convert($sale), $currency) : null,
+                'price' => $regular > 0 ? Micros::price($this->convert($regular), $currency) : null,
+                'salePrice' => $sale ? Micros::price($this->convert($sale), $currency) : null,
                 'availability' => $this->data->bundleInStock($product) ? 'IN_STOCK' : 'OUT_OF_STOCK',
             ];
         }
@@ -161,7 +161,7 @@ class ProductMapper
             if ($from || $to) {
                 $saleWindow = [
                     'startTime' => ($from ?? now($this->data->timezone())->startOfDay())->toRfc3339String(),
-                    'endTime'   => ($to ?? ($from ?? now())->addYear())->toRfc3339String(),
+                    'endTime' => ($to ?? ($from ?? now())->addYear())->toRfc3339String(),
                 ];
             }
         } elseif ($index && (float) $index->min_price > 0 && (float) $index->min_price < $price) {
@@ -172,10 +172,10 @@ class ProductMapper
         $manageStock = $this->data->bool($product, 'manage_stock', true);
 
         return [
-            'price'                  => $price > 0 ? Micros::price($this->convert($price), $currency) : null,
-            'salePrice'              => $sale ? Micros::price($this->convert($sale), $currency) : null,
+            'price' => $price > 0 ? Micros::price($this->convert($price), $currency) : null,
+            'salePrice' => $sale ? Micros::price($this->convert($sale), $currency) : null,
             'salePriceEffectiveDate' => $saleWindow,
-            'availability'           => ! $manageStock || $this->data->salableQty($product) > 0 ? 'IN_STOCK' : 'OUT_OF_STOCK',
+            'availability' => ! $manageStock || $this->data->salableQty($product) > 0 ? 'IN_STOCK' : 'OUT_OF_STOCK',
         ];
     }
 
@@ -205,9 +205,9 @@ class ProductMapper
         $identifierExists = $this->rawSource($product, 'identifierExists') ?? ($parent ? $this->rawSource($parent, 'identifierExists') : null);
 
         return [
-            'brand'            => $brand,
-            'gtins'            => $gtin !== null ? [preg_replace('/\s+/', '', (string) $gtin)] : null,
-            'mpn'              => $mpn,
+            'brand' => $brand,
+            'gtins' => $gtin !== null ? [preg_replace('/\s+/', '', (string) $gtin)] : null,
+            'mpn' => $mpn,
             'identifierExists' => $identifierExists !== null && ! (bool) $identifierExists ? false : null,
         ];
     }
@@ -220,9 +220,9 @@ class ProductMapper
             $source = $this->mapping->sourceFor($field, $this->target);
 
             $value = match ($source['type']) {
-                'static'    => $source['value'],
+                'static' => $source['value'],
                 'attribute' => $this->data->optionCode($product, $source['value']) ?? ($parent ? $this->data->optionCode($parent, $source['value']) : null),
-                default     => null,
+                default => null,
             };
 
             $value ??= $this->mapping->fallbackFor($field, $this->target);
@@ -236,16 +236,16 @@ class ProductMapper
             ?? $this->data->mappedGoogleCategory($categories->pluck('id')->all());
 
         $attributes = [
-            'condition'             => $enum('condition'),
-            'gender'                => $enum('gender'),
-            'ageGroup'              => $enum('ageGroup'),
+            'condition' => $enum('condition'),
+            'gender' => $enum('gender'),
+            'ageGroup' => $enum('ageGroup'),
             'googleProductCategory' => $googleCategory,
-            'productTypes'          => $categories->map(fn ($c) => implode(' > ', $c->path))->filter()->unique()->take(10)->values()->all(),
-            'color'                 => $this->labelAttr($product, 'color'),
-            'size'                  => $this->labelAttr($product, 'size'),
-            'material'              => $inherit('material'),
-            'pattern'               => $inherit('pattern'),
-            'multipack'             => ($m = $inherit('multipack')) !== null && (int) $m > 1 ? (string) (int) $m : null,
+            'productTypes' => $categories->map(fn ($c) => implode(' > ', $c->path))->filter()->unique()->take(10)->values()->all(),
+            'color' => $this->labelAttr($product, 'color'),
+            'size' => $this->labelAttr($product, 'size'),
+            'material' => $inherit('material'),
+            'pattern' => $inherit('pattern'),
+            'multipack' => ($m = $inherit('multipack')) !== null && (int) $m > 1 ? (string) (int) $m : null,
         ];
 
         foreach (range(0, 4) as $i) {
@@ -284,9 +284,9 @@ class ProductMapper
         $source = $this->mapping->sourceFor($googleField, $this->target);
 
         return match ($source['type']) {
-            'static'    => $source['value'] !== '' ? $source['value'] : null,
+            'static' => $source['value'] !== '' ? $source['value'] : null,
             'attribute' => $source['value'] ? $this->data->label($product, $source['value']) : null,
-            default     => null,
+            default => null,
         };
     }
 
@@ -296,9 +296,9 @@ class ProductMapper
         $source = $this->mapping->sourceFor($googleField, $this->target);
 
         return match ($source['type']) {
-            'static'    => $source['value'],
+            'static' => $source['value'],
             'attribute' => $source['value'] ? $this->data->own($product, $source['value']) : null,
-            default     => null,
+            default => null,
         };
     }
 

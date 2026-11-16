@@ -2,6 +2,7 @@
 
 namespace Custom\StorePolicy\Services;
 
+use Carbon\Carbon;
 use Custom\StorePolicy\Enums\PageStatus;
 use Custom\StorePolicy\Models\PolicyGenerationProxy;
 use Custom\StorePolicy\Repositories\PolicySettingRepository;
@@ -17,7 +18,7 @@ class PolicyStatusService
     /**
      * Status of every policy page for the channel, keyed by template key.
      *
-     * @return array<string, array{key: string, title: string, url_key: string, page_id: ?int, status: PageStatus, generated_at: ?\Carbon\Carbon, can_restore: bool}>
+     * @return array<string, array{key: string, title: string, url_key: string, page_id: ?int, status: PageStatus, generated_at: ?Carbon, can_restore: bool}>
      */
     public function forChannel(int $channelId, string $locale = 'en'): array
     {
@@ -36,13 +37,13 @@ class PolicyStatusService
                 : null;
 
             $statuses[$key] = [
-                'key'          => $key,
-                'title'        => $template['title'],
-                'url_key'      => $template['url_key'],
-                'page_id'      => $translation?->cms_page_id,
-                'status'       => $this->status($translation?->html_content, $generation, $settings, $template['depends']),
+                'key' => $key,
+                'title' => $template['title'],
+                'url_key' => $template['url_key'],
+                'page_id' => $translation?->cms_page_id,
+                'status' => $this->status($translation?->html_content, $generation, $settings, $template['depends']),
                 'generated_at' => $generation?->generated_at,
-                'can_restore'  => $generation !== null && $generation->previous_html !== null,
+                'can_restore' => $generation !== null && $generation->previous_html !== null,
             ];
         }
 
@@ -80,9 +81,9 @@ class PolicyStatusService
 
         return match (true) {
             $edited && $outOfDate => PageStatus::OutOfDateEdited,
-            $edited               => PageStatus::Edited,
-            $outOfDate            => PageStatus::OutOfDate,
-            default               => PageStatus::UpToDate,
+            $edited => PageStatus::Edited,
+            $outOfDate => PageStatus::OutOfDate,
+            default => PageStatus::UpToDate,
         };
     }
 }

@@ -4,6 +4,7 @@ namespace Custom\GoogleMerchant\Services;
 
 use Custom\GoogleMerchant\Enums\SyncState;
 use Custom\GoogleMerchant\Models\GmcAccount;
+use Custom\GoogleMerchant\Models\GmcProductProxy;
 use Custom\GoogleMerchant\Models\GmcTarget;
 use Custom\GoogleMerchant\Models\GmcTargetProxy;
 use Custom\GoogleMerchant\Support\Settings;
@@ -47,7 +48,7 @@ class StoreSettingsService
         $target = $account?->targets()->where('enabled', true)->orderBy('id')->first();
 
         return $target && $target->account
-            && \Custom\GoogleMerchant\Models\GmcProductProxy::modelClass()::query()
+            && GmcProductProxy::modelClass()::query()
                 ->where('gmc_target_id', $target->id)
                 ->where('state', SyncState::Synced->value)
                 ->exists();
@@ -106,17 +107,17 @@ class StoreSettingsService
     protected function moveMarket(GmcTarget $old, string $country, string $language, string $currency, ?int $adminId): int
     {
         $new = GmcTargetProxy::modelClass()::query()->firstOrNew([
-            'gmc_account_id'   => $old->gmc_account_id,
+            'gmc_account_id' => $old->gmc_account_id,
             'content_language' => $language,
-            'feed_label'       => $country,
+            'feed_label' => $country,
         ]);
 
         $new->forceFill([
             'channel_id' => $old->channel_id,
-            'locale'     => $language,
-            'countries'  => [$country],
-            'currency'   => $currency,
-            'enabled'    => true,
+            'locale' => $language,
+            'countries' => [$country],
+            'currency' => $currency,
+            'enabled' => true,
         ])->save();
 
         $this->provisioner->ensure($new);

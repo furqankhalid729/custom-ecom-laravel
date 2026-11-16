@@ -2,10 +2,13 @@
 
 require_once __DIR__.'/../Helpers.php';
 
+use Custom\GoogleMerchant\Api\ResponseRedactor;
 use Custom\GoogleMerchant\Models\GmcProduct;
 use Custom\GoogleMerchant\Models\GmcSyncLog;
 use Custom\GoogleMerchant\Support\ErrorExplainer;
 use Illuminate\Support\Facades\DB;
+use Webkul\User\Models\Admin;
+use Webkul\User\Models\Role;
 
 use function Pest\Laravel\get;
 use function Pest\Laravel\getJson;
@@ -51,10 +54,10 @@ it('shows one attempt with the redacted response and a readable explanation', fu
     $this->loginAsAdmin();
 
     $log = ($this->log)([
-        'status'           => 'error',
-        'http_status'      => 400,
-        'error_message'    => '[productAttributes.gtins] Invalid GTIN value.',
-        'response_excerpt' => app(\Custom\GoogleMerchant\Api\ResponseRedactor::class)->redact(json_encode(fixture('error-400-invalid-argument') + ['access_token' => 'ya29.secret'])),
+        'status' => 'error',
+        'http_status' => 400,
+        'error_message' => '[productAttributes.gtins] Invalid GTIN value.',
+        'response_excerpt' => app(ResponseRedactor::class)->redact(json_encode(fixture('error-400-invalid-argument') + ['access_token' => 'ya29.secret'])),
     ]);
 
     $json = getJson(route('admin.google_merchant.logs.show', $log->id))->assertOk()->json();
@@ -103,8 +106,8 @@ it('explains failures in the products grid instead of showing raw google text', 
 });
 
 it('protects the log with its own permission', function () {
-    $role = \Webkul\User\Models\Role::factory()->create(['permission_type' => 'custom', 'permissions' => ['dashboard']]);
-    $this->loginAsAdmin(\Webkul\User\Models\Admin::factory()->create(['role_id' => $role->id]));
+    $role = Role::factory()->create(['permission_type' => 'custom', 'permissions' => ['dashboard']]);
+    $this->loginAsAdmin(Admin::factory()->create(['role_id' => $role->id]));
 
     get(route('admin.google_merchant.logs.index'))->assertStatus(401);
 });

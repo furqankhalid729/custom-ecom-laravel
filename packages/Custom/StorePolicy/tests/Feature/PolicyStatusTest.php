@@ -65,12 +65,12 @@ it('reports edited when page html differs from generated hash', function () {
     $translation->update(['html_content' => '<p>b</p>']);
 
     PolicyGeneration::create([
-        'cms_page_id'         => $translation->cms_page_id,
-        'locale'              => 'en',
-        'template_key'        => 'privacy-policy',
+        'cms_page_id' => $translation->cms_page_id,
+        'locale' => 'en',
+        'template_key' => 'privacy-policy',
         'generated_html_hash' => $hasher->htmlHash('<p>a</p>'),
-        'settings_hash'       => $hasher->hash($settings, config('store_policy.templates.privacy-policy.depends')),
-        'generated_at'        => now(),
+        'settings_hash' => $hasher->hash($settings, config('store_policy.templates.privacy-policy.depends')),
+        'generated_at' => now(),
     ]);
 
     $status = app(PolicyStatusService::class)->forChannel(core()->getDefaultChannel()->id)['privacy-policy'];
@@ -84,12 +84,12 @@ it('reports out_of_date when dependent settings changed', function () {
     $translation = privacyPageTranslation();
 
     PolicyGeneration::create([
-        'cms_page_id'         => $translation->cms_page_id,
-        'locale'              => 'en',
-        'template_key'        => 'privacy-policy',
+        'cms_page_id' => $translation->cms_page_id,
+        'locale' => 'en',
+        'template_key' => 'privacy-policy',
         'generated_html_hash' => app(SettingsHasher::class)->htmlHash($translation->html_content),
-        'settings_hash'       => str_repeat('x', 40),
-        'generated_at'        => now(),
+        'settings_hash' => str_repeat('x', 40),
+        'generated_at' => now(),
     ]);
 
     $service = app(PolicyStatusService::class);

@@ -35,10 +35,10 @@ class GmcAccount extends Model implements GmcAccountContract
     protected $hidden = ['access_token', 'refresh_token', 'service_account_json'];
 
     protected $casts = [
-        'access_token'            => 'encrypted',
-        'refresh_token'           => 'encrypted',
-        'service_account_json'    => 'encrypted',
-        'token_expires_at'        => 'datetime',
+        'access_token' => 'encrypted',
+        'refresh_token' => 'encrypted',
+        'service_account_json' => 'encrypted',
+        'token_expires_at' => 'datetime',
         'developer_registered_at' => 'datetime',
     ];
 

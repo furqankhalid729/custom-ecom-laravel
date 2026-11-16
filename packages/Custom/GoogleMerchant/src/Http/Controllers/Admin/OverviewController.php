@@ -24,10 +24,10 @@ class OverviewController extends Controller
 
         return view('google_merchant::admin.overview', [
             'account' => $account,
-            'target'  => $target,
+            'target' => $target,
             'targets' => $targets,
-            'stats'   => $target ? $this->stats->forTarget($target) : null,
-            'checks'  => $this->checklist->run($account),
+            'stats' => $target ? $this->stats->forTarget($target) : null,
+            'checks' => $this->checklist->run($account),
         ]);
     }
 }

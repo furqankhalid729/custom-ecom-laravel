@@ -34,7 +34,7 @@ class ReauthRequired extends Mailable implements ShouldQueue
     {
         return new Content(view: 'google_merchant::emails.reauth', with: [
             'account' => $this->account,
-            'url'     => route('admin.google_merchant.connection.index'),
+            'url' => route('admin.google_merchant.connection.index'),
         ]);
     }
 }

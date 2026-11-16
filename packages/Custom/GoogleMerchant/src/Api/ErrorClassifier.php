@@ -31,11 +31,11 @@ class ErrorClassifier
 
         return match (true) {
             $status === 429 && str_contains(strtolower($message), 'quota') => new QuotaExhaustedException($message, $status, $excerpt, $this->retryAfter($failure, 3600)),
-            $status === 429, $status >= 500                                => new TransientApiException($message, $status, $excerpt, $this->retryAfter($failure, 60)),
+            $status === 429, $status >= 500 => new TransientApiException($message, $status, $excerpt, $this->retryAfter($failure, 60)),
             $status === 401 && str_contains(strtolower($message), 'not registered') => new UnregisteredProjectException($message, $status, $excerpt),
-            $status === 401, $status === 403                               => new AuthException($message, $status, $excerpt),
-            $status === 404                                                => new NotFoundException($message, $status, $excerpt),
-            default                                                        => new PermanentApiException($message, $status, $excerpt, $this->fieldViolations($failure)),
+            $status === 401, $status === 403 => new AuthException($message, $status, $excerpt),
+            $status === 404 => new NotFoundException($message, $status, $excerpt),
+            default => new PermanentApiException($message, $status, $excerpt, $this->fieldViolations($failure)),
         };
     }
 

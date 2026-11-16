@@ -44,8 +44,8 @@ class SendDigestJob implements ShouldQueue
         $rows = fn () => GmcProductProxy::modelClass()::query();
 
         $counts = [
-            'failed'      => $rows()->where('state', SyncState::Failed->value)->where('last_attempt_at', '>=', $since)->count(),
-            'invalid'     => $rows()->where('state', SyncState::Invalid->value)->where('last_attempt_at', '>=', $since)->count(),
+            'failed' => $rows()->where('state', SyncState::Failed->value)->where('last_attempt_at', '>=', $since)->count(),
+            'invalid' => $rows()->where('state', SyncState::Invalid->value)->where('last_attempt_at', '>=', $since)->count(),
             'disapproved' => $rows()->where('google_status', GoogleStatus::Disapproved->value)->where('google_status_changed_at', '>=', $since)->count(),
         ];
 
@@ -77,16 +77,16 @@ class SendDigestJob implements ShouldQueue
             ->groupBy('title')
             ->each(fn ($group, $title) => $problems->push([
                 'description' => (string) $title,
-                'count'       => $group->count(),
-                'hint'        => (string) $group->first()['hint'],
+                'count' => $group->count(),
+                'hint' => (string) $group->first()['hint'],
             ]));
 
         return $problems
             ->groupBy('description')
             ->map(fn ($same) => [
                 'description' => (string) $same->first()['description'],
-                'count'       => (int) $same->sum('count'),
-                'hint'        => (string) $same->first()['hint'],
+                'count' => (int) $same->sum('count'),
+                'hint' => (string) $same->first()['hint'],
             ])
             ->sortByDesc('count')
             ->take(self::TOP)

@@ -65,7 +65,7 @@ class ProductDataResolver
 
         $value = $row?->{$column};
 
-        return ($value === '' ? null : $value);
+        return $value === '' ? null : $value;
     }
 
     /**
@@ -182,7 +182,7 @@ class ProductDataResolver
             $chain = $category->ancestors()->whereNotNull('parent_id')->defaultOrder()->get()->push($category);
 
             return (object) [
-                'id'   => $category->id,
+                'id' => $category->id,
                 'path' => $chain->map(fn ($c) => $c->translate($this->locale)?->name ?? $c->name)->filter()->values()->all(),
             ];
         });

@@ -34,7 +34,7 @@ class MerchantJsonLd
             $returns = $region['returns'];
 
             $policy = [
-                '@type'             => 'MerchantReturnPolicy',
+                '@type' => 'MerchantReturnPolicy',
                 'applicableCountry' => array_values($region['countries']),
             ];
 
@@ -45,7 +45,7 @@ class MerchantJsonLd
                 $policy['merchantReturnDays'] = (int) $returns['window_days'];
                 $policy['returnMethod'] = match ($returns['method'] ?? 'mail') {
                     'store' => 'https://schema.org/ReturnInStore',
-                    'both'  => ['https://schema.org/ReturnByMail', 'https://schema.org/ReturnInStore'],
+                    'both' => ['https://schema.org/ReturnByMail', 'https://schema.org/ReturnInStore'],
                     default => 'https://schema.org/ReturnByMail',
                 };
                 $freeReturn = ($returns['return_shipping_paid_by'] ?? 'customer') !== 'customer'
@@ -87,17 +87,17 @@ class MerchantJsonLd
                     && $price >= (float) $method['free_over'];
 
                 $details[] = [
-                    '@type'        => 'OfferShippingDetails',
+                    '@type' => 'OfferShippingDetails',
                     'shippingRate' => [
-                        '@type'    => 'MonetaryAmount',
-                        'value'    => $free ? 0.0 : (float) $method['cost'],
+                        '@type' => 'MonetaryAmount',
+                        'value' => $free ? 0.0 : (float) $method['cost'],
                         'currency' => $region['currency'],
                     ],
                     'shippingDestination' => $destinations,
-                    'deliveryTime'        => [
-                        '@type'        => 'ShippingDeliveryTime',
+                    'deliveryTime' => [
+                        '@type' => 'ShippingDeliveryTime',
                         'handlingTime' => $this->days($shipping['handling_min_days'], $shipping['handling_max_days']),
-                        'transitTime'  => $this->days($method['min_days'], $method['max_days']),
+                        'transitTime' => $this->days($method['min_days'], $method['max_days']),
                     ],
                 ];
             }
@@ -113,27 +113,27 @@ class MerchantJsonLd
 
         return array_filter([
             '@context' => 'https://schema.org',
-            '@type'    => 'Organization',
-            'name'     => $business['legal_name'],
+            '@type' => 'Organization',
+            'name' => $business['legal_name'],
             'alternateName' => $business['trading_name'] !== $business['legal_name'] ? $business['trading_name'] : null,
-            'url'       => $business['website_url'] ?? null,
-            'logo'      => $business['logo_url'] ?? null,
-            'email'     => $business['email'] ?? null,
+            'url' => $business['website_url'] ?? null,
+            'logo' => $business['logo_url'] ?? null,
+            'email' => $business['email'] ?? null,
             'telephone' => $business['phone'] ?? null,
-            'vatID'     => $business['vat_number'] ?? null,
-            'address'   => array_filter([
-                '@type'           => 'PostalAddress',
-                'streetAddress'   => $address['street'] ?? null,
+            'vatID' => $business['vat_number'] ?? null,
+            'address' => array_filter([
+                '@type' => 'PostalAddress',
+                'streetAddress' => $address['street'] ?? null,
                 'addressLocality' => $address['city'] ?? null,
-                'addressRegion'   => $address['region'] ?? null,
-                'postalCode'      => $address['postcode'] ?? null,
-                'addressCountry'  => $address['country'] ?? null,
+                'addressRegion' => $address['region'] ?? null,
+                'postalCode' => $address['postcode'] ?? null,
+                'addressCountry' => $address['country'] ?? null,
             ]),
             'contactPoint' => array_filter([
-                '@type'       => 'ContactPoint',
+                '@type' => 'ContactPoint',
                 'contactType' => 'customer service',
-                'email'       => $business['email'] ?? null,
-                'telephone'   => $business['phone'] ?? null,
+                'email' => $business['email'] ?? null,
+                'telephone' => $business['phone'] ?? null,
             ]),
             'hasMerchantReturnPolicy' => $this->returnPolicies($settings) ?: null,
         ], fn ($value) => $value !== null && $value !== '');
@@ -142,7 +142,7 @@ class MerchantJsonLd
     protected function days(int|string|null $min, int|string|null $max): array
     {
         return [
-            '@type'    => 'QuantitativeValue',
+            '@type' => 'QuantitativeValue',
             'minValue' => (int) $min,
             'maxValue' => (int) $max,
             'unitCode' => 'DAY',

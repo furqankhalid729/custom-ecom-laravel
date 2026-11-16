@@ -18,11 +18,11 @@ class ServiceAccountTokenFetcher extends GoogleOAuthClient
         $segments = [
             $this->base64Url(json_encode(['alg' => 'RS256', 'typ' => 'JWT'])),
             $this->base64Url(json_encode([
-                'iss'   => $keyJson['client_email'],
+                'iss' => $keyJson['client_email'],
                 'scope' => implode(' ', $scopes),
-                'aud'   => self::TOKEN_URL,
-                'iat'   => $now,
-                'exp'   => $now + 3600,
+                'aud' => self::TOKEN_URL,
+                'iat' => $now,
+                'exp' => $now + 3600,
             ], JSON_UNESCAPED_SLASHES)),
         ];
 
@@ -36,7 +36,7 @@ class ServiceAccountTokenFetcher extends GoogleOAuthClient
 
         return $this->tokenRequest([
             'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-            'assertion'  => implode('.', $segments),
+            'assertion' => implode('.', $segments),
         ]);
     }
 

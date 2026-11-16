@@ -49,9 +49,9 @@ beforeEach(function () {
         }
 
         return match (true) {
-            str_contains($request->url(), '/dataSources?')                                  => Http::response(['dataSources' => []]),
+            str_contains($request->url(), '/dataSources?') => Http::response(['dataSources' => []]),
             $request->method() === 'POST' && str_ends_with(parse_url($request->url(), PHP_URL_PATH), '/dataSources') => Http::response(['name' => 'accounts/123456/dataSources/777', 'input' => 'API']),
-            default                                                                         => Http::response(fixture('productinput-insert')),
+            default => Http::response(fixture('productinput-insert')),
         };
     });
 
@@ -102,8 +102,8 @@ it('creates a market with a data source and a first full sync', function () {
     $this->de->delete();
 
     post(route('admin.google_merchant.targets.store'), [
-        'locale'    => 'en',
-        'currency'  => 'EUR',
+        'locale' => 'en',
+        'currency' => 'EUR',
         'countries' => 'de, at',
     ])->assertRedirect(route('admin.google_merchant.targets.index'));
 

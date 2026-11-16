@@ -25,9 +25,9 @@ class SyncFailureDigest extends Mailable
     public function content(): Content
     {
         return new Content(view: 'google_merchant::emails.digest', with: [
-            'counts'   => $this->counts,
+            'counts' => $this->counts,
             'problems' => $this->problems,
-            'url'      => route('admin.google_merchant.diagnostics.index'),
+            'url' => route('admin.google_merchant.diagnostics.index'),
         ]);
     }
 }

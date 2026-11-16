@@ -16,12 +16,12 @@ class QueueRunCommand extends Command
     public function handle(): int
     {
         return $this->call('queue:work', [
-            'connection'       => config('google_merchant.queue.connection'),
-            '--queue'          => config('google_merchant.queue.name'),
+            'connection' => config('google_merchant.queue.connection'),
+            '--queue' => config('google_merchant.queue.name'),
             '--stop-when-empty' => true,
-            '--max-time'       => (int) $this->option('max-time'),
-            '--sleep'          => 3,
-            '--timeout'        => 120,
+            '--max-time' => (int) $this->option('max-time'),
+            '--sleep' => 3,
+            '--timeout' => 120,
         ]);
     }
 }

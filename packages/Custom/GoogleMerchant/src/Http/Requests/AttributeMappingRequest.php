@@ -4,6 +4,7 @@ namespace Custom\GoogleMerchant\Http\Requests;
 
 use Custom\GoogleMerchant\Mapping\MappingRegistry;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
@@ -17,9 +18,9 @@ class AttributeMappingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'mappings'          => ['required', 'array'],
-            'mappings.*.type'   => ['required', Rule::in(MappingRegistry::SOURCE_TYPES)],
-            'mappings.*.value'  => ['nullable', 'string', 'max:255'],
+            'mappings' => ['required', 'array'],
+            'mappings.*.type' => ['required', Rule::in(MappingRegistry::SOURCE_TYPES)],
+            'mappings.*.value' => ['nullable', 'string', 'max:255'],
         ];
     }
 
@@ -33,7 +34,7 @@ class AttributeMappingRequest extends FormRequest
                     $validator->errors()->add('mappings', trans('google_merchant::app.mapping.unknown-field', ['fields' => implode(', ', $unknown)]));
                 }
 
-                $codes = \Illuminate\Support\Facades\DB::table('attributes')->pluck('code')->all();
+                $codes = DB::table('attributes')->pluck('code')->all();
 
                 foreach ((array) $this->input('mappings', []) as $field => $mapping) {
                     $type = $mapping['type'] ?? null;

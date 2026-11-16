@@ -9,6 +9,7 @@ use Custom\GoogleMerchant\Models\GmcAttributeMapping;
 use Custom\GoogleMerchant\Models\GmcCategoryMapping;
 use Custom\GoogleMerchant\Support\Taxonomy;
 use Custom\GoogleMerchant\Sync\Eligibility;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
 
@@ -76,8 +77,8 @@ it('saves attribute mappings from the admin and queues a refresh', function () {
 
     put(route('admin.google_merchant.mapping.attributes.update'), ['mappings' => [
         'condition' => ['type' => 'static', 'value' => 'refurbished'],
-        'brand'     => ['type' => 'attribute', 'value' => 'brand'], // same as default → no row
-        'mpn'       => ['type' => 'none', 'value' => ''],
+        'brand' => ['type' => 'attribute', 'value' => 'brand'], // same as default → no row
+        'mpn' => ['type' => 'none', 'value' => ''],
     ]])->assertRedirect(route('admin.google_merchant.mapping.attributes'));
 
     expect(GmcAttributeMapping::whereNull('gmc_target_id')->pluck('source_type', 'google_field')->all())->toEqualCanonicalizing(['condition' => 'static', 'mpn' => 'none'])
@@ -140,10 +141,10 @@ it('installs the taxonomy from a file and rejects junk', function () {
     $target = storage_path('framework/testing/gmc-taxonomy-'.uniqid().'.txt');
     config(['google_merchant.taxonomy_path' => $target]);
 
-    expect(\Illuminate\Support\Facades\Artisan::call('gmc:taxonomy', ['--from' => __DIR__.'/../Fixtures/token.json']))->toBe(1)
+    expect(Artisan::call('gmc:taxonomy', ['--from' => __DIR__.'/../Fixtures/token.json']))->toBe(1)
         ->and(is_file($target))->toBeFalse();
 
-    expect(\Illuminate\Support\Facades\Artisan::call('gmc:taxonomy', ['--from' => __DIR__.'/../Fixtures/taxonomy-with-ids.en-US.txt']))->toBe(0)
+    expect(Artisan::call('gmc:taxonomy', ['--from' => __DIR__.'/../Fixtures/taxonomy-with-ids.en-US.txt']))->toBe(0)
         ->and(app(Taxonomy::class)->pathFor('173'))->toBe('Apparel & Accessories > Clothing Accessories > Hats');
 
     @unlink($target);

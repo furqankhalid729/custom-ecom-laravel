@@ -15,7 +15,7 @@ class ServiceAccountRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'key_file'        => ['required', 'file', 'max:64'],
+            'key_file' => ['required', 'file', 'max:64'],
             'developer_email' => ['nullable', 'email'],
         ];
     }

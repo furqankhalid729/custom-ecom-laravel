@@ -93,10 +93,10 @@ class RefreshStatusesJob implements ShouldQueue
                 ->update([
                     // Must come before google_status: MySQL evaluates SET left to right.
                     'google_status_changed_at' => DB::raw("CASE WHEN google_status IS NULL OR google_status <> '{$status}' THEN '{$now->toDateTimeString()}' ELSE google_status_changed_at END"),
-                    'google_status'     => $status,
-                    'google_issues'     => json_encode($parsed['issues']),
+                    'google_status' => $status,
+                    'google_issues' => json_encode($parsed['issues']),
                     'google_checked_at' => $now,
-                    'updated_at'        => $now,
+                    'updated_at' => $now,
                 ]);
         }
 
@@ -104,8 +104,8 @@ class RefreshStatusesJob implements ShouldQueue
 
         if ($run) {
             $run->forceFill(array_filter([
-                'processed'   => $run->processed + $updated,
-                'status'      => $next ? null : RunStatus::Completed->value,
+                'processed' => $run->processed + $updated,
+                'status' => $next ? null : RunStatus::Completed->value,
                 'finished_at' => $next ? null : $now,
             ]))->save();
         }

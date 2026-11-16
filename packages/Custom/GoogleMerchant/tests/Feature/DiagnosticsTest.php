@@ -51,8 +51,8 @@ beforeEach(function () {
 
         return match (true) {
             str_contains($request->url(), '/accounts/v1/accounts/123456/issues') => Http::response(fixture('account-issues')),
-            str_contains($request->url(), '/quota/v1/accounts/123456/quotas')    => Http::response(fixture('quotas-list')),
-            default                                                             => Http::response([], 404),
+            str_contains($request->url(), '/quota/v1/accounts/123456/quotas') => Http::response(fixture('quotas-list')),
+            default => Http::response([], 404),
         };
     });
 
@@ -89,11 +89,11 @@ it('counts google statuses and keeps submitted-but-unreviewed products out of ap
         ->viewData('summary');
 
     expect($summary)->toMatchArray([
-        'approved'    => 1,
+        'approved' => 1,
         'disapproved' => 4,
-        'partial'     => 2,
-        'pending'     => 1,
-        'awaiting'    => 1,
+        'partial' => 2,
+        'pending' => 1,
+        'awaiting' => 1,
     ]);
 });
 

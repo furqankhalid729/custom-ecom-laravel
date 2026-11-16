@@ -2,6 +2,7 @@
 
 use Custom\GoogleMerchant\Support\GoogleAttributes;
 use Illuminate\Support\Facades\DB;
+use Webkul\Faker\Helpers\Product;
 
 function googleShoppingMigration()
 {
@@ -62,7 +63,7 @@ it('is idempotent', function () {
 it('shows the google shopping group on the product edit page', function () {
     $this->loginAsAdmin();
 
-    $product = (new \Webkul\Faker\Helpers\Product)->getSimpleProductFactory()->create();
+    $product = (new Product)->getSimpleProductFactory()->create();
 
     \Pest\Laravel\get(route('admin.catalog.products.edit', $product->id))
         ->assertOk()

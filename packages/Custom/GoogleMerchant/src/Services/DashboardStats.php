@@ -37,20 +37,20 @@ class DashboardStats
         $count = fn (string $state) => (int) ($states[$state] ?? 0);
 
         return [
-            'synced'          => $count('synced'),
-            'pending'         => $count('pending'),
-            'failed'          => $count('failed'),
-            'invalid'         => $count('invalid'),
-            'excluded'        => $count('excluded'),
-            'deleting'        => $count('deleting'),
-            'total'           => array_sum($states) - $count('deleted'),
-            'approved'        => (int) ($google['approved'] ?? 0),
-            'disapproved'     => (int) ($google['disapproved'] ?? 0),
-            'google_pending'  => (int) ($google['pending'] ?? 0),
-            'partial'         => (int) ($google['partial'] ?? 0),
+            'synced' => $count('synced'),
+            'pending' => $count('pending'),
+            'failed' => $count('failed'),
+            'invalid' => $count('invalid'),
+            'excluded' => $count('excluded'),
+            'deleting' => $count('deleting'),
+            'total' => array_sum($states) - $count('deleted'),
+            'approved' => (int) ($google['approved'] ?? 0),
+            'disapproved' => (int) ($google['disapproved'] ?? 0),
+            'google_pending' => (int) ($google['pending'] ?? 0),
+            'partial' => (int) ($google['partial'] ?? 0),
             'last_success_at' => $last ? Carbon::parse($last) : null,
-            'worker_ok'       => $checks['queue_runner']['ok'],
-            'scheduler_ok'    => $checks['scheduler']['ok'],
+            'worker_ok' => $checks['queue_runner']['ok'],
+            'scheduler_ok' => $checks['scheduler']['ok'],
         ];
     }
 }

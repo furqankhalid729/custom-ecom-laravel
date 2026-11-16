@@ -50,21 +50,21 @@ class AccountPolicySync
             $freeOver = $method['free_over'] ?? null;
 
             $services[] = [
-                'serviceName'       => in_array($name, array_column($services, 'serviceName'), true) ? "$name ".($i + 1) : $name,
-                'active'            => true,
+                'serviceName' => in_array($name, array_column($services, 'serviceName'), true) ? "$name ".($i + 1) : $name,
+                'active' => true,
                 'deliveryCountries' => array_values($target->countries),
-                'currencyCode'      => $currency,
-                'deliveryTime'      => [
+                'currencyCode' => $currency,
+                'deliveryTime' => [
                     'minHandlingDays' => (int) ($shipping['handling_min_days'] ?? 0),
                     'maxHandlingDays' => (int) ($shipping['handling_max_days'] ?? ($shipping['handling_min_days'] ?? 0)),
-                    'minTransitDays'  => $minTransit,
-                    'maxTransitDays'  => max($minTransit, (int) ($method['max_days'] ?? $minTransit)),
+                    'minTransitDays' => $minTransit,
+                    'maxTransitDays' => max($minTransit, (int) ($method['max_days'] ?? $minTransit)),
                 ],
-                'rateGroups'        => [$freeOver !== null && (float) $freeOver > 0
+                'rateGroups' => [$freeOver !== null && (float) $freeOver > 0
                     ? [
                         // Orders up to the threshold (inclusive) pay the rate, above it ship free.
                         'applicableShippingLabels' => [],
-                        'mainTable'                => [
+                        'mainTable' => [
                             'rowHeaders' => ['prices' => [
                                 Micros::price((float) $freeOver, $currency),
                                 ['amountMicros' => '-1', 'currencyCode' => $currency],
@@ -77,7 +77,7 @@ class AccountPolicySync
                     ]
                     : [
                         'applicableShippingLabels' => [],
-                        'singleValue'              => ['flatRate' => $cost],
+                        'singleValue' => ['flatRate' => $cost],
                     ]],
             ];
         }
@@ -90,13 +90,13 @@ class AccountPolicySync
         $returns = $this->region($target)['returns'] ?? [];
 
         $body = [
-            'label'     => $this->label($target),
+            'label' => $this->label($target),
             'countries' => array_values($target->countries),
         ];
 
         if (! ($returns['accepted'] ?? true)) {
             return $body + [
-                'policy'          => ['type' => 'NO_RETURNS'],
+                'policy' => ['type' => 'NO_RETURNS'],
                 'returnPolicyUri' => $this->returnUrl($target),
             ];
         }
@@ -104,20 +104,20 @@ class AccountPolicySync
         $fee = (float) ($returns['restocking_fee_percent'] ?? 0);
 
         return $body + array_filter([
-            'policy'            => ['type' => 'NUMBER_OF_DAYS_AFTER_DELIVERY', 'days' => (string) (int) ($returns['window_days'] ?? 30)],
-            'returnMethods'     => match ($returns['method'] ?? 'mail') {
+            'policy' => ['type' => 'NUMBER_OF_DAYS_AFTER_DELIVERY', 'days' => (string) (int) ($returns['window_days'] ?? 30)],
+            'returnMethods' => match ($returns['method'] ?? 'mail') {
                 'store' => ['IN_STORE'],
-                'both'  => ['BY_MAIL', 'IN_STORE'],
+                'both' => ['BY_MAIL', 'IN_STORE'],
                 default => ['BY_MAIL'],
             },
-            'itemConditions'    => ['NEW'],
-            'restockingFee'     => $fee > 0 ? ['microPercent' => (int) round($fee * 1_000_000)] : null,
+            'itemConditions' => ['NEW'],
+            'restockingFee' => $fee > 0 ? ['microPercent' => (int) round($fee * 1_000_000)] : null,
             'returnShippingFee' => ($returns['return_shipping_paid_by'] ?? 'customer') === 'customer'
                 ? ['type' => 'CUSTOMER_PAYING_ACTUAL_FEE']
                 : ['type' => 'FIXED'], // no fixedFee = free for the customer
-            'returnPolicyUri'   => $this->returnUrl($target),
+            'returnPolicyUri' => $this->returnUrl($target),
             'processRefundDays' => isset($returns['refund_days']) ? (int) $returns['refund_days'] : null,
-            'acceptExchange'    => (bool) ($returns['exchanges'] ?? false),
+            'acceptExchange' => (bool) ($returns['exchanges'] ?? false),
         ], fn ($v) => $v !== null);
     }
 
@@ -201,9 +201,9 @@ class AccountPolicySync
         ));
 
         $this->client->insertShippingSettings($account, [
-            'services'   => [...$kept, ...$services],
+            'services' => [...$kept, ...$services],
             'warehouses' => $current['warehouses'] ?? [],
-            'etag'       => $current['etag'] ?? '',
+            'etag' => $current['etag'] ?? '',
         ]);
     }
 

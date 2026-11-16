@@ -31,12 +31,12 @@ class StorePolicyController extends Controller
         $channelId = $this->channelId();
 
         return view('store_policy::admin.index', [
-            'settings'   => $this->settingRepository->forChannel($channelId)->toSettingsArray(),
-            'saved'      => $this->settingRepository->existsForChannel($channelId),
-            'statuses'   => $this->statusService->forChannel($channelId),
-            'readiness'  => $this->readinessChecker->check($channelId),
+            'settings' => $this->settingRepository->forChannel($channelId)->toSettingsArray(),
+            'saved' => $this->settingRepository->existsForChannel($channelId),
+            'statuses' => $this->statusService->forChannel($channelId),
+            'readiness' => $this->readinessChecker->check($channelId),
             'regionDefs' => Regions::definitions(),
-            'outOfDate'  => session('store_policy_out_of_date', []),
+            'outOfDate' => session('store_policy_out_of_date', []),
         ]);
     }
 
@@ -62,9 +62,9 @@ class StorePolicyController extends Controller
         $keys = array_keys(config('store_policy.templates'));
 
         $data = request()->validate([
-            'templates'           => ['required', 'array', 'min:1'],
-            'templates.*'         => [Rule::in($keys)],
-            'confirm_overwrite'   => ['nullable', 'array'],
+            'templates' => ['required', 'array', 'min:1'],
+            'templates.*' => [Rule::in($keys)],
+            'confirm_overwrite' => ['nullable', 'array'],
             'confirm_overwrite.*' => [Rule::in($keys)],
         ]);
 

@@ -43,16 +43,16 @@ class GmcProduct extends Model implements GmcProductContract
 
     protected $casts = [
         'validation_errors' => 'array',
-        'field_hashes'      => 'array',
-        'google_issues'     => 'array',
-        'last_synced_at'    => 'datetime',
-        'last_attempt_at'   => 'datetime',
+        'field_hashes' => 'array',
+        'google_issues' => 'array',
+        'last_synced_at' => 'datetime',
+        'last_attempt_at' => 'datetime',
         'google_checked_at' => 'datetime',
         'google_status_changed_at' => 'datetime',
-        'revision'          => 'integer',
-        'synced_revision'   => 'integer',
-        'attempts'          => 'integer',
-        'retry_cycles'      => 'integer',
+        'revision' => 'integer',
+        'synced_revision' => 'integer',
+        'attempts' => 'integer',
+        'retry_cycles' => 'integer',
     ];
 
     public function target(): BelongsTo

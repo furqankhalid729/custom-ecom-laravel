@@ -40,12 +40,12 @@ class ProductIssues
                 $group = $this->classify($code, (string) ($issue['attribute'] ?? ''));
 
                 $buckets[$group][$code] ??= [
-                    'code'          => $code,
-                    'count'         => 0,
-                    'description'   => (string) ($issue['description'] ?? $code),
-                    'hint'          => IssueHints::for($code, $issue['attribute'] ?? null, $issue['detail'] ?? null, $issue['resolution'] ?? null),
+                    'code' => $code,
+                    'count' => 0,
+                    'description' => (string) ($issue['description'] ?? $code),
+                    'hint' => IssueHints::for($code, $issue['attribute'] ?? null, $issue['detail'] ?? null, $issue['resolution'] ?? null),
                     'documentation' => $issue['documentation'] ?? null,
-                    'link'          => route('admin.google_merchant.products.index', ['issue' => $code]),
+                    'link' => route('admin.google_merchant.products.index', ['issue' => $code]),
                 ];
 
                 $buckets[$group][$code]['count']++;
@@ -61,12 +61,12 @@ class ProductIssues
                 $hintKey = $hints['fields'][$field] ?? null;
 
                 $buckets['missing'][$code] ??= [
-                    'code'          => $code,
-                    'count'         => 0,
-                    'description'   => (string) $message,
-                    'hint'          => $hintKey ? trans("google_merchant::app.hints.fields.$hintKey.hint") : '',
+                    'code' => $code,
+                    'count' => 0,
+                    'description' => (string) $message,
+                    'hint' => $hintKey ? trans("google_merchant::app.hints.fields.$hintKey.hint") : '',
                     'documentation' => null,
-                    'link'          => route('admin.google_merchant.products.index', ['state' => SyncState::Invalid->value]),
+                    'link' => route('admin.google_merchant.products.index', ['state' => SyncState::Invalid->value]),
                 ];
 
                 $buckets['missing'][$code]['count']++;
@@ -112,13 +112,13 @@ class ProductIssues
         $code = strtolower($code);
 
         return match (true) {
-            str_starts_with($code, 'missing_')                                                         => 'missing',
-            (bool) preg_match('/policy|prohibited|restricted|counterfeit|adult|dangerous/', $code)     => 'policy',
-            in_array($attribute, ['price', 'sale_price'], true) || str_contains($code, 'price')         => 'price',
+            str_starts_with($code, 'missing_') => 'missing',
+            (bool) preg_match('/policy|prohibited|restricted|counterfeit|adult|dangerous/', $code) => 'policy',
+            in_array($attribute, ['price', 'sale_price'], true) || str_contains($code, 'price') => 'price',
             in_array($attribute, ['image_link', 'additional_image_link'], true) || str_contains($code, 'image') => 'image',
             in_array($attribute, ['gtin', 'mpn', 'brand', 'identifier_exists'], true)
-                || (bool) preg_match('/gtin|upc|ean|isbn|mpn|identifier|brand/', $code)                 => 'identifier',
-            default                                                                                     => 'other',
+                || (bool) preg_match('/gtin|upc|ean|isbn|mpn|identifier|brand/', $code) => 'identifier',
+            default => 'other',
         };
     }
 

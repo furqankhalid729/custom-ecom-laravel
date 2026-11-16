@@ -27,7 +27,7 @@ class GmcTarget extends Model implements GmcTargetContract
 
     protected $casts = [
         'countries' => 'array',
-        'enabled'   => 'boolean',
+        'enabled' => 'boolean',
     ];
 
     public function account(): BelongsTo

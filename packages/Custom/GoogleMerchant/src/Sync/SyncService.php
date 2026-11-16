@@ -9,7 +9,6 @@ use Custom\GoogleMerchant\Api\Exceptions\PermanentApiException;
 use Custom\GoogleMerchant\Api\Exceptions\TransientApiException;
 use Custom\GoogleMerchant\Api\Exceptions\UnregisteredProjectException;
 use Custom\GoogleMerchant\Api\MerchantApiClient;
-use Custom\GoogleMerchant\Enums\ErrorKind;
 use Custom\GoogleMerchant\Enums\Operation;
 use Custom\GoogleMerchant\Enums\SyncState;
 use Custom\GoogleMerchant\Mapping\MappedOffer;
@@ -159,12 +158,12 @@ class SyncService
             }
 
             $row->forceFill([
-                'state'             => SyncState::Invalid->value,
-                'payload_hash'      => $offer->hash, // lets the nightly refresh skip unchanged invalid offers
+                'state' => SyncState::Invalid->value,
+                'payload_hash' => $offer->hash, // lets the nightly refresh skip unchanged invalid offers
                 'validation_errors' => $errors,
-                'last_error'        => implode(' ', $errors),
-                'error_kind'        => null,
-                'last_attempt_at'   => now(),
+                'last_error' => implode(' ', $errors),
+                'error_kind' => null,
+                'last_attempt_at' => now(),
             ])->save();
 
             $this->logger->log($row, Operation::Upsert, 'error', runId: $runId, message: implode(' ', $errors));
@@ -210,16 +209,16 @@ class SyncService
         }
 
         $row->forceFill([
-            'state'              => SyncState::Synced->value,
-            'payload_hash'       => $offer->hash,
-            'field_hashes'       => $offer->fieldHashes,
+            'state' => SyncState::Synced->value,
+            'payload_hash' => $offer->hash,
+            'field_hashes' => $offer->fieldHashes,
             'product_input_name' => ProductInputName::encode($target->account->merchant_id, $target->content_language, $target->feed_label, $offer->offerId),
-            'last_synced_at'     => now(),
-            'attempts'           => 0,
-            'retry_cycles'       => 0,
-            'last_error'         => null,
-            'error_kind'         => null,
-            'validation_errors'  => null,
+            'last_synced_at' => now(),
+            'attempts' => 0,
+            'retry_cycles' => 0,
+            'last_error' => null,
+            'error_kind' => null,
+            'validation_errors' => null,
         ])->save();
 
         $this->logger->log($row, Operation::Upsert, 'success', durationMs: $this->duration($started), runId: $runId);
@@ -258,9 +257,9 @@ class SyncService
         $attributes = array_intersect_key($offer->attributes(), array_flip($fields));
 
         $body = [
-            'offerId'           => $offer->offerId,
-            'contentLanguage'   => $offer->productInput['contentLanguage'],
-            'feedLabel'         => $offer->productInput['feedLabel'],
+            'offerId' => $offer->offerId,
+            'contentLanguage' => $offer->productInput['contentLanguage'],
+            'feedLabel' => $offer->productInput['feedLabel'],
             'productAttributes' => $attributes ?: new \stdClass,
         ];
 
@@ -292,12 +291,12 @@ class SyncService
 
         // last_synced_at stays at the last full insert: that is what keeps the offer from expiring.
         $row->forceFill([
-            'payload_hash'      => $offer->hash,
-            'field_hashes'      => $offer->fieldHashes,
-            'attempts'          => 0,
-            'retry_cycles'      => 0,
-            'last_error'        => null,
-            'error_kind'        => null,
+            'payload_hash' => $offer->hash,
+            'field_hashes' => $offer->fieldHashes,
+            'attempts' => 0,
+            'retry_cycles' => 0,
+            'last_error' => null,
+            'error_kind' => null,
             'validation_errors' => null,
         ])->save();
 
@@ -342,12 +341,12 @@ class SyncService
         }
 
         $row->forceFill([
-            'state'          => $final->value,
-            'last_error'     => $reason,
-            'error_kind'     => null,
-            'attempts'       => 0,
+            'state' => $final->value,
+            'last_error' => $reason,
+            'error_kind' => null,
+            'attempts' => 0,
             'last_synced_at' => null,
-            'payload_hash'   => null,
+            'payload_hash' => null,
         ])->save();
     }
 
@@ -358,7 +357,7 @@ class SyncService
             : '';
 
         $row->forceFill([
-            'state'      => SyncState::Failed->value,
+            'state' => SyncState::Failed->value,
             'error_kind' => $e->kind()->value,
             'last_error' => $e->getMessage().$fields,
         ])->save();

@@ -5,16 +5,16 @@
 */
 return [
     [
-        'key'   => 'cms.pages',
-        'name'  => 'store_policy::app.menu.pages',
+        'key' => 'cms.pages',
+        'name' => 'store_policy::app.menu.pages',
         'route' => 'admin.cms.index',
-        'sort'  => 1,
-        'icon'  => '',
+        'sort' => 1,
+        'icon' => '',
     ], [
-        'key'   => 'cms.store_policies',
-        'name'  => 'store_policy::app.menu.store-policies',
+        'key' => 'cms.store_policies',
+        'name' => 'store_policy::app.menu.store-policies',
         'route' => 'admin.cms.store_policies.index',
-        'sort'  => 2,
-        'icon'  => '',
+        'sort' => 2,
+        'icon' => '',
     ],
 ];

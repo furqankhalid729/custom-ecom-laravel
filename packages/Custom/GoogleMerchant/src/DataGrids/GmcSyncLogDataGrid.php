@@ -57,38 +57,38 @@ class GmcSyncLogDataGrid extends DataGrid
         $this->addColumn(['index' => 'created_at', 'label' => $t('time'), 'type' => 'datetime', 'sortable' => true, 'filterable' => true]);
         $this->addColumn(['index' => 'product_id', 'label' => $t('product-id'), 'type' => 'integer', 'sortable' => true, 'filterable' => true]);
         $this->addColumn([
-            'index'      => 'product_name',
-            'label'      => $t('product'),
-            'type'       => 'string',
+            'index' => 'product_name',
+            'label' => $t('product'),
+            'type' => 'string',
             'searchable' => true,
             'filterable' => true,
-            'closure'    => fn ($row) => e($row->product_name ?? '—'),
+            'closure' => fn ($row) => e($row->product_name ?? '—'),
         ]);
         $this->addColumn(['index' => 'offer_id', 'label' => $t('offer-id'), 'type' => 'string', 'searchable' => true, 'filterable' => true, 'sortable' => true]);
         $this->addColumn([
-            'index'              => 'operation',
-            'label'              => $t('operation'),
-            'type'               => 'string',
-            'filterable'         => true,
-            'filterable_type'    => 'dropdown',
+            'index' => 'operation',
+            'label' => $t('operation'),
+            'type' => 'string',
+            'filterable' => true,
+            'filterable_type' => 'dropdown',
             'filterable_options' => collect(['upsert', 'delete', 'status'])->map(fn ($o) => ['label' => trans("google_merchant::app.logs.operation.$o"), 'value' => $o])->all(),
-            'closure'            => fn ($row) => e(trans("google_merchant::app.logs.operation.{$row->operation}")),
+            'closure' => fn ($row) => e(trans("google_merchant::app.logs.operation.{$row->operation}")),
         ]);
         $this->addColumn([
-            'index'              => 'status',
-            'label'              => $t('status'),
-            'type'               => 'string',
-            'sortable'           => true,
-            'filterable'         => true,
-            'filterable_type'    => 'dropdown',
+            'index' => 'status',
+            'label' => $t('status'),
+            'type' => 'string',
+            'sortable' => true,
+            'filterable' => true,
+            'filterable_type' => 'dropdown',
             'filterable_options' => collect(['success', 'error', 'skipped'])->map(fn ($s) => ['label' => trans("google_merchant::app.logs.status.$s"), 'value' => $s])->all(),
-            'closure'            => fn ($row) => '<span class="gmc-badge '.(self::BADGES[$row->status] ?? 'gmc-muted').'">'.e(trans("google_merchant::app.logs.status.{$row->status}")).'</span>',
+            'closure' => fn ($row) => '<span class="gmc-badge '.(self::BADGES[$row->status] ?? 'gmc-muted').'">'.e(trans("google_merchant::app.logs.status.{$row->status}")).'</span>',
         ]);
         $this->addColumn(['index' => 'http_status', 'label' => $t('http'), 'type' => 'integer', 'filterable' => true, 'sortable' => true]);
         $this->addColumn([
-            'index'   => 'error_message',
-            'label'   => $t('message'),
-            'type'    => 'string',
+            'index' => 'error_message',
+            'label' => $t('message'),
+            'type' => 'string',
             'closure' => fn ($row) => e(mb_strimwidth((string) $row->error_message, 0, 140, '…')),
         ]);
         $this->addColumn(['index' => 'attempt', 'label' => $t('attempt'), 'type' => 'integer', 'sortable' => true]);
@@ -99,11 +99,11 @@ class GmcSyncLogDataGrid extends DataGrid
     {
         if (bouncer()->hasPermission('marketing.google_merchant.logs.show')) {
             $this->addAction([
-                'index'  => 'view',
-                'icon'   => 'icon-view',
-                'title'  => trans('google_merchant::app.logs.view'),
+                'index' => 'view',
+                'icon' => 'icon-view',
+                'title' => trans('google_merchant::app.logs.view'),
                 'method' => 'GET',
-                'url'    => fn ($row) => route('admin.google_merchant.logs.show', $row->id),
+                'url' => fn ($row) => route('admin.google_merchant.logs.show', $row->id),
             ]);
         }
     }

@@ -19,10 +19,10 @@ class AuditLogger
 
         AuditLogProxy::modelClass()::create([
             'integration' => $integration,
-            'action'      => $action,
-            'admin_id'    => auth()->guard('admin')->id(),
-            'context'     => $clean ?: null,
-            'ip'          => request()?->ip(),
+            'action' => $action,
+            'admin_id' => auth()->guard('admin')->id(),
+            'context' => $clean ?: null,
+            'ip' => request()?->ip(),
         ]);
     }
 

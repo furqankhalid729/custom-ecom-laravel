@@ -9,6 +9,7 @@ use Custom\GoogleMerchant\Mail\ReauthRequired;
 use Custom\GoogleMerchant\Mail\SyncFailureDigest;
 use Custom\GoogleMerchant\Models\GmcProduct;
 use Custom\GoogleMerchant\Models\GmcSyncLog;
+use Custom\GoogleMerchant\Support\Settings;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -116,7 +117,7 @@ it('prunes sync logs older than the retention period', function () {
     $old = $log(40);
     $recent = $log(10);
 
-    (new PruneLogsJob)->handle(app(\Custom\GoogleMerchant\Support\Settings::class));
+    (new PruneLogsJob)->handle(app(Settings::class));
 
     expect(GmcSyncLog::find($old->id))->toBeNull()
         ->and(GmcSyncLog::find($recent->id))->not->toBeNull();

@@ -9,12 +9,12 @@ namespace Custom\StorePolicy\Support;
 class SettingsNormalizer
 {
     public const METHOD_SHAPE = [
-        'name'      => 'string',
-        'carrier'   => 'string',
-        'cost'      => 'float',
+        'name' => 'string',
+        'carrier' => 'string',
+        'cost' => 'float',
         'free_over' => 'float',
-        'min_days'  => 'int',
-        'max_days'  => 'int',
+        'min_days' => 'int',
+        'max_days' => 'int',
     ];
 
     /**
@@ -62,7 +62,7 @@ class SettingsNormalizer
 
                 $method[$field] = match ($type) {
                     'float' => self::float($value),
-                    'int'   => self::int($value),
+                    'int' => self::int($value),
                     default => self::string($value),
                 };
             }

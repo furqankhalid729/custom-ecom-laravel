@@ -46,10 +46,10 @@ class TargetController extends Controller
             ->pluck('total', 'gmc_target_id');
 
         return view('google_merchant::admin.settings.targets', [
-            'account'    => $account,
-            'targets'    => $targets,
-            'counts'     => $counts,
-            'locales'    => $channel->locales->pluck('code')->all(),
+            'account' => $account,
+            'targets' => $targets,
+            'counts' => $counts,
+            'locales' => $channel->locales->pluck('code')->all(),
             'currencies' => $channel->currencies->pluck('code')->all(),
         ]);
     }
@@ -62,13 +62,13 @@ class TargetController extends Controller
         $request->merge(['countries' => $this->parseCountries($request->input('countries'))]);
 
         $data = $request->validate([
-            'locale'      => ['required', Rule::in($channel->locales->pluck('code')->all())],
-            'currency'    => ['required', Rule::in($channel->currencies->pluck('code')->all()), function ($attribute, $value, $fail) {
+            'locale' => ['required', Rule::in($channel->locales->pluck('code')->all())],
+            'currency' => ['required', Rule::in($channel->currencies->pluck('code')->all()), function ($attribute, $value, $fail) {
                 if (! $this->hasRate($value)) {
                     $fail(trans('google_merchant::app.targets.no-rate', ['currency' => $value]));
                 }
             }],
-            'countries'   => ['required', 'array', 'min:1', function ($attribute, $value, $fail) {
+            'countries' => ['required', 'array', 'min:1', function ($attribute, $value, $fail) {
                 $known = DB::table('countries')->whereIn('code', $value)->pluck('code')->all();
                 $bad = array_filter($value, fn ($c) => ! preg_match('/^[A-Z]{2}$/', $c) || ! in_array($c, $known, true));
 
@@ -76,9 +76,9 @@ class TargetController extends Controller
                     $fail(trans('google_merchant::app.targets.bad-country', ['codes' => implode(', ', $bad)]));
                 }
             }],
-            'feed_label'  => ['nullable', 'string', 'max:20', 'regex:/^[A-Z0-9_-]+$/'],
+            'feed_label' => ['nullable', 'string', 'max:20', 'regex:/^[A-Z0-9_-]+$/'],
         ], [
-            'locale.in'   => trans('google_merchant::app.store.language-not-in-channel'),
+            'locale.in' => trans('google_merchant::app.store.language-not-in-channel'),
             'currency.in' => trans('google_merchant::app.store.currency-not-in-channel'),
         ]);
 
@@ -95,14 +95,14 @@ class TargetController extends Controller
 
         /** @var GmcTarget $target */
         $target = GmcTargetProxy::modelClass()::create([
-            'gmc_account_id'   => $account->id,
-            'channel_id'       => $channel->id,
-            'locale'           => $data['locale'],
+            'gmc_account_id' => $account->id,
+            'channel_id' => $channel->id,
+            'locale' => $data['locale'],
             'content_language' => $language,
-            'feed_label'       => $feedLabel,
-            'countries'        => $data['countries'],
-            'currency'         => $data['currency'],
-            'enabled'          => true,
+            'feed_label' => $feedLabel,
+            'countries' => $data['countries'],
+            'currency' => $data['currency'],
+            'enabled' => true,
         ]);
 
         try {
@@ -117,9 +117,9 @@ class TargetController extends Controller
 
         $this->audit->record(ConnectionService::AUDIT, 'target.created', [
             'target_id' => $target->id,
-            'label'     => $feedLabel,
-            'language'  => $language,
-            'currency'  => $data['currency'],
+            'label' => $feedLabel,
+            'language' => $language,
+            'currency' => $data['currency'],
             'countries' => $data['countries'],
         ]);
 

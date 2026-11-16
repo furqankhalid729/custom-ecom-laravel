@@ -14,9 +14,9 @@ class CategoryMappingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'categories'                           => ['required', 'array'],
+            'categories' => ['required', 'array'],
             'categories.*.google_product_category' => ['nullable', 'regex:/^\d{1,10}$/'],
-            'categories.*.excluded'                => ['nullable', 'boolean'],
+            'categories.*.excluded' => ['nullable', 'boolean'],
         ];
     }
 
