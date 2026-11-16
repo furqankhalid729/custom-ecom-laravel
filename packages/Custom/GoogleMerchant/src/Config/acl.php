@@ -9,7 +9,7 @@ $r = 'admin.google_merchant';
 $t = 'google_merchant::app.acl';
 
 return [
-    ['key' => $p, 'name' => "$t.google-merchant", 'route' => "$r.overview", 'sort' => 4],
+    ['key' => $p, 'name' => "$t.google-merchant", 'route' => "$r.overview", 'sort' => 5],
     ['key' => "$p.overview", 'name' => "$t.overview", 'route' => "$r.overview", 'sort' => 1],
 
     ['key' => "$p.products", 'name' => "$t.products", 'route' => "$r.products.index", 'sort' => 2],

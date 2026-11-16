@@ -5,7 +5,7 @@ return [
         'key'   => 'marketing.google_merchant',
         'name'  => 'google_merchant::app.menu.google-merchant',
         'route' => 'admin.google_merchant.overview',
-        'sort'  => 4,
+        'sort'  => 5,
         'icon'  => '',
     ], [
         'key'   => 'marketing.google_merchant.overview',
