@@ -17,6 +17,23 @@ class GmcSchedule
 {
     public function __construct(protected Settings $settings) {}
 
+    /** reconcile_time (HH:MM, default 01:00) × reconcile_frequency (daily | twicedaily, 12 h apart). */
+    protected function reconcileCron(): string
+    {
+        $time = (string) $this->settings->get('settings.reconcile_time', '01:00');
+
+        [$hour, $minute] = preg_match('/^([01]?\d|2[0-3]):([0-5]\d)$/', trim($time), $m) ? [(int) $m[1], (int) $m[2]] : [1, 0];
+
+        $hours = [$hour];
+
+        if ($this->settings->get('settings.reconcile_frequency', 'daily') === 'twicedaily') {
+            $hours[] = ($hour + 12) % 24;
+            sort($hours);
+        }
+
+        return $minute.' '.implode(',', $hours).' * * *';
+    }
+
     public function define(Schedule $schedule): void
     {
         $enabled = fn () => $this->settings->enabled();
@@ -38,12 +55,12 @@ class GmcSchedule
             ->when($enabled)
             ->name('gmc:worker-heartbeat');
 
-        // After Bagisto's 00:01 catalog-rule price reindex, which fires no events.
-        $schedule->command('gmc:refresh')
-            ->dailyAt('01:00')
+        // Default 01:00: after Bagisto's 00:01 catalog-rule price reindex, which fires no events.
+        // Reconcile = orphan cleanup in Google + the drift/stale pass (gmc:refresh alone stays manual).
+        $schedule->command('gmc:reconcile')
+            ->cron($this->reconcileCron())
             ->when($enabled)
-            ->withoutOverlapping(120)
-            ->name('gmc:refresh');
+            ->name('gmc:reconcile');
 
         $schedule->command('gmc:statuses')
             ->cron('0 */6 * * *')

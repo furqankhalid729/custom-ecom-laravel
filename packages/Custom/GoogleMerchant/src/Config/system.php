@@ -48,6 +48,17 @@ return [
             ],
             ['name' => 'default_brand', 'title' => "$t.settings.default-brand", 'type' => 'text', 'default' => ''],
             ['name' => 'rate_limit_per_minute', 'title' => "$t.settings.rate-limit", 'type' => 'number', 'default' => 60, 'validation' => 'numeric|min:1|max:6000'],
+            ['name' => 'reconcile_time', 'title' => "$t.settings.reconcile-time", 'type' => 'text', 'default' => '01:00', 'validation' => 'nullable|date_format:H:i'],
+            [
+                'name'    => 'reconcile_frequency',
+                'title'   => "$t.settings.reconcile-frequency",
+                'type'    => 'select',
+                'default' => 'daily',
+                'options' => [
+                    ['title' => "$t.settings.reconcile-daily", 'value' => 'daily'],
+                    ['title' => "$t.settings.reconcile-twicedaily", 'value' => 'twicedaily'],
+                ],
+            ],
             ['name' => 'log_retention_days', 'title' => "$t.settings.log-retention", 'type' => 'number', 'default' => 30, 'validation' => 'numeric|min:1|max:365'],
             ['name' => 'notify_email', 'title' => "$t.settings.notify-email", 'type' => 'text', 'default' => '', 'validation' => 'nullable|email'],
             ['name' => 'notify_on_failure', 'title' => "$t.settings.notify-on-failure", 'type' => 'boolean', 'default' => true],

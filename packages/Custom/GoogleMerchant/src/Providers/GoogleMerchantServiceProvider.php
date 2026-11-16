@@ -6,6 +6,7 @@ use Custom\GoogleCore\Integrations\IntegrationRegistry;
 use Custom\GoogleMerchant\Auth\AccessTokenProvider;
 use Custom\GoogleMerchant\Auth\TokenManager;
 use Custom\GoogleMerchant\Console\Commands\QueueRunCommand;
+use Custom\GoogleMerchant\Console\Commands\ReconcileCommand;
 use Custom\GoogleMerchant\Console\Commands\RefreshCommand;
 use Custom\GoogleMerchant\Console\Commands\RetryFailedCommand;
 use Custom\GoogleMerchant\Console\Commands\StatusesCommand;
@@ -66,6 +67,7 @@ class GoogleMerchantServiceProvider extends ServiceProvider
                 QueueRunCommand::class,
                 SyncCommand::class,
                 RefreshCommand::class,
+                ReconcileCommand::class,
                 RetryFailedCommand::class,
                 StatusesCommand::class,
                 TaxonomyCommand::class,
