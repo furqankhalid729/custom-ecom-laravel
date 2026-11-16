@@ -18,12 +18,16 @@
                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ $t('intro') }}</p>
             </div>
 
-            @if ($live && bouncer()->hasPermission('marketing.google_merchant.diagnostics.refresh'))
-                <form method="POST" action="{{ route('admin.google_merchant.diagnostics.refresh') }}">
-                    @csrf
-                    <button type="submit" class="primary-button">{{ $t('refresh') }}</button>
-                </form>
-            @endif
+            <div class="flex items-center gap-2 max-sm:flex-wrap">
+                @include('google_merchant::admin.partials.market-switcher')
+
+                @if ($live && bouncer()->hasPermission('marketing.google_merchant.diagnostics.refresh'))
+                    <form method="POST" action="{{ route('admin.google_merchant.diagnostics.refresh') }}">
+                        @csrf
+                        <button type="submit" class="primary-button">{{ $t('refresh') }}</button>
+                    </form>
+                @endif
+            </div>
         </div>
 
         @if (! $target)

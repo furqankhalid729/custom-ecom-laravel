@@ -50,6 +50,12 @@ return [
         'sort'  => 5,
         'icon'  => '',
     ], [
+        'key'   => 'marketing.google_merchant.targets',
+        'name'  => 'google_merchant::app.menu.targets',
+        'route' => 'admin.google_merchant.targets.index',
+        'sort'  => 5,
+        'icon'  => '',
+    ], [
         'key'   => 'marketing.google_merchant.connection',
         'name'  => 'google_merchant::app.menu.connection',
         'route' => 'admin.google_merchant.connection.index',

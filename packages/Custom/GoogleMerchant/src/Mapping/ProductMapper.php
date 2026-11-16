@@ -139,8 +139,8 @@ class ProductMapper
             $sale = isset($index->min_price) && (float) $index->min_price < $regular ? (float) $index->min_price : null;
 
             return [
-                'price'        => $regular > 0 ? Micros::price($regular, $currency) : null,
-                'salePrice'    => $sale ? Micros::price($sale, $currency) : null,
+                'price'        => $regular > 0 ? Micros::price($this->convert($regular), $currency) : null,
+                'salePrice'    => $sale ? Micros::price($this->convert($sale), $currency) : null,
                 'availability' => $this->data->bundleInStock($product) ? 'IN_STOCK' : 'OUT_OF_STOCK',
             ];
         }
@@ -172,11 +172,24 @@ class ProductMapper
         $manageStock = $this->data->bool($product, 'manage_stock', true);
 
         return [
-            'price'                  => $price > 0 ? Micros::price($price, $currency) : null,
-            'salePrice'              => $sale ? Micros::price($sale, $currency) : null,
+            'price'                  => $price > 0 ? Micros::price($this->convert($price), $currency) : null,
+            'salePrice'              => $sale ? Micros::price($this->convert($sale), $currency) : null,
             'salePriceEffectiveDate' => $saleWindow,
             'availability'           => ! $manageStock || $this->data->salableQty($product) > 0 ? 'IN_STOCK' : 'OUT_OF_STOCK',
         ];
+    }
+
+    /**
+     * Catalog prices are stored in the channel's base currency. A market in another
+     * currency gets them converted at the store's exchange rate, rounded to cents.
+     */
+    protected function convert(float $amount): float
+    {
+        if ($this->target->currency === core()->getBaseCurrencyCode()) {
+            return $amount;
+        }
+
+        return round((float) core()->convertPrice($amount, $this->target->currency), 2);
     }
 
     protected function identifiers(Product $product, ?Product $parent): array

@@ -8,6 +8,7 @@ use Custom\GoogleMerchant\Http\Controllers\Admin\OverviewController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\ProductSyncController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\RunController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\StoreSettingsController;
+use Custom\GoogleMerchant\Http\Controllers\Admin\TargetController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('google-merchant')->name('admin.google_merchant.')->group(function () {
@@ -47,6 +48,13 @@ Route::prefix('google-merchant')->name('admin.google_merchant.')->group(function
         Route::get('store', 'edit')->name('store.edit');
         Route::put('store', 'update')->name('store.update');
         Route::post('store/push-policies', 'pushPolicies')->name('store.push_policies');
+    });
+
+    Route::controller(TargetController::class)->group(function () {
+        Route::get('markets', 'index')->name('targets.index');
+        Route::post('markets', 'store')->name('targets.store');
+        Route::put('markets/{id}', 'update')->whereNumber('id')->name('targets.update');
+        Route::delete('markets/{id}', 'destroy')->whereNumber('id')->name('targets.destroy');
     });
 
     Route::controller(DiagnosticsController::class)->group(function () {

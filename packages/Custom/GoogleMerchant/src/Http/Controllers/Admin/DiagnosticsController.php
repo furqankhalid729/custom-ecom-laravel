@@ -22,12 +22,14 @@ class DiagnosticsController extends Controller
     public function index(): View
     {
         $account = $this->connection->current();
-        $target = $account?->targets()->orderBy('id')->first();
+        $targets = $account ? $account->targets()->orderBy('id')->get() : collect();
+        $target = $targets->firstWhere('id', (int) request('target')) ?? $targets->first();
         $live = $account?->status === AccountStatus::Connected->value && $account->merchant_id;
 
         return view('google_merchant::admin.diagnostics.index', [
             'account'       => $account,
             'target'        => $target,
+            'targets'       => $targets,
             'summary'       => $target ? $this->issues->summary($target) : null,
             'groups'        => $target ? $this->issues->groups($target) : [],
             'accountIssues' => $live ? AccountIssues::get($account) : null,
