@@ -1,0 +1,48 @@
+{
+  "products": [
+    {
+      "name": "accounts/123456/products/en~US~SKU-APPROVED",
+      "offerId": "SKU-APPROVED",
+      "contentLanguage": "en",
+      "feedLabel": "US",
+      "dataSource": "accounts/123456/dataSources/999",
+      "productStatus": {
+        "destinationStatuses": [
+          { "reportingContext": "SHOPPING_ADS", "approvedCountries": ["US"] },
+          { "reportingContext": "FREE_LISTINGS", "approvedCountries": ["US"] }
+        ],
+        "itemLevelIssues": [],
+        "creationDate": "2026-11-08T10:00:00Z",
+        "lastUpdateDate": "2026-11-09T10:00:00Z",
+        "googleExpirationDate": "2026-12-09T10:00:00Z"
+      }
+    },
+    {
+      "name": "accounts/123456/products/en~US~SKU-DISAPPROVED",
+      "offerId": "SKU-DISAPPROVED",
+      "contentLanguage": "en",
+      "feedLabel": "US",
+      "dataSource": "accounts/123456/dataSources/999",
+      "productStatus": {
+        "destinationStatuses": [
+          { "reportingContext": "SHOPPING_ADS", "disapprovedCountries": ["US"] },
+          { "reportingContext": "FREE_LISTINGS", "disapprovedCountries": ["US"] }
+        ],
+        "itemLevelIssues": [
+          {
+            "code": "image_too_small",
+            "severity": "DISAPPROVED",
+            "resolution": "merchant_action",
+            "attribute": "image_link",
+            "reportingContext": "SHOPPING_ADS",
+            "description": "Image too small",
+            "detail": "Use a larger image (at least 100 x 100 pixels)",
+            "documentation": "https://support.google.com/merchants/answer/6098289",
+            "applicableCountries": ["US"]
+          }
+        ]
+      }
+    }
+  ],
+  "nextPageToken": "page-2"
+}

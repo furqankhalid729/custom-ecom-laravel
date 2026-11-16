@@ -45,6 +45,11 @@ class GmcSchedule
             ->withoutOverlapping(120)
             ->name('gmc:refresh');
 
+        $schedule->command('gmc:statuses')
+            ->cron('0 */6 * * *')
+            ->when($enabled)
+            ->name('gmc:statuses');
+
         $schedule->command('gmc:retry-failed')
             ->hourly()
             ->when($enabled)

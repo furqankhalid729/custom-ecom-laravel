@@ -236,7 +236,7 @@ return [
             'title'        => ['title' => 'Product name problem', 'hint' => 'Give the product a clear name of at most 150 characters, without promotional text such as "free shipping".'],
             'description'  => ['title' => 'Description problem', 'hint' => 'Add a plain description of the product (no links or promotional text), up to 5,000 characters.'],
             'link'         => ['title' => 'Product page problem', 'hint' => 'Google could not use the product page address. The store must be on a public https address and the product page must open without login.'],
-            'image'        => ['title' => 'Image problem', 'hint' => 'Upload a clear product photo of at least 100×100 pixels (250×250 for clothing) without watermarks, text or placeholder images.'],
+            'image'        => ['title' => 'Image problem', 'hint' => 'Upload a clear product photo of at least 100×100 pixels (250×250 for clothing) without watermarks, text or placeholder images, under Images on the product.'],
             'price'        => ['title' => 'Price problem', 'hint' => 'Check the price and special price: they must be above 0 and match the price shoppers see on the product page.'],
             'availability' => ['title' => 'Stock problem', 'hint' => 'Check the product’s stock and the "Manage stock" setting.'],
             'brand'        => ['title' => 'Brand problem', 'hint' => 'Choose the brand on the product, or set a fallback brand in Configure → Google Merchant Center.'],

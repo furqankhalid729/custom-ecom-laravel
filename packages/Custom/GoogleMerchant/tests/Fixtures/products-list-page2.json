@@ -1,0 +1,58 @@
+{
+  "products": [
+    {
+      "name": "accounts/123456/products/en~US~SKU-PARTIAL",
+      "offerId": "SKU-PARTIAL",
+      "contentLanguage": "en",
+      "feedLabel": "US",
+      "dataSource": "accounts/123456/dataSources/999",
+      "productStatus": {
+        "destinationStatuses": [
+          { "reportingContext": "SHOPPING_ADS", "disapprovedCountries": ["US"] },
+          { "reportingContext": "FREE_LISTINGS", "approvedCountries": ["US"] }
+        ],
+        "itemLevelIssues": [
+          {
+            "code": "missing_gtin",
+            "severity": "DISAPPROVED",
+            "resolution": "merchant_action",
+            "attribute": "gtin",
+            "reportingContext": "SHOPPING_ADS",
+            "description": "Missing value [gtin]",
+            "detail": "Add a GTIN for this product",
+            "documentation": "https://support.google.com/merchants/answer/6324461",
+            "applicableCountries": ["US"]
+          }
+        ]
+      }
+    },
+    {
+      "name": "accounts/123456/products/en~US~SKU-PENDING",
+      "offerId": "SKU-PENDING",
+      "contentLanguage": "en",
+      "feedLabel": "US",
+      "dataSource": "accounts/123456/dataSources/999",
+      "productStatus": {
+        "destinationStatuses": [
+          { "reportingContext": "SHOPPING_ADS", "pendingCountries": ["US"] }
+        ]
+      }
+    },
+    {
+      "name": "accounts/123456/products/en~US~SKU-NOT-IN-STORE",
+      "offerId": "SKU-NOT-IN-STORE",
+      "contentLanguage": "en",
+      "feedLabel": "US",
+      "dataSource": "accounts/123456/dataSources/999",
+      "productStatus": { "destinationStatuses": [ { "reportingContext": "SHOPPING_ADS", "approvedCountries": ["US"] } ] }
+    },
+    {
+      "name": "accounts/123456/products/de~DE~SKU-APPROVED",
+      "offerId": "SKU-APPROVED",
+      "contentLanguage": "de",
+      "feedLabel": "DE",
+      "dataSource": "accounts/123456/dataSources/1000",
+      "productStatus": { "destinationStatuses": [ { "reportingContext": "SHOPPING_ADS", "disapprovedCountries": ["DE"] } ] }
+    }
+  ]
+}

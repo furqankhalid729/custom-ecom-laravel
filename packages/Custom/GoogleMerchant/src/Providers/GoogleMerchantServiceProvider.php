@@ -8,6 +8,7 @@ use Custom\GoogleMerchant\Auth\TokenManager;
 use Custom\GoogleMerchant\Console\Commands\QueueRunCommand;
 use Custom\GoogleMerchant\Console\Commands\RefreshCommand;
 use Custom\GoogleMerchant\Console\Commands\RetryFailedCommand;
+use Custom\GoogleMerchant\Console\Commands\StatusesCommand;
 use Custom\GoogleMerchant\Console\Commands\SyncCommand;
 use Custom\GoogleMerchant\Console\Commands\TaxonomyCommand;
 use Custom\GoogleMerchant\Console\GmcSchedule;
@@ -66,6 +67,7 @@ class GoogleMerchantServiceProvider extends ServiceProvider
                 SyncCommand::class,
                 RefreshCommand::class,
                 RetryFailedCommand::class,
+                StatusesCommand::class,
                 TaxonomyCommand::class,
             ]);
         }
