@@ -48,6 +48,15 @@ class GmcProductDataGrid extends DataGrid
                 'pf.name as product_name',
             );
 
+        // Presets from Diagnostics links (?issue=<google issue code>, ?state=<sync state>).
+        if (is_string($issue = request('issue')) && $issue !== '') {
+            $queryBuilder->whereJsonContains('gmc_products.google_issues', ['code' => $issue]);
+        }
+
+        if (in_array(request('state'), array_column(SyncState::cases(), 'value'), true)) {
+            $queryBuilder->where('gmc_products.state', request('state'));
+        }
+
         $this->addFilter('id', 'gmc_products.id');
         $this->addFilter('offer_id', 'gmc_products.offer_id');
         $this->addFilter('state', 'gmc_products.state');

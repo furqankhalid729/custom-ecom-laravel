@@ -1,6 +1,7 @@
 <?php
 
 use Custom\GoogleMerchant\Http\Controllers\Admin\ConnectionController;
+use Custom\GoogleMerchant\Http\Controllers\Admin\DiagnosticsController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\LogController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\MappingController;
 use Custom\GoogleMerchant\Http\Controllers\Admin\OverviewController;
@@ -45,6 +46,11 @@ Route::prefix('google-merchant')->name('admin.google_merchant.')->group(function
     Route::controller(StoreSettingsController::class)->group(function () {
         Route::get('store', 'edit')->name('store.edit');
         Route::put('store', 'update')->name('store.update');
+    });
+
+    Route::controller(DiagnosticsController::class)->group(function () {
+        Route::get('diagnostics', 'index')->name('diagnostics.index');
+        Route::post('diagnostics/refresh', 'refresh')->name('diagnostics.refresh');
     });
 
     Route::controller(LogController::class)->group(function () {

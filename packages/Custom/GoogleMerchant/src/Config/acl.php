@@ -39,6 +39,9 @@ return [
     ['key' => "$p.store", 'name' => "$t.store", 'route' => "$r.store.edit", 'sort' => 7],
     ['key' => "$p.store.update", 'name' => "$t.edit-store", 'route' => "$r.store.update", 'sort' => 1],
 
+    ['key' => "$p.diagnostics", 'name' => "$t.diagnostics", 'route' => "$r.diagnostics.index", 'sort' => 5],
+    ['key' => "$p.diagnostics.refresh", 'name' => "$t.refresh-statuses", 'route' => "$r.diagnostics.refresh", 'sort' => 1],
+
     ['key' => "$p.logs", 'name' => "$t.logs", 'route' => "$r.logs.index", 'sort' => 5],
     ['key' => "$p.logs.show", 'name' => "$t.view-log", 'route' => "$r.logs.show", 'sort' => 1],
 

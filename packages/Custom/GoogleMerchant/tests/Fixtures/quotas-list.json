@@ -1,0 +1,11 @@
+{
+  "quotaGroups": [
+    {
+      "name": "accounts/123456/quotas/products.insert",
+      "quotaUsage": "4200",
+      "quotaLimit": "10000",
+      "quotaMinuteLimit": "500",
+      "methodDetails": [ { "method": "productInputs.insert", "version": "v1", "subapi": "products", "path": "products/v1/accounts/{account}/productInputs:insert" } ]
+    }
+  ]
+}

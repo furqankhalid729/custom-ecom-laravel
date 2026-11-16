@@ -66,13 +66,25 @@ class MerchantApiClient
         return ['products' => $response['products'] ?? [], 'nextPageToken' => $response['nextPageToken'] ?? null];
     }
 
-    protected function paginate(GmcAccount $account, string $path, string $key, int $pageSize): array
+    /** Account-level issues (suspensions, missing policies, website problems), human-readable in $languageCode. */
+    public function listAccountIssues(GmcAccount $account, string $languageCode = 'en-US'): array
+    {
+        return $this->paginate($account, "accounts/v1/accounts/{$account->merchant_id}/issues", 'accountIssues', 100, ['languageCode' => $languageCode]);
+    }
+
+    /** Quota groups sorted by usage, highest first. */
+    public function listQuotas(GmcAccount $account): array
+    {
+        return $this->paginate($account, "quota/v1/accounts/{$account->merchant_id}/quotas", 'quotaGroups', 1000);
+    }
+
+    protected function paginate(GmcAccount $account, string $path, string $key, int $pageSize, array $query = []): array
     {
         $items = [];
         $token = null;
 
         do {
-            $response = $this->send($account, 'GET', $path, array_filter(['pageSize' => $pageSize, 'pageToken' => $token]));
+            $response = $this->send($account, 'GET', $path, array_filter(['pageSize' => $pageSize, 'pageToken' => $token] + $query));
 
             array_push($items, ...($response[$key] ?? []));
 

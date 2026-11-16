@@ -18,5 +18,14 @@
         </div>
     </div>
 
-    <x-admin::datagrid :src="route('admin.google_merchant.products.index')" />
+    @php($preset = array_filter(request()->only(['issue', 'state']), 'is_string'))
+
+    @if ($preset)
+        <div class="mb-3 flex items-center gap-3 rounded border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800 dark:border-blue-900 dark:bg-gray-900 dark:text-blue-300">
+            <span>@lang('google_merchant::app.products.preset', ['filter' => implode(', ', $preset)])</span>
+            <a href="{{ route('admin.google_merchant.products.index') }}" class="font-semibold underline">@lang('google_merchant::app.products.clear-preset')</a>
+        </div>
+    @endif
+
+    <x-admin::datagrid :src="route('admin.google_merchant.products.index', $preset)" />
 </x-admin::layouts>

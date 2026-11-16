@@ -38,6 +38,12 @@ return [
         'sort'  => 4,
         'icon'  => '',
     ], [
+        'key'   => 'marketing.google_merchant.diagnostics',
+        'name'  => 'google_merchant::app.menu.diagnostics',
+        'route' => 'admin.google_merchant.diagnostics.index',
+        'sort'  => 4,
+        'icon'  => '',
+    ], [
         'key'   => 'marketing.google_merchant.store',
         'name'  => 'google_merchant::app.menu.store',
         'route' => 'admin.google_merchant.store.edit',
