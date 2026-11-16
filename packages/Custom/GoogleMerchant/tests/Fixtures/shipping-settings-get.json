@@ -1,0 +1,23 @@
+{
+  "name": "accounts/123456/shippingSettings",
+  "etag": "etag-1",
+  "services": [
+    {
+      "serviceName": "Canada post (set up in Merchant Center)",
+      "active": true,
+      "deliveryCountries": ["CA"],
+      "currencyCode": "CAD",
+      "deliveryTime": { "minHandlingDays": 1, "maxHandlingDays": 2, "minTransitDays": 3, "maxTransitDays": 7 },
+      "rateGroups": [ { "applicableShippingLabels": [], "singleValue": { "flatRate": { "amountMicros": "9000000", "currencyCode": "CAD" } } } ]
+    },
+    {
+      "serviceName": "Old US service",
+      "active": true,
+      "deliveryCountries": ["US"],
+      "currencyCode": "USD",
+      "deliveryTime": { "minHandlingDays": 0, "maxHandlingDays": 1, "minTransitDays": 1, "maxTransitDays": 2 },
+      "rateGroups": [ { "applicableShippingLabels": [], "singleValue": { "flatRate": { "amountMicros": "1000000", "currencyCode": "USD" } } } ]
+    }
+  ],
+  "warehouses": []
+}

@@ -65,6 +65,21 @@ return [
         'awaiting'    => 'Submitted – awaiting Google review',
     ],
 
+    'policies' => [
+        'title'              => 'Shipping and returns in Merchant Center',
+        'intro'              => 'Send the shipping methods and return policy from Store Policies to Google, so Google shows the same delivery times, costs and return window as your policy pages. Shipping set up in Merchant Center for other countries is kept.',
+        'push'               => 'Push to Google',
+        'queued'             => 'Sending shipping and return settings to Google. Check back here in a minute.',
+        'not-connected'      => 'Connect Google and choose a Merchant Center account first.',
+        'pushed'             => 'Shipping and returns sent for :count market(s).',
+        'last-success'       => 'Last sent :date.',
+        'last-error'         => 'Last attempt :date failed:',
+        'package-missing'    => 'The Store Policies package is not installed.',
+        'no-target'          => 'No market is set up yet: save Store details first.',
+        'no-region'          => 'Store Policies has no enabled region for :countries. Turn on the region in Store Policies.',
+        'missing-return-url' => 'Google needs a public https page for your return policy: generate the Return policy page in Store Policies or enter its address above.',
+    ],
+
     'mail' => [
         'reauth' => [
             'subject' => 'Google Merchant Center needs reconnecting',
@@ -412,6 +427,7 @@ return [
     ],
 
     'acl' => [
+        'push-policies'     => 'Push shipping and returns to Google',
         'diagnostics'       => 'Diagnostics',
         'refresh-statuses'  => 'Refresh Google statuses',
         'google-merchant'   => 'Google Merchant Center',

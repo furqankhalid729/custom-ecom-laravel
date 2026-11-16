@@ -46,6 +46,7 @@ Route::prefix('google-merchant')->name('admin.google_merchant.')->group(function
     Route::controller(StoreSettingsController::class)->group(function () {
         Route::get('store', 'edit')->name('store.edit');
         Route::put('store', 'update')->name('store.update');
+        Route::post('store/push-policies', 'pushPolicies')->name('store.push_policies');
     });
 
     Route::controller(DiagnosticsController::class)->group(function () {

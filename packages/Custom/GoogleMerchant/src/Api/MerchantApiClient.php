@@ -72,6 +72,38 @@ class MerchantApiClient
         return $this->paginate($account, "accounts/v1/accounts/{$account->merchant_id}/issues", 'accountIssues', 100, ['languageCode' => $languageCode]);
     }
 
+    /** The account's shipping settings, or null when none exist yet. */
+    public function getShippingSettings(GmcAccount $account): ?array
+    {
+        try {
+            return $this->send($account, 'GET', "accounts/v1/accounts/{$account->merchant_id}/shippingSettings");
+        } catch (Exceptions\NotFoundException) {
+            return null;
+        }
+    }
+
+    /** Replaces ALL shipping settings of the account; `etag` from get ('' the first time). */
+    public function insertShippingSettings(GmcAccount $account, array $body): array
+    {
+        return $this->send($account, 'POST', "accounts/v1/accounts/{$account->merchant_id}/shippingSettings:insert", [], $body);
+    }
+
+    public function listOnlineReturnPolicies(GmcAccount $account): array
+    {
+        return $this->paginate($account, "accounts/v1/accounts/{$account->merchant_id}/onlineReturnPolicies", 'onlineReturnPolicies', 100);
+    }
+
+    public function createOnlineReturnPolicy(GmcAccount $account, array $body): array
+    {
+        return $this->send($account, 'POST', "accounts/v1/accounts/{$account->merchant_id}/onlineReturnPolicies", [], $body);
+    }
+
+    /** v1 has no update: countries/label are immutable, so a changed policy is deleted and recreated. */
+    public function deleteOnlineReturnPolicy(GmcAccount $account, string $name): void
+    {
+        $this->send($account, 'DELETE', "accounts/v1/{$name}");
+    }
+
     /** Quota groups sorted by usage, highest first. */
     public function listQuotas(GmcAccount $account): array
     {

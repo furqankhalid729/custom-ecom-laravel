@@ -4,6 +4,8 @@ namespace Custom\GoogleMerchant\Http\Controllers\Admin;
 
 use Custom\GoogleCore\Audit\AuditLogger;
 use Custom\GoogleMerchant\Api\Exceptions\GmcApiException;
+use Custom\GoogleMerchant\Jobs\PushAccountPoliciesJob;
+use Custom\GoogleMerchant\Services\AccountPolicySync;
 use Custom\GoogleMerchant\Services\ConnectionService;
 use Custom\GoogleMerchant\Services\StoreSettingsService;
 use Custom\GoogleMerchant\Services\UrlProbe;
@@ -35,7 +37,26 @@ class StoreSettingsController extends Controller
             'currencies' => $channel->currencies->pluck('code')->all(),
             'report'     => session('gmc_url_report', []),
             'target'     => $this->connection->current()?->targets()->where('enabled', true)->orderBy('id')->first(),
+
+            'policiesAvailable' => AccountPolicySync::available(),
+            'policyResult'      => ($account = $this->connection->current()) ? app(AccountPolicySync::class)->lastResult($account) : null,
         ]);
+    }
+
+    /** "Push to Google": shipping settings + return policy, always via the queue. */
+    public function pushPolicies(): RedirectResponse
+    {
+        $account = $this->connection->current();
+
+        if (! $account?->isConnected() || ! $account->merchant_id) {
+            return back()->with('warning', trans('google_merchant::app.policies.not-connected'));
+        }
+
+        PushAccountPoliciesJob::dispatch($account->id);
+
+        $this->audit->record('google_merchant', 'policies.push.requested', ['account_id' => $account->id, 'admin_id' => auth()->guard('admin')->id()]);
+
+        return back()->with('success', trans('google_merchant::app.policies.queued'));
     }
 
     public function update(Request $request): RedirectResponse

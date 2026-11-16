@@ -90,6 +90,9 @@ class GoogleMerchantServiceProvider extends ServiceProvider
 
         Event::listen('data_transfer.imports.batch.import.after', [ImportListener::class, 'handle']);
 
+        // Store Policies package (optional): push shipping/returns to Merchant Center after a save.
+        Event::listen('eloquent.saved: Custom\StorePolicy\Models\PolicySetting', [\Custom\GoogleMerchant\Listeners\PolicySettingsListener::class, 'saved']);
+
         Event::listen('bagisto.admin.catalog.product.edit.after', static function (ViewRenderEventManager $manager) {
             if (bouncer()->hasPermission('marketing.google_merchant.products')) {
                 $manager->addTemplate('google_merchant::admin.partials.product-panel');

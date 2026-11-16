@@ -114,5 +114,32 @@
                 </div>
             </div>
         </form>
+
+        @if ($policiesAvailable)
+            @php($p = fn ($key, $replace = []) => trans("google_merchant::app.policies.$key", $replace))
+
+            <div class="box-shadow mt-2.5 rounded bg-white p-4 dark:bg-gray-900">
+                <div class="flex items-start justify-between gap-4 max-sm:flex-wrap">
+                    <div>
+                        <p class="text-base font-semibold text-gray-800 dark:text-white">{{ $p('title') }}</p>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ $p('intro') }}</p>
+                    </div>
+
+                    @if ($target && bouncer()->hasPermission('marketing.google_merchant.store.push_policies'))
+                        <form method="POST" action="{{ route('admin.google_merchant.store.push_policies') }}">
+                            @csrf
+                            <button type="submit" class="secondary-button">{{ $p('push') }}</button>
+                        </form>
+                    @endif
+                </div>
+
+                @if ($policyResult)
+                    <p class="mt-3 text-sm {{ $policyResult['status'] === 'success' ? 'text-green-700' : 'text-red-600' }}">
+                        {{ $p('last-'.$policyResult['status'], ['date' => core()->formatDate($policyResult['at'], 'd M Y H:i')]) }}
+                        {{ $policyResult['message'] }}
+                    </p>
+                @endif
+            </div>
+        @endif
     </div>
 </x-admin::layouts>
