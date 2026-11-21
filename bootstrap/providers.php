@@ -3,6 +3,7 @@
 use App\Providers\AppServiceProvider;
 use Custom\GoogleCore\Providers\GoogleCoreServiceProvider;
 use Custom\GoogleMerchant\Providers\GoogleMerchantServiceProvider;
+use Custom\ReviewImport\Providers\ReviewImportServiceProvider;
 use Custom\StorePolicy\Providers\StorePolicyServiceProvider;
 use Webkul\Admin\Providers\AdminServiceProvider;
 use Webkul\Attribute\Providers\AttributeServiceProvider;
@@ -89,4 +90,5 @@ return [
     StorePolicyServiceProvider::class,
     GoogleCoreServiceProvider::class,
     GoogleMerchantServiceProvider::class,
+    ReviewImportServiceProvider::class,
 ];

@@ -1,0 +1,85 @@
+<?php
+
+return [
+    'menu' => 'Import Reviews',
+
+    'acl' => [
+        'import' => 'Import Reviews',
+        'create' => 'Run Import',
+    ],
+
+    'index' => [
+        'title' => 'Import Reviews',
+        'intro' => 'Upload a CSV file of product reviews. You will see a preview before anything is saved.',
+        'step-1' => '1. Download the template',
+        'step-1-info' => 'Open it in Excel or Google Sheets, replace the two example rows with your reviews, then save as CSV.',
+        'download-template' => 'Download CSV Template',
+        'step-2' => '2. Upload your file',
+        'file' => 'CSV file (max 5 MB, up to 5,000 reviews)',
+        'preview-btn' => 'Upload and Preview',
+        'columns-title' => 'Columns',
+        'required' => 'Required',
+        'optional' => 'Optional',
+        'columns' => [
+            'sku' => 'Product SKU. Must match a product in the store (Catalog → Products).',
+            'name' => 'Reviewer name shown on the review.',
+            'rating' => 'Star rating, a whole number from 1 to 5.',
+            'title' => 'Review headline.',
+            'comment' => 'Review text.',
+            'status' => 'approved, pending or disapproved. Blank means approved (shown on the store straight away).',
+            'date' => 'Review date, e.g. 2026-01-15 or 15/01/2026. Blank means today.',
+            'customer_email' => 'Links the review to an existing customer account with this email. Ignored if no account matches.',
+        ],
+        'notes-title' => 'Good to know',
+        'notes' => [
+            'Reviews already in the store (same product, name, rating, title and text) are skipped, so uploading the same file twice is safe.',
+            'Rows with errors are skipped. The others are still imported.',
+            'Commas or semicolons both work as the separator.',
+        ],
+    ],
+
+    'preview' => [
+        'title' => 'Review Import Preview',
+        'file' => 'File: :name',
+        'total' => 'Rows read',
+        'valid' => 'Ready to import',
+        'invalid' => 'Rows with errors (will be skipped)',
+        'errors-title' => 'Rows with errors',
+        'line' => 'Line :line',
+        'file-error' => 'File problem',
+        'rows-title' => 'Reviews to import',
+        'showing' => 'Showing the first :shown of :total.',
+        'confirm-btn' => 'Import :count Reviews',
+        'back-btn' => 'Upload a Different File',
+        'nothing' => 'Nothing can be imported from this file. Fix the errors below and upload it again.',
+        'columns' => [
+            'line' => 'Line',
+            'sku' => 'SKU',
+            'name' => 'Name',
+            'rating' => 'Rating',
+            'title' => 'Title',
+            'comment' => 'Comment',
+            'status' => 'Status',
+            'date' => 'Date',
+        ],
+    ],
+
+    'done' => 'Imported :imported reviews. Skipped :duplicates already in the store and :skipped rows with errors.',
+
+    'errors' => [
+        'unreadable' => 'The file could not be read.',
+        'empty' => 'The file is empty.',
+        'no-rows' => 'The file has a header row but no reviews.',
+        'missing-columns' => 'The file is missing these columns: :columns. Start from the template.',
+        'too-many-rows' => 'The file has more than :max reviews. Split it into smaller files.',
+        'sku-required' => 'SKU is empty.',
+        'sku-not-found' => 'No product has the SKU ":sku".',
+        'name-required' => 'Name is empty.',
+        'too-long' => 'The :field is longer than 255 characters.',
+        'rating' => 'Rating ":value" must be a whole number from 1 to 5.',
+        'status' => 'Status ":value" must be one of: :allowed.',
+        'date' => 'Date ":value" is not a recognised date. Use 2026-01-15 or 15/01/2026.',
+        'future-date' => 'Date ":value" is in the future.',
+        'expired' => 'That preview has expired. Upload the file again.',
+    ],
+];
