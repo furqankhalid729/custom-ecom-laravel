@@ -110,7 +110,7 @@
                             v-if="canPlaceOrder"
                         >
                             @php
-                                $policyLink = fn ($urlKey, $label) => '<a href="'.route('shop.cms.page', $urlKey).'" target="_blank" class="text-black hover:underline">'.e($label).'</a>';
+                                $policyLink = fn ($urlKey, $label) => '<a href="'.route('shop.cms.page', $urlKey).'" target="_blank" class="text-black underline">'.e($label).'</a>';
                             @endphp
 
                             <!-- Privacy Notice -->
@@ -128,7 +128,8 @@
                                 <input
                                     type="checkbox"
                                     id="terms_accepted"
-                                    class="mt-1.5 h-4 w-4 shrink-0 cursor-pointer accent-black"
+                                    class="mt-1 h-4 w-4 flex-shrink-0 cursor-pointer"
+                                    style="accent-color: #000"
                                     v-model="termsAccepted"
                                 >
 
