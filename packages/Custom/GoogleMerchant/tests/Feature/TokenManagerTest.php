@@ -27,11 +27,11 @@ it('refreshes an oauth token that expires within five minutes', function () {
     Http::fake(['oauth2.googleapis.com/token' => Http::response(fixture('token'))]);
 
     $account = gmcAccount([
-        'auth_type'            => 'oauth',
+        'auth_type' => 'oauth',
         'service_account_json' => null,
-        'access_token'         => 'old',
-        'refresh_token'        => '1//refresh-token',
-        'token_expires_at'     => now()->addMinutes(2),
+        'access_token' => 'old',
+        'refresh_token' => '1//refresh-token',
+        'token_expires_at' => now()->addMinutes(2),
     ]);
 
     expect(app(TokenManager::class)->accessToken($account))->toBe('ya29.fresh-token');
@@ -49,10 +49,10 @@ it('marks the account needs_reauth on invalid_grant', function () {
     Http::fake(['oauth2.googleapis.com/token' => Http::response(fixture('token-invalid-grant'), 400)]);
 
     $account = gmcAccount([
-        'auth_type'            => 'oauth',
+        'auth_type' => 'oauth',
         'service_account_json' => null,
-        'refresh_token'        => 'revoked',
-        'token_expires_at'     => now()->subMinute(),
+        'refresh_token' => 'revoked',
+        'token_expires_at' => now()->subMinute(),
     ]);
 
     try {
@@ -74,8 +74,8 @@ it('uses the jwt-bearer grant for service accounts', function () {
 
     $account = gmcAccount([
         'service_account_json' => json_encode(['type' => 'service_account', 'client_email' => 'sync@p.iam.gserviceaccount.com', 'private_key' => $pem]),
-        'token_expires_at'     => null,
-        'access_token'         => null,
+        'token_expires_at' => null,
+        'access_token' => null,
     ]);
 
     expect(app(TokenManager::class)->accessToken($account))->toBe('sa-token');

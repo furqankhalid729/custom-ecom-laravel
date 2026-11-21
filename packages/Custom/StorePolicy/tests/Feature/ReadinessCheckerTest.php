@@ -64,10 +64,10 @@ it('flags other locales with placeholder text', function () {
     PageTranslation::where('cms_page_id', $en->cms_page_id)->where('locale', 'ar')->delete();
 
     PageTranslation::create([
-        'cms_page_id'  => $en->cms_page_id,
-        'locale'       => 'ar',
-        'url_key'      => 'privacy-policy',
-        'page_title'   => 'Privacy Policy',
+        'cms_page_id' => $en->cms_page_id,
+        'locale' => 'ar',
+        'url_key' => 'privacy-policy',
+        'page_title' => 'Privacy Policy',
         'html_content' => '<p>placeholder</p>',
     ]);
 

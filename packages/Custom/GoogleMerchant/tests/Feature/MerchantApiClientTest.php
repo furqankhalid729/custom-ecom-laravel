@@ -69,7 +69,7 @@ it('classifies errors', function (int $status, ?string $fixtureName, array $head
     try {
         app(MerchantApiClient::class)->listDataSources($this->account);
         $this->fail('expected exception');
-    } catch (\Throwable $e) {
+    } catch (Throwable $e) {
         expect($e)->toBeInstanceOf($expected)
             ->and($e->httpStatus)->toBe($status);
 
@@ -82,13 +82,13 @@ it('classifies errors', function (int $status, ?string $fixtureName, array $head
         }
     }
 })->with([
-    'rate limited'  => [429, 'error-429', ['Retry-After' => '120'], TransientApiException::class],
-    'daily quota'   => [429, 'error-429-quota', [], QuotaExhaustedException::class],
-    'unavailable'   => [503, 'error-503', [], TransientApiException::class],
-    'bad request'   => [400, 'error-400-invalid-argument', [], PermanentApiException::class],
-    'not found'     => [404, 'error-404', [], NotFoundException::class],
-    'unregistered'  => [401, 'error-401-unregistered', [], UnregisteredProjectException::class],
-    'forbidden'     => [403, null, [], AuthException::class],
+    'rate limited' => [429, 'error-429', ['Retry-After' => '120'], TransientApiException::class],
+    'daily quota' => [429, 'error-429-quota', [], QuotaExhaustedException::class],
+    'unavailable' => [503, 'error-503', [], TransientApiException::class],
+    'bad request' => [400, 'error-400-invalid-argument', [], PermanentApiException::class],
+    'not found' => [404, 'error-404', [], NotFoundException::class],
+    'unregistered' => [401, 'error-401-unregistered', [], UnregisteredProjectException::class],
+    'forbidden' => [403, null, [], AuthException::class],
 ]);
 
 it('uses 60 seconds when a transient error has no Retry-After', function () {
@@ -165,8 +165,8 @@ it('throttles per account', function () {
 
 it('lists accessible accounts and creates a data source', function () {
     Http::fake([
-        'merchantapi.googleapis.com/accounts/v1/accounts*'          => Http::response(fixture('accounts-list')),
-        'merchantapi.googleapis.com/datasources/v1/*/dataSources'   => Http::response(fixture('datasource-create')),
+        'merchantapi.googleapis.com/accounts/v1/accounts*' => Http::response(fixture('accounts-list')),
+        'merchantapi.googleapis.com/datasources/v1/*/dataSources' => Http::response(fixture('datasource-create')),
     ]);
 
     $client = app(MerchantApiClient::class);

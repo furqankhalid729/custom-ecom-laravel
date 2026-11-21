@@ -9,7 +9,7 @@ $r = 'admin.google_merchant';
 $t = 'google_merchant::app.acl';
 
 return [
-    ['key' => $p, 'name' => "$t.google-merchant", 'route' => "$r.overview", 'sort' => 4],
+    ['key' => $p, 'name' => "$t.google-merchant", 'route' => "$r.overview", 'sort' => 5],
     ['key' => "$p.overview", 'name' => "$t.overview", 'route' => "$r.overview", 'sort' => 1],
 
     ['key' => "$p.products", 'name' => "$t.products", 'route' => "$r.products.index", 'sort' => 2],
@@ -38,6 +38,15 @@ return [
 
     ['key' => "$p.store", 'name' => "$t.store", 'route' => "$r.store.edit", 'sort' => 7],
     ['key' => "$p.store.update", 'name' => "$t.edit-store", 'route' => "$r.store.update", 'sort' => 1],
+    ['key' => "$p.store.push_policies", 'name' => "$t.push-policies", 'route' => "$r.store.push_policies", 'sort' => 2],
+
+    ['key' => "$p.targets", 'name' => "$t.targets", 'route' => "$r.targets.index", 'sort' => 8],
+    ['key' => "$p.targets.create", 'name' => "$t.add-target", 'route' => "$r.targets.store", 'sort' => 1],
+    ['key' => "$p.targets.update", 'name' => "$t.pause-target", 'route' => "$r.targets.update", 'sort' => 2],
+    ['key' => "$p.targets.delete", 'name' => "$t.remove-target", 'route' => "$r.targets.destroy", 'sort' => 3],
+
+    ['key' => "$p.diagnostics", 'name' => "$t.diagnostics", 'route' => "$r.diagnostics.index", 'sort' => 5],
+    ['key' => "$p.diagnostics.refresh", 'name' => "$t.refresh-statuses", 'route' => "$r.diagnostics.refresh", 'sort' => 1],
 
     ['key' => "$p.logs", 'name' => "$t.logs", 'route' => "$r.logs.index", 'sort' => 5],
     ['key' => "$p.logs.show", 'name' => "$t.view-log", 'route' => "$r.logs.show", 'sort' => 1],

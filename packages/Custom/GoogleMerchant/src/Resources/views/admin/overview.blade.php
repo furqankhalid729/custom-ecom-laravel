@@ -17,7 +17,8 @@
                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{{ $t('intro') }}</p>
             </div>
 
-            <div class="flex gap-2">
+            <div class="flex items-center gap-2 max-sm:flex-wrap">
+                @include('google_merchant::admin.partials.market-switcher')
                 <a href="{{ $products }}" class="secondary-button">{{ $t('view-products') }}</a>
                 <a href="{{ route('admin.google_merchant.connection.index') }}" class="secondary-button">{{ $t('connection') }}</a>
             </div>

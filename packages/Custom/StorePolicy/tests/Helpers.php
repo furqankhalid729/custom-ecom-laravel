@@ -13,11 +13,11 @@ if (! function_exists('validSettings')) {
         $settings['business']['legal_name'] = 'Acme Trading Ltd';
         $settings['business']['trading_name'] = 'Acme Store';
         $settings['business']['address'] = [
-            'street'   => '1 Main Street',
-            'city'     => 'Dublin',
-            'region'   => 'Leinster',
+            'street' => '1 Main Street',
+            'city' => 'Dublin',
+            'region' => 'Leinster',
             'postcode' => 'D01 F5P2',
-            'country'  => 'IE',
+            'country' => 'IE',
         ];
         $settings['business']['email'] = 'support@acme.test';
         $settings['business']['phone'] = '+353 1 234 5678';
@@ -29,21 +29,21 @@ if (! function_exists('validSettings')) {
         $settings['terms']['governing_law'] = 'Ireland';
 
         $settings['regions']['EU']['shipping']['methods'] = [[
-            'name'      => 'EU Standard',
-            'carrier'   => 'DHL',
-            'cost'      => 4.95,
+            'name' => 'EU Standard',
+            'carrier' => 'DHL',
+            'cost' => 4.95,
             'free_over' => 50,
-            'min_days'  => 3,
-            'max_days'  => 7,
+            'min_days' => 3,
+            'max_days' => 7,
         ]];
 
         $settings['regions']['US']['shipping']['methods'] = [[
-            'name'      => 'US Standard',
-            'carrier'   => 'UPS',
-            'cost'      => 7.5,
+            'name' => 'US Standard',
+            'carrier' => 'UPS',
+            'cost' => 7.5,
             'free_over' => null,
-            'min_days'  => 5,
-            'max_days'  => 10,
+            'min_days' => 5,
+            'max_days' => 10,
         ]];
 
         return $settings;

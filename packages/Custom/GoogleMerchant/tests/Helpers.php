@@ -2,8 +2,11 @@
 
 use Custom\GoogleMerchant\Models\GmcAccount;
 use Custom\GoogleMerchant\Models\GmcTarget;
+use Illuminate\Cache\ArrayStore;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Webkul\Faker\Helpers\Product as ProductFaker;
+use Webkul\Product\Helpers\Indexers\Flat;
 use Webkul\Product\Helpers\Indexers\Price as PriceIndexer;
 use Webkul\Product\Models\Product;
 use Webkul\Product\Models\ProductAttributeValue;
@@ -24,14 +27,14 @@ if (! function_exists('fixture')) {
     function gmcAccount(array $overrides = []): GmcAccount
     {
         return GmcAccount::create(array_merge([
-            'merchant_id'          => '123456',
-            'display_name'         => 'Acme Store',
-            'auth_type'            => 'service_account',
-            'google_email'         => 'sync@project.iam.gserviceaccount.com',
-            'access_token'         => 'test-token',
-            'token_expires_at'     => now()->addHour(),
+            'merchant_id' => '123456',
+            'display_name' => 'Acme Store',
+            'auth_type' => 'service_account',
+            'google_email' => 'sync@project.iam.gserviceaccount.com',
+            'access_token' => 'test-token',
+            'token_expires_at' => now()->addHour(),
             'service_account_json' => json_encode(['type' => 'service_account', 'client_email' => 'sync@project.iam.gserviceaccount.com', 'private_key' => 'unused']),
-            'status'               => 'connected',
+            'status' => 'connected',
             'developer_registered_at' => now(),
         ], $overrides));
     }
@@ -42,15 +45,15 @@ if (! function_exists('fixture')) {
     function gmcTarget(GmcAccount $account, array $overrides = []): GmcTarget
     {
         return GmcTarget::create(array_merge([
-            'gmc_account_id'   => $account->id,
-            'channel_id'       => core()->getDefaultChannel()->id,
-            'locale'           => 'en',
+            'gmc_account_id' => $account->id,
+            'channel_id' => core()->getDefaultChannel()->id,
+            'locale' => 'en',
             'content_language' => 'en',
-            'feed_label'       => 'US',
-            'countries'        => ['US'],
-            'currency'         => 'USD',
+            'feed_label' => 'US',
+            'countries' => ['US'],
+            'currency' => 'USD',
             'data_source_name' => 'accounts/123456/dataSources/999',
-            'enabled'          => true,
+            'enabled' => true,
         ], $overrides));
     }
 
@@ -69,7 +72,7 @@ if (! function_exists('fixture')) {
         }
 
         // Bagisto caches CoreConfigRepository lookups; admin saves clear it, raw inserts don't.
-        \Illuminate\Support\Facades\Cache::flush();
+        Cache::flush();
     }
 
     /**
@@ -87,7 +90,7 @@ if (! function_exists('fixture')) {
         DB::table('product_attribute_values')->updateOrInsert(
             ['product_id' => $product->id, 'attribute_id' => $attribute->id, 'channel' => $channel, 'locale' => $locale],
             [
-                $column     => $value,
+                $column => $value,
                 'unique_id' => implode('|', array_filter([$channel, $locale, $product->id, $attribute->id])),
             ]
         );
@@ -117,10 +120,10 @@ if (! function_exists('fixture')) {
         DB::table('gmc_products')->whereIn('id', $rows)->delete();
         DB::table('jobs')->where('queue', 'gmc')->delete();
 
-        \Illuminate\Support\Facades\Cache::flush();
+        Cache::flush();
 
         // ArrayStore::flush() keeps locks (incl. unique-job locks); clear them as a fresh process would.
-        if (($store = \Illuminate\Support\Facades\Cache::getStore()) instanceof \Illuminate\Cache\ArrayStore) {
+        if (($store = Cache::getStore()) instanceof ArrayStore) {
             $store->locks = [];
         }
     }
@@ -148,7 +151,7 @@ if (! function_exists('fixture')) {
 
         // product_flat (admin grids, storefront) as Bagisto's own save would.
         foreach ($products as $product) {
-            app(\Webkul\Product\Helpers\Indexers\Flat::class)->refresh($product->fresh());
+            app(Flat::class)->refresh($product->fresh());
         }
     }
 
@@ -160,16 +163,16 @@ if (! function_exists('fixture')) {
         $product = (new ProductFaker)->getSimpleProductFactory()->create();
 
         $defaults = [
-            'name'        => 'Arctic Cozy Knit Beanie',
-            'url_key'     => 'arctic-cozy-beanie-'.$product->id,
+            'name' => 'Arctic Cozy Knit Beanie',
+            'url_key' => 'arctic-cozy-beanie-'.$product->id,
             'description' => '<p>Warm <strong>knit</strong> beanie &amp; soft lining.</p>',
-            'price'       => 21,
+            'price' => 21,
             'special_price' => null,
-            'status'      => 1,
+            'status' => 1,
             'visible_individually' => 1,
             'manage_stock' => 1,
-            'brand'       => optionId('brand', 'Arctic'),
-            'gtin'        => '4006381333931',
+            'brand' => optionId('brand', 'Arctic'),
+            'gtin' => '4006381333931',
             'product_number' => 'MPN-'.$product->id,
         ];
 
@@ -195,12 +198,12 @@ if (! function_exists('fixture')) {
         $sizes = array_slice(['S', 'M', 'L', 'XL'], 0, $variants);
 
         $parent = app(ProductRepository::class)->create([
-            'type'                => 'configurable',
+            'type' => 'configurable',
             'attribute_family_id' => 1,
-            'sku'                 => 'cfg-'.uniqid(),
-            'super_attributes'    => [
+            'sku' => 'cfg-'.uniqid(),
+            'super_attributes' => [
                 'color' => [optionId('color', 'Red')],
-                'size'  => array_map(fn ($s) => optionId('size', $s), $sizes),
+                'size' => array_map(fn ($s) => optionId('size', $s), $sizes),
             ],
         ]);
 

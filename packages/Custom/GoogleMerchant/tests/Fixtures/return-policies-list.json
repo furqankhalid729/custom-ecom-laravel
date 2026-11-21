@@ -1,0 +1,6 @@
+{
+  "onlineReturnPolicies": [
+    { "name": "accounts/123456/onlineReturnPolicies/111", "returnPolicyId": "111", "label": "store-sync-US", "countries": ["US"], "returnPolicyUri": "https://shop.example.com/old-returns" },
+    { "name": "accounts/123456/onlineReturnPolicies/222", "returnPolicyId": "222", "label": "manual-uk", "countries": ["GB"], "returnPolicyUri": "https://shop.example.com/uk-returns" }
+  ]
+}

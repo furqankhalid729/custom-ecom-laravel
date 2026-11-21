@@ -25,10 +25,10 @@ class RefreshStarter
 
         foreach ($targets as $target) {
             $run = GmcRunProxy::modelClass()::create([
-                'type'          => RunType::Refresh->value,
-                'status'        => RunStatus::Running->value,
+                'type' => RunType::Refresh->value,
+                'status' => RunStatus::Running->value,
                 'gmc_target_id' => $target->id,
-                'started_at'    => now(),
+                'started_at' => now(),
             ]);
 
             RefreshRunJob::dispatch($run->id);

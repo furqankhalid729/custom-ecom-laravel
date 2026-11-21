@@ -4,6 +4,7 @@ namespace Custom\GoogleMerchant\Models;
 
 use Custom\GoogleMerchant\Contracts\GmcAccount as GmcAccountContract;
 use Custom\GoogleMerchant\Enums\AccountStatus;
+use Custom\GoogleMerchant\Support\Notifier;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -34,10 +35,10 @@ class GmcAccount extends Model implements GmcAccountContract
     protected $hidden = ['access_token', 'refresh_token', 'service_account_json'];
 
     protected $casts = [
-        'access_token'            => 'encrypted',
-        'refresh_token'           => 'encrypted',
-        'service_account_json'    => 'encrypted',
-        'token_expires_at'        => 'datetime',
+        'access_token' => 'encrypted',
+        'refresh_token' => 'encrypted',
+        'service_account_json' => 'encrypted',
+        'token_expires_at' => 'datetime',
         'developer_registered_at' => 'datetime',
     ];
 
@@ -49,5 +50,15 @@ class GmcAccount extends Model implements GmcAccountContract
     public function isConnected(): bool
     {
         return $this->status === AccountStatus::Connected->value;
+    }
+
+    /** Whatever path marks the account as needing a reconnect, the admin is told (once a day). */
+    protected static function booted(): void
+    {
+        static::updated(function (GmcAccount $account) {
+            if ($account->wasChanged('status') && $account->status === AccountStatus::NeedsReauth->value) {
+                app(Notifier::class)->reauthRequired($account);
+            }
+        });
     }
 }

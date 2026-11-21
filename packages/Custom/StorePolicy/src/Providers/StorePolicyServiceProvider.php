@@ -5,8 +5,8 @@ namespace Custom\StorePolicy\Providers;
 use Custom\StorePolicy\Seo\ProductSeo;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
-use Webkul\Core\Http\Middleware\NoCacheMiddleware;
 use Illuminate\Support\ServiceProvider;
+use Webkul\Core\Http\Middleware\NoCacheMiddleware;
 use Webkul\Product\Helpers\SEO;
 use Webkul\Theme\ViewRenderEventManager;
 

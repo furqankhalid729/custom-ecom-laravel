@@ -14,8 +14,8 @@ beforeEach(function () {
 
     $this->calls = fn () => collect(Http::recorded())->map(fn ($pair) => [
         'method' => $pair[0]->method(),
-        'url'    => urldecode($pair[0]->url()),
-        'body'   => $pair[0]->data(),
+        'url' => urldecode($pair[0]->url()),
+        'body' => $pair[0]->data(),
     ]);
 
     // Tests swap $this->respond to script Google's answers (fake stubs match in registration order).

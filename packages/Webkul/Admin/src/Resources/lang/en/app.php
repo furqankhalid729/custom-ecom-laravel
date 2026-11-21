@@ -4065,6 +4065,17 @@ return [
                         'title-info' => 'Product view page configuration entails adjusting the layout and elements on a product\'s display page, enhancing user experience and information presentation.',
                     ],
 
+                    'product-tabs' => [
+                        'tab-1-content' => 'Tab 1 Content',
+                        'tab-1-heading' => 'Tab 1 Heading',
+                        'tab-1-status' => 'Show Tab 1',
+                        'tab-2-content' => 'Tab 2 Content',
+                        'tab-2-heading' => 'Tab 2 Heading',
+                        'tab-2-status' => 'Show Tab 2',
+                        'title' => 'Product Page Tabs',
+                        'title-info' => 'Add up to two extra tabs (for example Shipping and Returns) shown next to Description and Reviews on every product page.',
+                    ],
+
                     'cart-view-page' => [
                         'allow-no-of-cross-sells-products' => 'Allowed number of Cross-Sell Products',
                         'title' => 'Cart view page configuration',

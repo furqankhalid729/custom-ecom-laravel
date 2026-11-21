@@ -14,13 +14,13 @@ class GmcProductDataGrid extends DataGrid
     protected $primaryColumn = 'id';
 
     public const BADGES = [
-        'synced'   => 'gmc-ok',
-        'pending'  => 'gmc-info',
+        'synced' => 'gmc-ok',
+        'pending' => 'gmc-info',
         'deleting' => 'gmc-info',
-        'failed'   => 'gmc-bad',
-        'invalid'  => 'gmc-warn',
+        'failed' => 'gmc-bad',
+        'invalid' => 'gmc-warn',
         'excluded' => 'gmc-muted',
-        'deleted'  => 'gmc-muted',
+        'deleted' => 'gmc-muted',
     ];
 
     public function prepareQueryBuilder()
@@ -48,6 +48,15 @@ class GmcProductDataGrid extends DataGrid
                 'pf.name as product_name',
             );
 
+        // Presets from Diagnostics links (?issue=<google issue code>, ?state=<sync state>).
+        if (is_string($issue = request('issue')) && $issue !== '') {
+            $queryBuilder->whereJsonContains('gmc_products.google_issues', ['code' => $issue]);
+        }
+
+        if (in_array(request('state'), array_column(SyncState::cases(), 'value'), true)) {
+            $queryBuilder->where('gmc_products.state', request('state'));
+        }
+
         $this->addFilter('id', 'gmc_products.id');
         $this->addFilter('offer_id', 'gmc_products.offer_id');
         $this->addFilter('state', 'gmc_products.state');
@@ -66,13 +75,13 @@ class GmcProductDataGrid extends DataGrid
         $this->addColumn(['index' => 'id', 'label' => $t('id'), 'type' => 'integer', 'sortable' => true, 'filterable' => true]);
 
         $this->addColumn([
-            'index'      => 'product_name',
-            'label'      => $t('product'),
-            'type'       => 'string',
+            'index' => 'product_name',
+            'label' => $t('product'),
+            'type' => 'string',
             'searchable' => true,
-            'sortable'   => true,
+            'sortable' => true,
             'filterable' => true,
-            'closure'    => fn ($row) => $row->product_name ?? trans('google_merchant::app.products.deleted-product'),
+            'closure' => fn ($row) => $row->product_name ?? trans('google_merchant::app.products.deleted-product'),
         ]);
 
         $this->addColumn(['index' => 'offer_id', 'label' => $t('offer-id'), 'type' => 'string', 'searchable' => true, 'sortable' => true, 'filterable' => true]);
@@ -80,27 +89,27 @@ class GmcProductDataGrid extends DataGrid
         $this->addColumn(['index' => 'feed_label', 'label' => $t('market'), 'type' => 'string', 'sortable' => true, 'filterable' => true]);
 
         $this->addColumn([
-            'index'              => 'state',
-            'label'              => $t('state'),
-            'type'               => 'string',
-            'sortable'           => true,
-            'filterable'         => true,
-            'filterable_type'    => 'dropdown',
+            'index' => 'state',
+            'label' => $t('state'),
+            'type' => 'string',
+            'sortable' => true,
+            'filterable' => true,
+            'filterable_type' => 'dropdown',
             'filterable_options' => collect(SyncState::cases())->reject(fn ($s) => $s === SyncState::Deleted)
                 ->map(fn ($s) => ['label' => trans("google_merchant::app.states.{$s->value}"), 'value' => $s->value])->values()->all(),
-            'closure'            => fn ($row) => '<span class="gmc-badge '.(self::BADGES[$row->state] ?? 'gmc-muted').'">'.e(trans("google_merchant::app.states.{$row->state}")).'</span>',
+            'closure' => fn ($row) => '<span class="gmc-badge '.(self::BADGES[$row->state] ?? 'gmc-muted').'">'.e(trans("google_merchant::app.states.{$row->state}")).'</span>',
         ]);
 
         $this->addColumn([
-            'index'              => 'google_status',
-            'label'              => $t('google-status'),
-            'type'               => 'string',
-            'sortable'           => true,
-            'filterable'         => true,
-            'filterable_type'    => 'dropdown',
+            'index' => 'google_status',
+            'label' => $t('google-status'),
+            'type' => 'string',
+            'sortable' => true,
+            'filterable' => true,
+            'filterable_type' => 'dropdown',
             'filterable_options' => collect(GoogleStatus::cases())
                 ->map(fn ($s) => ['label' => trans("google_merchant::app.google-status.{$s->value}"), 'value' => $s->value])->all(),
-            'closure'            => fn ($row) => $row->google_status
+            'closure' => fn ($row) => $row->google_status
                 ? e(trans("google_merchant::app.google-status.{$row->google_status}"))
                 : ($row->state === 'synced' ? e(trans('google_merchant::app.google-status.awaiting')) : '—'),
         ]);
@@ -108,9 +117,9 @@ class GmcProductDataGrid extends DataGrid
         $this->addColumn(['index' => 'last_synced_at', 'label' => $t('last-sync'), 'type' => 'datetime', 'sortable' => true, 'filterable' => true]);
 
         $this->addColumn([
-            'index'   => 'last_error',
-            'label'   => $t('problem'),
-            'type'    => 'string',
+            'index' => 'last_error',
+            'label' => $t('problem'),
+            'type' => 'string',
             'closure' => function ($row) {
                 if (! $row->last_error) {
                     return '';
@@ -136,11 +145,11 @@ class GmcProductDataGrid extends DataGrid
         ] as [$key, $icon, $method, $route]) {
             if (bouncer()->hasPermission("marketing.google_merchant.$route")) {
                 $this->addAction([
-                    'index'  => $key,
-                    'icon'   => $icon,
-                    'title'  => $t($key),
+                    'index' => $key,
+                    'icon' => $icon,
+                    'title' => $t($key),
                     'method' => $method,
-                    'url'    => fn ($row) => route("admin.google_merchant.$route", $row->id),
+                    'url' => fn ($row) => route("admin.google_merchant.$route", $row->id),
                 ]);
             }
         }
@@ -153,9 +162,9 @@ class GmcProductDataGrid extends DataGrid
         foreach ([['mass-sync', 'products.mass_sync'], ['mass-retry', 'products.mass_retry'], ['mass-exclude', 'products.mass_exclude']] as [$key, $route]) {
             if (bouncer()->hasPermission("marketing.google_merchant.$route")) {
                 $this->addMassAction([
-                    'title'  => $t($key),
+                    'title' => $t($key),
                     'method' => 'POST',
-                    'url'    => route("admin.google_merchant.$route"),
+                    'url' => route("admin.google_merchant.$route"),
                 ]);
             }
         }

@@ -36,15 +36,15 @@ class MappingController extends Controller
         $saved = GmcAttributeMappingProxy::modelClass()::query()->whereNull('gmc_target_id')->get()->keyBy('google_field');
 
         $fields = collect(MappingRegistry::DEFAULTS)->map(fn ($default, $field) => [
-            'field'   => $field,
+            'field' => $field,
             'default' => $default,
-            'type'    => $saved[$field]->source_type ?? $default[0],
-            'value'   => $saved[$field]->source_value ?? $default[1],
-            'custom'  => isset($saved[$field]),
+            'type' => $saved[$field]->source_type ?? $default[0],
+            'value' => $saved[$field]->source_value ?? $default[1],
+            'custom' => isset($saved[$field]),
         ]);
 
         return view('google_merchant::admin.mapping.attributes', [
-            'fields'     => $fields,
+            'fields' => $fields,
             'attributes' => DB::table('attributes')->orderBy('admin_name')->get(['code', 'admin_name', 'type']),
         ]);
     }
@@ -79,9 +79,9 @@ class MappingController extends Controller
     public function categories(CategoryRepository $categories): View
     {
         return view('google_merchant::admin.mapping.categories', [
-            'tree'      => $categories->getCategoryTree(),
-            'mappings'  => GmcCategoryMappingProxy::modelClass()::query()->get()->keyBy('category_id'),
-            'taxonomy'  => $this->taxonomy,
+            'tree' => $categories->getCategoryTree(),
+            'mappings' => GmcCategoryMappingProxy::modelClass()::query()->get()->keyBy('category_id'),
+            'taxonomy' => $this->taxonomy,
         ]);
     }
 

@@ -19,7 +19,7 @@ it('queues sync for imported batch skus', function () {
 
     $batch = (object) [
         'import' => (object) ['type' => 'products'],
-        'data'   => [['sku' => $products[0]->sku, 'name' => 'x'], ['sku' => $products[1]->sku], ['sku' => 'not-in-store']],
+        'data' => [['sku' => $products[0]->sku, 'name' => 'x'], ['sku' => $products[1]->sku], ['sku' => 'not-in-store']],
     ];
 
     app(ImportListener::class)->handle($batch);
@@ -33,7 +33,7 @@ it('ignores non-product imports', function () {
 
     app(ImportListener::class)->handle((object) [
         'import' => (object) ['type' => 'customers'],
-        'data'   => [['email' => 'a@b.test']],
+        'data' => [['email' => 'a@b.test']],
     ]);
 
     Queue::assertNothingPushed();

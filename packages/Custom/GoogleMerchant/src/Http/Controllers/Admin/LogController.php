@@ -26,9 +26,9 @@ class LogController extends Controller
     public function show(GmcSyncLog $log): View|JsonResponse
     {
         $data = [
-            'log'         => $log,
+            'log' => $log,
             'explanation' => $this->explainer->explain($log),
-            'pretty'      => $this->pretty($log->response_excerpt),
+            'pretty' => $this->pretty($log->response_excerpt),
         ];
 
         if (request()->expectsJson()) {

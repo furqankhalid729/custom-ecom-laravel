@@ -26,7 +26,7 @@ class ErrorExplainer
         if ($entry instanceof GmcProduct && $entry->state === 'invalid' && $entry->validation_errors) {
             return [
                 'title' => trans('google_merchant::app.hints.invalid.title'),
-                'hint'  => implode(' ', $entry->validation_errors),
+                'hint' => implode(' ', $entry->validation_errors),
             ];
         }
 
@@ -37,7 +37,7 @@ class ErrorExplainer
             if ($key = $this->table['fields'][$field] ?? null) {
                 return [
                     'title' => trans("google_merchant::app.hints.fields.$key.title"),
-                    'hint'  => trans("google_merchant::app.hints.fields.$key.hint"),
+                    'hint' => trans("google_merchant::app.hints.fields.$key.hint"),
                 ];
             }
         }
@@ -45,13 +45,13 @@ class ErrorExplainer
         if ($status && ($code = $this->httpKey($status))) {
             return [
                 'title' => trans("google_merchant::app.hints.http.$code.title"),
-                'hint'  => trans("google_merchant::app.hints.http.$code.hint"),
+                'hint' => trans("google_merchant::app.hints.http.$code.hint"),
             ];
         }
 
         return [
             'title' => trans('google_merchant::app.hints.unknown.title'),
-            'hint'  => $message !== '' ? $message : trans('google_merchant::app.hints.unknown.hint'),
+            'hint' => $message !== '' ? $message : trans('google_merchant::app.hints.unknown.hint'),
         ];
     }
 

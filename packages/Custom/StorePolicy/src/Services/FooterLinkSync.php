@@ -38,8 +38,8 @@ class FooterLinkSync
             $template = config("store_policy.templates.{$key}");
 
             $column[] = [
-                'url'        => rtrim(config('app.url'), '/').'/page/'.$template['url_key'],
-                'title'      => $template['title'],
+                'url' => rtrim(config('app.url'), '/').'/page/'.$template['url_key'],
+                'title' => $template['title'],
                 'sort_order' => ++$sortOrder,
             ];
         }
@@ -98,10 +98,10 @@ class FooterLinkSync
         $model = ThemeCustomizationProxy::modelClass();
 
         return $model::query()->create([
-            'type'       => 'footer_links',
-            'name'       => 'Footer Links',
+            'type' => 'footer_links',
+            'name' => 'Footer Links',
             'sort_order' => (int) $model::query()->where('channel_id', $channelId)->max('sort_order') + 1,
-            'status'     => 1,
+            'status' => 1,
             'channel_id' => $channelId,
             'theme_code' => $channel->theme,
         ]);

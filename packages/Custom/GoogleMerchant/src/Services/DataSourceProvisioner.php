@@ -36,11 +36,11 @@ class DataSourceProvisioner
         }
 
         $created = $this->client->createDataSource($account, [
-            'displayName'              => "Bagisto {$target->feed_label}/{$target->content_language}",
+            'displayName' => "Bagisto {$target->feed_label}/{$target->content_language}",
             'primaryProductDataSource' => [
                 'contentLanguage' => $target->content_language,
-                'feedLabel'       => $target->feed_label,
-                'countries'       => array_values($target->countries),
+                'feedLabel' => $target->feed_label,
+                'countries' => array_values($target->countries),
             ],
         ]);
 
@@ -62,14 +62,14 @@ class DataSourceProvisioner
         $language = strtolower((string) $this->settings->get('store.language', 'en'));
 
         return GmcTargetProxy::modelClass()::create([
-            'gmc_account_id'   => $account->id,
-            'channel_id'       => core()->getDefaultChannel()->id,
-            'locale'           => $language,
+            'gmc_account_id' => $account->id,
+            'channel_id' => core()->getDefaultChannel()->id,
+            'locale' => $language,
             'content_language' => $language,
-            'feed_label'       => $country,
-            'countries'        => [$country],
-            'currency'         => strtoupper((string) $this->settings->get('store.currency', 'USD')),
-            'enabled'          => true,
+            'feed_label' => $country,
+            'countries' => [$country],
+            'currency' => strtoupper((string) $this->settings->get('store.currency', 'USD')),
+            'enabled' => true,
         ]);
     }
 

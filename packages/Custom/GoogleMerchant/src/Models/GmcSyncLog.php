@@ -17,6 +17,7 @@ class GmcSyncLog extends Model implements GmcSyncLogContract
         'gmc_target_id',
         'offer_id',
         'operation',
+        'context',
         'status',
         'http_status',
         'response_excerpt',

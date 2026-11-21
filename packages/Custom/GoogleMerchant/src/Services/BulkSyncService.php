@@ -36,13 +36,13 @@ class BulkSyncService
 
         return $this->targets($filters['target_id'] ?? null)->map(function ($target) use ($filters, $mode, $adminId) {
             $run = GmcRunProxy::modelClass()::create([
-                'type'          => RunType::Bulk->value,
-                'status'        => RunStatus::Running->value,
+                'type' => RunType::Bulk->value,
+                'status' => RunStatus::Running->value,
                 'gmc_target_id' => $target->id,
-                'options'       => ['mode' => $mode, 'filters' => $filters],
-                'total'         => $this->rootQuery($filters)->count(),
-                'started_by'    => $adminId,
-                'started_at'    => now(),
+                'options' => ['mode' => $mode, 'filters' => $filters],
+                'total' => $this->rootQuery($filters)->count(),
+                'started_by' => $adminId,
+                'started_at' => now(),
             ]);
 
             StartBulkRunJob::dispatch($run->id);
@@ -61,13 +61,13 @@ class BulkSyncService
     public function startDeleteAllForTarget(GmcTarget $target, ?int $adminId): array
     {
         $run = GmcRunProxy::modelClass()::create([
-            'type'          => RunType::DeleteAll->value,
-            'status'        => RunStatus::Running->value,
+            'type' => RunType::DeleteAll->value,
+            'status' => RunStatus::Running->value,
             'gmc_target_id' => $target->id,
-            'options'       => ['mode' => 'delete'],
-            'total'         => $this->deletableQuery($target->id)->count(),
-            'started_by'    => $adminId,
-            'started_at'    => now(),
+            'options' => ['mode' => 'delete'],
+            'total' => $this->deletableQuery($target->id)->count(),
+            'started_by' => $adminId,
+            'started_at' => now(),
         ]);
 
         StartBulkRunJob::dispatch($run->id);

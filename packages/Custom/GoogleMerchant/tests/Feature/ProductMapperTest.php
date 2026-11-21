@@ -64,7 +64,7 @@ it('maps a configurable product to one offer per variant', function () {
             ->and($a['link'])->toBe('https://shop.example.com/puffer-jacket-'.$parent->id.'?variant='.rawurlencode($variants[$i]->sku))
             ->and($a['color'])->toBe('Red')
             ->and($a['size'])->toBe(['S', 'M', 'L'][$i])
-            ->and($a['price']['amountMicros'])->toBe([ '14000000', '17000000', '21000000'][$i]);
+            ->and($a['price']['amountMicros'])->toBe(['14000000', '17000000', '21000000'][$i]);
     }
 });
 
@@ -95,9 +95,9 @@ it('prefers a variant own name and image', function () {
 
 it('emits sale price only when lower', function () {
     $product = simpleProduct([
-        'special_price'      => 17,
+        'special_price' => 17,
         'special_price_from' => now()->subDay()->toDateString(),
-        'special_price_to'   => now()->addDays(5)->toDateString(),
+        'special_price_to' => now()->addDays(5)->toDateString(),
     ]);
 
     $a = ($this->map)($product)[0]->productInput['productAttributes'];
@@ -113,9 +113,9 @@ it('emits sale price only when lower', function () {
 
 it('ignores an expired special price', function () {
     $product = simpleProduct([
-        'special_price'      => 17,
+        'special_price' => 17,
         'special_price_from' => now()->subDays(10)->toDateString(),
-        'special_price_to'   => now()->subDays(2)->toDateString(),
+        'special_price_to' => now()->subDays(2)->toDateString(),
     ]);
 
     expect(($this->map)($product)[0]->productInput['productAttributes'])->not->toHaveKey('salePrice');
@@ -158,15 +158,15 @@ it('sends identifierExists false only when the admin set it to No', function () 
 
 it('maps apparel attributes and labels', function () {
     $product = simpleProduct([
-        'gmc_condition'      => optionId('gmc_condition', 'refurbished'),
-        'gmc_gender'         => optionId('gmc_gender', 'unisex'),
-        'gmc_age_group'      => optionId('gmc_age_group', 'adult'),
-        'gmc_material'       => 'Wool',
-        'gmc_pattern'        => 'Cable knit',
+        'gmc_condition' => optionId('gmc_condition', 'refurbished'),
+        'gmc_gender' => optionId('gmc_gender', 'unisex'),
+        'gmc_age_group' => optionId('gmc_age_group', 'adult'),
+        'gmc_material' => 'Wool',
+        'gmc_pattern' => 'Cable knit',
         'gmc_google_category' => '173',
         'gmc_custom_label_0' => 'winter',
-        'gmc_multipack'      => '2',
-        'weight'             => '0.3',
+        'gmc_multipack' => '2',
+        'weight' => '0.3',
     ]);
 
     $a = ($this->map)($product)[0]->productInput['productAttributes'];

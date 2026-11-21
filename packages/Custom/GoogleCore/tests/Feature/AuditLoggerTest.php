@@ -5,10 +5,10 @@ use Illuminate\Support\Facades\DB;
 
 it('records audit entries without secrets', function () {
     app(AuditLogger::class)->record('merchant_center', 'connect', [
-        'refresh_token'        => 'x',
-        'client_secret'        => 'y',
+        'refresh_token' => 'x',
+        'client_secret' => 'y',
         'service_account_json' => '{}',
-        'merchant_id'          => '1',
+        'merchant_id' => '1',
     ]);
 
     $row = DB::table('google_audit_logs')->latest('id')->first();

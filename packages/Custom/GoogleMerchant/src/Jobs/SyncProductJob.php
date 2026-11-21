@@ -21,7 +21,7 @@ use Illuminate\Queue\InteractsWithQueue;
  * Syncs one root product to one target. Unique until a worker picks it up, so
  * a burst of saves becomes one job, while a save during the run queues a follow-up.
  */
-class SyncProductJob implements ShouldQueue, ShouldBeUniqueUntilProcessing
+class SyncProductJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, RunsOnGmcQueue;
 
@@ -90,7 +90,7 @@ class SyncProductJob implements ShouldQueue, ShouldBeUniqueUntilProcessing
             ->where('gmc_target_id', $this->targetId)
             ->where('state', SyncState::Pending->value)
             ->update([
-                'state'      => SyncState::Failed->value,
+                'state' => SyncState::Failed->value,
                 'error_kind' => ErrorKind::Transient->value,
                 'last_error' => mb_strcut('Gave up after repeated errors: '.($e?->getMessage() ?? 'unknown'), 0, 1000),
                 'updated_at' => now(),

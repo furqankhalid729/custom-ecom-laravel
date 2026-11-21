@@ -6,22 +6,25 @@ use Custom\GoogleCore\Integrations\IntegrationRegistry;
 use Custom\GoogleMerchant\Auth\AccessTokenProvider;
 use Custom\GoogleMerchant\Auth\TokenManager;
 use Custom\GoogleMerchant\Console\Commands\QueueRunCommand;
+use Custom\GoogleMerchant\Console\Commands\ReconcileCommand;
 use Custom\GoogleMerchant\Console\Commands\RefreshCommand;
 use Custom\GoogleMerchant\Console\Commands\RetryFailedCommand;
+use Custom\GoogleMerchant\Console\Commands\StatusesCommand;
 use Custom\GoogleMerchant\Console\Commands\SyncCommand;
 use Custom\GoogleMerchant\Console\Commands\TaxonomyCommand;
 use Custom\GoogleMerchant\Console\GmcSchedule;
 use Custom\GoogleMerchant\Listeners\ImportListener;
-use Illuminate\Console\Scheduling\Schedule;
-use Webkul\Theme\ViewRenderEventManager;
 use Custom\GoogleMerchant\Listeners\InventoryListener;
+use Custom\GoogleMerchant\Listeners\PolicySettingsListener;
 use Custom\GoogleMerchant\Listeners\ProductListener;
 use Custom\GoogleMerchant\MerchantIntegration;
 use Custom\GoogleMerchant\Sync\SkuChangeTracker;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Webkul\Core\Http\Middleware\NoCacheMiddleware;
+use Webkul\Theme\ViewRenderEventManager;
 
 class GoogleMerchantServiceProvider extends ServiceProvider
 {
@@ -65,7 +68,9 @@ class GoogleMerchantServiceProvider extends ServiceProvider
                 QueueRunCommand::class,
                 SyncCommand::class,
                 RefreshCommand::class,
+                ReconcileCommand::class,
                 RetryFailedCommand::class,
+                StatusesCommand::class,
                 TaxonomyCommand::class,
             ]);
         }
@@ -85,6 +90,9 @@ class GoogleMerchantServiceProvider extends ServiceProvider
         }
 
         Event::listen('data_transfer.imports.batch.import.after', [ImportListener::class, 'handle']);
+
+        // Store Policies package (optional): push shipping/returns to Merchant Center after a save.
+        Event::listen('eloquent.saved: Custom\StorePolicy\Models\PolicySetting', [PolicySettingsListener::class, 'saved']);
 
         Event::listen('bagisto.admin.catalog.product.edit.after', static function (ViewRenderEventManager $manager) {
             if (bouncer()->hasPermission('marketing.google_merchant.products')) {

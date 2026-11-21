@@ -26,33 +26,33 @@ class RunController extends Controller
     public function index(CategoryRepository $categories): View
     {
         return view('google_merchant::admin.runs.index', [
-            'runs'       => GmcRunProxy::modelClass()::query()->latest('id')->limit(20)->get(),
+            'runs' => GmcRunProxy::modelClass()::query()->latest('id')->limit(20)->get(),
             'categories' => $categories->getCategoryTree(),
-            'account'    => $this->connection->current(),
+            'account' => $this->connection->current(),
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'mode'           => ['required', Rule::in(BulkSyncService::MODES)],
-            'category_ids'   => ['nullable', 'array'],
+            'mode' => ['required', Rule::in(BulkSyncService::MODES)],
+            'category_ids' => ['nullable', 'array'],
             'category_ids.*' => ['integer'],
             'product_status' => ['nullable', Rule::in(['any', 'enabled', 'disabled'])],
-            'updated_from'   => ['nullable', 'date_format:Y-m-d'],
-            'updated_to'     => ['nullable', 'date_format:Y-m-d', 'after_or_equal:updated_from'],
-            'product_ids'    => ['nullable', 'string', 'max:20000'],
-            'sync_state'     => ['nullable', 'array'],
-            'sync_state.*'   => [Rule::in(['pending', 'synced', 'failed', 'invalid', 'excluded'])],
+            'updated_from' => ['nullable', 'date_format:Y-m-d'],
+            'updated_to' => ['nullable', 'date_format:Y-m-d', 'after_or_equal:updated_from'],
+            'product_ids' => ['nullable', 'string', 'max:20000'],
+            'sync_state' => ['nullable', 'array'],
+            'sync_state.*' => [Rule::in(['pending', 'synced', 'failed', 'invalid', 'excluded'])],
         ]);
 
         $filters = array_filter([
-            'category_ids'   => $data['category_ids'] ?? null,
+            'category_ids' => $data['category_ids'] ?? null,
             'product_status' => $data['product_status'] ?? null,
-            'updated_from'   => $data['updated_from'] ?? null,
-            'updated_to'     => $data['updated_to'] ?? null,
-            'product_ids'    => ($ids = array_values(array_filter(array_map('intval', preg_split('/[\s,]+/', (string) ($data['product_ids'] ?? '')))))) ?: null,
-            'sync_state'     => $data['sync_state'] ?? null,
+            'updated_from' => $data['updated_from'] ?? null,
+            'updated_to' => $data['updated_to'] ?? null,
+            'product_ids' => ($ids = array_values(array_filter(array_map('intval', preg_split('/[\s,]+/', (string) ($data['product_ids'] ?? '')))))) ?: null,
+            'sync_state' => $data['sync_state'] ?? null,
         ]);
 
         $runs = $this->bulk->start($filters, $data['mode'], auth()->guard('admin')->id());
@@ -80,16 +80,16 @@ class RunController extends Controller
     public function show(GmcRun $run): JsonResponse
     {
         return new JsonResponse([
-            'id'          => $run->id,
-            'type'        => $run->type,
-            'status'      => $run->status,
-            'total'       => $run->total,
-            'processed'   => $run->processed,
-            'succeeded'   => $run->succeeded,
-            'failed'      => $run->failed,
-            'pending'     => max(0, $run->total - $run->processed),
-            'cursor'      => $run->cursor,
-            'started_at'  => $run->started_at?->toIso8601String(),
+            'id' => $run->id,
+            'type' => $run->type,
+            'status' => $run->status,
+            'total' => $run->total,
+            'processed' => $run->processed,
+            'succeeded' => $run->succeeded,
+            'failed' => $run->failed,
+            'pending' => max(0, $run->total - $run->processed),
+            'cursor' => $run->cursor,
+            'started_at' => $run->started_at?->toIso8601String(),
             'finished_at' => $run->finished_at?->toIso8601String(),
         ]);
     }

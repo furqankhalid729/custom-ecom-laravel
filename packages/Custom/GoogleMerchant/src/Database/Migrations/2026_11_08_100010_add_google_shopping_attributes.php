@@ -33,12 +33,12 @@ return new class extends Migration
 
             if (! $groupId) {
                 $groupId = DB::table('attribute_groups')->insertGetId([
-                    'code'                => GoogleAttributes::GROUP_CODE,
+                    'code' => GoogleAttributes::GROUP_CODE,
                     'attribute_family_id' => $familyId,
-                    'name'                => GoogleAttributes::GROUP_NAME,
-                    'column'              => 2,
-                    'position'            => (int) DB::table('attribute_groups')->where('attribute_family_id', $familyId)->where('column', 2)->max('position') + 1,
-                    'is_user_defined'     => 0,
+                    'name' => GoogleAttributes::GROUP_NAME,
+                    'column' => 2,
+                    'position' => (int) DB::table('attribute_groups')->where('attribute_family_id', $familyId)->where('column', 2)->max('position') + 1,
+                    'is_user_defined' => 0,
                 ]);
             }
 
@@ -60,9 +60,9 @@ return new class extends Migration
                 }
 
                 DB::table('attribute_group_mappings')->insert([
-                    'attribute_id'       => $attributeId,
+                    'attribute_id' => $attributeId,
                     'attribute_group_id' => $groupId,
-                    'position'           => $i,
+                    'position' => $i,
                 ]);
             }
         }
@@ -83,24 +83,24 @@ return new class extends Migration
         $now = now();
 
         $id = DB::table('attributes')->insertGetId([
-            'code'                => $code,
-            'admin_name'          => $definition['name'],
-            'type'                => $definition['type'],
-            'validation'          => $definition['validation'] ?? null,
-            'position'            => $position,
-            'is_required'         => 0,
-            'is_unique'           => 0,
-            'is_filterable'       => 0,
-            'is_comparable'       => 0,
-            'is_configurable'     => 0,
-            'is_user_defined'     => 1,
+            'code' => $code,
+            'admin_name' => $definition['name'],
+            'type' => $definition['type'],
+            'validation' => $definition['validation'] ?? null,
+            'position' => $position,
+            'is_required' => 0,
+            'is_unique' => 0,
+            'is_filterable' => 0,
+            'is_comparable' => 0,
+            'is_configurable' => 0,
+            'is_user_defined' => 1,
             'is_visible_on_front' => 0,
-            'value_per_locale'    => 0,
-            'value_per_channel'   => 0,
-            'default_value'       => $definition['default'] ?? null,
-            'enable_wysiwyg'      => 0,
-            'created_at'          => $now,
-            'updated_at'          => $now,
+            'value_per_locale' => 0,
+            'value_per_channel' => 0,
+            'default_value' => $definition['default'] ?? null,
+            'enable_wysiwyg' => 0,
+            'created_at' => $now,
+            'updated_at' => $now,
         ]);
 
         foreach ($locales as $locale) {
@@ -110,15 +110,15 @@ return new class extends Migration
         foreach ($definition['options'] ?? [] as $sort => $option) {
             $optionId = DB::table('attribute_options')->insertGetId([
                 'attribute_id' => $id,
-                'admin_name'   => $option,
-                'sort_order'   => $sort + 1,
+                'admin_name' => $option,
+                'sort_order' => $sort + 1,
             ]);
 
             foreach ($locales as $locale) {
                 DB::table('attribute_option_translations')->insert([
                     'attribute_option_id' => $optionId,
-                    'locale'              => $locale,
-                    'label'               => ucfirst($option),
+                    'locale' => $locale,
+                    'label' => ucfirst($option),
                 ]);
             }
         }

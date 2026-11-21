@@ -68,8 +68,8 @@ class ReadinessChecker
     protected function item(string $key, bool $passed, ?string $detail = null): array
     {
         return [
-            'key'    => $key,
-            'label'  => trans("store_policy::app.readiness.{$key}.label"),
+            'key' => $key,
+            'label' => trans("store_policy::app.readiness.{$key}.label"),
             'passed' => $passed,
             'detail' => $passed ? null : trim(trans("store_policy::app.readiness.{$key}.fail").($detail ? ' '.$detail : '')),
         ];

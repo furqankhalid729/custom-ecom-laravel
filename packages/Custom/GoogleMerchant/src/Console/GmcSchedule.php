@@ -3,6 +3,8 @@
 namespace Custom\GoogleMerchant\Console;
 
 use Custom\GoogleMerchant\Jobs\HeartbeatJob;
+use Custom\GoogleMerchant\Jobs\PruneLogsJob;
+use Custom\GoogleMerchant\Jobs\SendDigestJob;
 use Custom\GoogleMerchant\Services\SetupChecklist;
 use Custom\GoogleMerchant\Support\Settings;
 use Illuminate\Console\Scheduling\Schedule;
@@ -16,6 +18,23 @@ use Illuminate\Support\Facades\Cache;
 class GmcSchedule
 {
     public function __construct(protected Settings $settings) {}
+
+    /** reconcile_time (HH:MM, default 01:00) × reconcile_frequency (daily | twicedaily, 12 h apart). */
+    protected function reconcileCron(): string
+    {
+        $time = (string) $this->settings->get('settings.reconcile_time', '01:00');
+
+        [$hour, $minute] = preg_match('/^([01]?\d|2[0-3]):([0-5]\d)$/', trim($time), $m) ? [(int) $m[1], (int) $m[2]] : [1, 0];
+
+        $hours = [$hour];
+
+        if ($this->settings->get('settings.reconcile_frequency', 'daily') === 'twicedaily') {
+            $hours[] = ($hour + 12) % 24;
+            sort($hours);
+        }
+
+        return $minute.' '.implode(',', $hours).' * * *';
+    }
 
     public function define(Schedule $schedule): void
     {
@@ -38,12 +57,26 @@ class GmcSchedule
             ->when($enabled)
             ->name('gmc:worker-heartbeat');
 
-        // After Bagisto's 00:01 catalog-rule price reindex, which fires no events.
-        $schedule->command('gmc:refresh')
-            ->dailyAt('01:00')
+        // Default 01:00: after Bagisto's 00:01 catalog-rule price reindex, which fires no events.
+        // Reconcile = orphan cleanup in Google + the drift/stale pass (gmc:refresh alone stays manual).
+        $schedule->command('gmc:reconcile')
+            ->cron($this->reconcileCron())
             ->when($enabled)
-            ->withoutOverlapping(120)
-            ->name('gmc:refresh');
+            ->name('gmc:reconcile');
+
+        $schedule->command('gmc:statuses')
+            ->cron('0 */6 * * *')
+            ->when($enabled)
+            ->name('gmc:statuses');
+
+        $schedule->job(new SendDigestJob)
+            ->dailyAt('08:00')
+            ->when($enabled)
+            ->name('gmc:digest');
+
+        $schedule->job(new PruneLogsJob)
+            ->dailyAt('03:00')
+            ->name('gmc:prune-logs');
 
         $schedule->command('gmc:retry-failed')
             ->hourly()

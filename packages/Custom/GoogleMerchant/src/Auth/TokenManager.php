@@ -66,9 +66,9 @@ class TokenManager implements AccessTokenProvider
         }
 
         $account->forceFill([
-            'access_token'     => $token->accessToken,
+            'access_token' => $token->accessToken,
             'token_expires_at' => $token->expiresAt,
-            'refresh_token'    => $token->refreshToken ?? $account->refresh_token,
+            'refresh_token' => $token->refreshToken ?? $account->refresh_token,
         ])->save();
 
         return $token->accessToken;
@@ -100,7 +100,7 @@ class TokenManager implements AccessTokenProvider
     protected function markNeedsReauth(GmcAccount $account, string $reason): void
     {
         $account->forceFill([
-            'status'     => AccountStatus::NeedsReauth->value,
+            'status' => AccountStatus::NeedsReauth->value,
             'last_error' => $reason,
         ])->save();
     }

@@ -2,7 +2,7 @@
 
 require_once __DIR__.'/../Helpers.php';
 
-use Illuminate\Support\Facades\Event;
+use Webkul\Theme\ViewRenderEventManager;
 
 function renderPreselect($product, ?string $variant): string
 {
@@ -17,8 +17,8 @@ it('emits the option steps for the requested variant', function () {
 
     $html = renderPreselect($parent, $variant->sku);
 
-    $colorId = \DB::table('attributes')->where('code', 'color')->value('id');
-    $sizeId = \DB::table('attributes')->where('code', 'size')->value('id');
+    $colorId = DB::table('attributes')->where('code', 'color')->value('id');
+    $sizeId = DB::table('attributes')->where('code', 'size')->value('id');
 
     expect($html)->toContain('gmc-variant-preselect')
         ->toContain('['.$colorId.','.optionId('color', 'Red').']')
@@ -41,7 +41,7 @@ it('escapes the requested sku', function () {
 
 it('hooks into the shop product page only for variant links', function () {
     $product = configurableProduct(1);
-    $templates = fn () => (new \Webkul\Theme\ViewRenderEventManager)
+    $templates = fn () => (new ViewRenderEventManager)
         ->handleRenderEvent('bagisto.shop.products.view.after', ['product' => $product])
         ->getTemplates();
 

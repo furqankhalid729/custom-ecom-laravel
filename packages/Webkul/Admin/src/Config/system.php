@@ -928,6 +928,52 @@ return [
             ],
         ],
     ], [
+        'key' => 'catalog.products.product_tabs',
+        'name' => 'admin::app.configuration.index.catalog.products.product-tabs.title',
+        'info' => 'admin::app.configuration.index.catalog.products.product-tabs.title-info',
+        'sort' => 2,
+        'fields' => [
+            [
+                'name' => 'tab_1_status',
+                'title' => 'admin::app.configuration.index.catalog.products.product-tabs.tab-1-status',
+                'type' => 'boolean',
+                'default' => false,
+                'channel_based' => true,
+            ], [
+                'name' => 'tab_1_heading',
+                'title' => 'admin::app.configuration.index.catalog.products.product-tabs.tab-1-heading',
+                'type' => 'text',
+                'default' => 'Shipping',
+                'channel_based' => true,
+                'locale_based' => true,
+            ], [
+                'name' => 'tab_1_content',
+                'title' => 'admin::app.configuration.index.catalog.products.product-tabs.tab-1-content',
+                'type' => 'editor',
+                'channel_based' => true,
+                'locale_based' => true,
+            ], [
+                'name' => 'tab_2_status',
+                'title' => 'admin::app.configuration.index.catalog.products.product-tabs.tab-2-status',
+                'type' => 'boolean',
+                'default' => false,
+                'channel_based' => true,
+            ], [
+                'name' => 'tab_2_heading',
+                'title' => 'admin::app.configuration.index.catalog.products.product-tabs.tab-2-heading',
+                'type' => 'text',
+                'default' => 'Refund & Returns',
+                'channel_based' => true,
+                'locale_based' => true,
+            ], [
+                'name' => 'tab_2_content',
+                'title' => 'admin::app.configuration.index.catalog.products.product-tabs.tab-2-content',
+                'type' => 'editor',
+                'channel_based' => true,
+                'locale_based' => true,
+            ],
+        ],
+    ], [
         'key' => 'catalog.products.cart_view_page',
         'name' => 'admin::app.configuration.index.catalog.products.cart-view-page.title',
         'info' => 'admin::app.configuration.index.catalog.products.cart-view-page.title-info',

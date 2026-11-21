@@ -132,10 +132,10 @@ class PolicyGenerator
         $html = $this->renderer->render($key, $settings, self::LOCALE);
 
         $attributes = [
-            'url_key'          => $template['url_key'],
-            'page_title'       => $template['title'],
-            'html_content'     => $html,
-            'meta_title'       => $template['title'],
+            'url_key' => $template['url_key'],
+            'page_title' => $template['title'],
+            'html_content' => $html,
+            'meta_title' => $template['title'],
             'meta_description' => $template['meta_description'],
         ];
 
@@ -151,8 +151,8 @@ class PolicyGenerator
             // rewrites) reads the admin form request, and generation never changes url_key.
             $page = $this->pageRepository->update([
                 self::LOCALE => $attributes + ['meta_keywords' => $translation->meta_keywords],
-                'channels'   => $channels,
-                'locale'     => self::LOCALE,
+                'channels' => $channels,
+                'locale' => self::LOCALE,
             ], $pageId);
 
             Event::dispatch('cms.page.update.after', $page);
@@ -169,12 +169,12 @@ class PolicyGenerator
         PolicyGenerationProxy::modelClass()::query()->updateOrCreate(
             ['cms_page_id' => $page->id, 'locale' => self::LOCALE],
             [
-                'template_key'        => $key,
+                'template_key' => $key,
                 'generated_html_hash' => $this->hasher->htmlHash($html),
-                'settings_hash'       => $this->hasher->hash($settings, $template['depends']),
-                'previous_html'       => $previousHtml,
-                'generated_at'        => now(),
-                'generated_by'        => $adminId,
+                'settings_hash' => $this->hasher->hash($settings, $template['depends']),
+                'previous_html' => $previousHtml,
+                'generated_at' => now(),
+                'generated_by' => $adminId,
             ]
         );
     }

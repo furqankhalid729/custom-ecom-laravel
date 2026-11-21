@@ -6,6 +6,8 @@ use Custom\GoogleMerchant\Jobs\SyncProductJob;
 use Custom\GoogleMerchant\Listeners\InventoryListener;
 use Custom\GoogleMerchant\Sync\SyncDispatcher;
 use Custom\GoogleMerchant\Sync\SyncService;
+use Illuminate\Bus\UniqueLock;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
@@ -21,7 +23,7 @@ function salesEntity(array $productIds, ?int $childId = null): object
 {
     return (object) ['items' => collect($productIds)->map(fn ($id) => (object) [
         'product_id' => $id,
-        'child'      => $childId ? (object) ['product_id' => $childId] : null,
+        'child' => $childId ? (object) ['product_id' => $childId] : null,
     ])];
 }
 
@@ -57,7 +59,7 @@ it('turns stock to OUT_OF_STOCK when the last unit sells and back after a refund
 
     $runQueued = function () {
         Queue::pushed(SyncProductJob::class)->each(function ($job) {
-            (new \Illuminate\Bus\UniqueLock(\Illuminate\Support\Facades\Cache::driver()))->release($job); // as a worker does
+            (new UniqueLock(Cache::driver()))->release($job); // as a worker does
 
             $job->handle(app(SyncService::class), app(SyncDispatcher::class));
         });

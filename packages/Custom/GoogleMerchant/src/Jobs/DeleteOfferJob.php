@@ -18,7 +18,7 @@ use Illuminate\Queue\InteractsWithQueue;
  * Removes one offer marked `deleting` (product deleted). Idempotent: 404 = done,
  * a row reclaimed by a new product with the same SKU is skipped.
  */
-class DeleteOfferJob implements ShouldQueue, ShouldBeUnique
+class DeleteOfferJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, RunsOnGmcQueue;
 

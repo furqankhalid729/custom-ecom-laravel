@@ -17,34 +17,34 @@ class GoogleOAuthClient
     public function authUrl(string $clientId, string $redirectUri, array $scopes, string $state): string
     {
         return self::AUTH_URL.'?'.http_build_query([
-            'client_id'              => $clientId,
-            'redirect_uri'           => $redirectUri,
-            'response_type'          => 'code',
-            'scope'                  => implode(' ', $scopes),
-            'access_type'            => 'offline',
-            'prompt'                 => 'consent',
+            'client_id' => $clientId,
+            'redirect_uri' => $redirectUri,
+            'response_type' => 'code',
+            'scope' => implode(' ', $scopes),
+            'access_type' => 'offline',
+            'prompt' => 'consent',
             'include_granted_scopes' => 'true',
-            'state'                  => $state,
+            'state' => $state,
         ], '', '&', PHP_QUERY_RFC3986);
     }
 
     public function exchangeCode(string $clientId, string $secret, string $redirectUri, string $code): TokenResponse
     {
         return $this->tokenRequest([
-            'grant_type'    => 'authorization_code',
-            'code'          => $code,
-            'client_id'     => $clientId,
+            'grant_type' => 'authorization_code',
+            'code' => $code,
+            'client_id' => $clientId,
             'client_secret' => $secret,
-            'redirect_uri'  => $redirectUri,
+            'redirect_uri' => $redirectUri,
         ]);
     }
 
     public function refresh(string $clientId, string $secret, string $refreshToken): TokenResponse
     {
         return $this->tokenRequest([
-            'grant_type'    => 'refresh_token',
+            'grant_type' => 'refresh_token',
             'refresh_token' => $refreshToken,
-            'client_id'     => $clientId,
+            'client_id' => $clientId,
             'client_secret' => $secret,
         ]);
     }

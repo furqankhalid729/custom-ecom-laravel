@@ -85,9 +85,9 @@ class BulkSyncChunkJob implements ShouldQueue
             }
 
             DB::table('gmc_runs')->where('id', $run->id)->update([
-                'processed'                 => DB::raw('processed + 1'),
+                'processed' => DB::raw('processed + 1'),
                 $ok ? 'succeeded' : 'failed' => DB::raw(($ok ? 'succeeded' : 'failed').' + 1'),
-                'updated_at'                => now(),
+                'updated_at' => now(),
             ]);
         }
 

@@ -29,10 +29,10 @@ class PolicyRenderer
         }
 
         $html = view($view, [
-            's'           => $settings,
-            'regions'     => Regions::enabled($settings),
-            'template'    => $template,
-            'lastUpdated'   => Carbon::today()->format('F j, Y'),
+            's' => $settings,
+            'regions' => Regions::enabled($settings),
+            'template' => $template,
+            'lastUpdated' => Carbon::today()->format('F j, Y'),
             'effectiveDate' => $this->effectiveDate($settings),
         ])->render();
 

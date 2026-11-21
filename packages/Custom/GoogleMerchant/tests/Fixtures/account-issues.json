@@ -1,0 +1,14 @@
+{
+  "accountIssues": [
+    {
+      "name": "accounts/123456/issues/missing-return-policy",
+      "title": "Missing return policy",
+      "severity": "ERROR",
+      "impactedDestinations": [
+        { "reportingContext": "FREE_LISTINGS", "impacts": [ { "regionCode": "US", "severity": "ERROR" } ] }
+      ],
+      "detail": "Add a return policy for the United States in Merchant Center.",
+      "documentationUri": "https://support.google.com/merchants/answer/10220642"
+    }
+  ]
+}

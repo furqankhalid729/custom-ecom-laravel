@@ -21,16 +21,16 @@ beforeEach(function () {
     $this->target = gmcTarget(gmcAccount());
 
     $this->valid = fn (array $overrides = []) => array_merge([
-        'website_url'       => 'https://shop.example.com',
-        'country'           => 'US',
-        'language'          => 'en',
-        'currency'          => 'USD',
+        'website_url' => 'https://shop.example.com',
+        'country' => 'US',
+        'language' => 'en',
+        'currency' => 'USD',
         'return_policy_url' => 'https://shop.example.com/page/return-policy',
         'refund_policy_url' => 'https://shop.example.com/page/refund-policy',
-        'terms_url'         => 'https://shop.example.com/page/terms-conditions',
-        'privacy_url'       => 'https://shop.example.com/page/privacy-policy',
-        'shipping_note'     => 'Flat rate in Merchant Center',
-        'tax_note'          => '',
+        'terms_url' => 'https://shop.example.com/page/terms-conditions',
+        'privacy_url' => 'https://shop.example.com/page/privacy-policy',
+        'shipping_note' => 'Flat rate in Merchant Center',
+        'tax_note' => '',
     ], $overrides);
 
     Http::fake(['shop.example.com*' => Http::response('ok')]);
@@ -77,12 +77,12 @@ it('requires https policy and website urls', function () {
 
 it('probes urls', function () {
     Http::fake([
-        'a.example.com/missing'  => Http::response('', 404),
-        'a.example.com/ok'       => Http::response('', 200),
-        'a.example.com/moved'    => Http::response('', 301, ['Location' => 'https://a.example.com/ok']),
-        'a.example.com/away'     => Http::response('', 301, ['Location' => 'https://elsewhere.example.org/']),
-        'a.example.com/no-head'  => Http::sequence()->push('', 405)->push('fine', 200),
-        'down.example.com/*'     => Http::failedConnection(),
+        'a.example.com/missing' => Http::response('', 404),
+        'a.example.com/ok' => Http::response('', 200),
+        'a.example.com/moved' => Http::response('', 301, ['Location' => 'https://a.example.com/ok']),
+        'a.example.com/away' => Http::response('', 301, ['Location' => 'https://elsewhere.example.org/']),
+        'a.example.com/no-head' => Http::sequence()->push('', 405)->push('fine', 200),
+        'down.example.com/*' => Http::failedConnection(),
     ]);
 
     $probe = app(UrlProbe::class);
@@ -111,7 +111,7 @@ it('moves to a new market: new data source, old offers removed, full sync starte
 
     Http::fake([
         'merchantapi.googleapis.com/datasources/v1/accounts/123456/dataSources?*' => Http::response(['dataSources' => []]),
-        'merchantapi.googleapis.com/datasources/v1/accounts/123456/dataSources'   => Http::response(['name' => 'accounts/123456/dataSources/777', 'input' => 'API']),
+        'merchantapi.googleapis.com/datasources/v1/accounts/123456/dataSources' => Http::response(['name' => 'accounts/123456/dataSources/777', 'input' => 'API']),
     ]);
     Queue::fake();
 
