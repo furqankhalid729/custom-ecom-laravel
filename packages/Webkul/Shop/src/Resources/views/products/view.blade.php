@@ -70,6 +70,18 @@
         <x-shop::shimmer.products.view />
     </v-product>
 
+    @php
+        // Store-wide extra tabs managed in Configuration > Catalog > Products > Product Page Tabs.
+        $extraTabs = collect([1, 2])
+            ->filter(fn ($number) => (bool) core()->getConfigData("catalog.products.product_tabs.tab_{$number}_status"))
+            ->map(fn ($number) => [
+                'id'      => "extra-tab-{$number}",
+                'heading' => trim((string) core()->getConfigData("catalog.products.product_tabs.tab_{$number}_heading")),
+                'content' => (string) core()->getConfigData("catalog.products.product_tabs.tab_{$number}_content"),
+            ])
+            ->filter(fn ($tab) => $tab['heading'] !== '' && trim(strip_tags($tab['content'])) !== '');
+    @endphp
+
     <!-- Information Section -->
     <div class="1180:mt-20">
         <div class="max-1180:hidden">
@@ -143,6 +155,22 @@
                         </div>
                     </x-shop::tabs.item>
                 @endif
+
+                <!-- Extra Tabs -->
+                @foreach ($extraTabs as $extraTab)
+                    <x-shop::tabs.item
+                        :id="$extraTab['id']"
+                        class="container mt-[60px] !p-0"
+                        :title="$extraTab['heading']"
+                        :is-selected="false"
+                    >
+                        <div class="container mt-[60px] max-1180:px-5">
+                            <div class="text-lg text-zinc-500 max-1180:text-sm">
+                                {!! $extraTab['content'] !!}
+                            </div>
+                        </div>
+                    </x-shop::tabs.item>
+                @endforeach
 
                 <!-- Reviews Tab -->
                 <x-shop::tabs.item
@@ -238,6 +266,29 @@
                 </x-slot>
             </x-shop::accordion>
         @endif
+
+        <!-- Extra Tab Accordions -->
+        @foreach ($extraTabs as $extraTab)
+            <x-shop::accordion
+                class="max-md:border-none"
+                :is-active="false"
+            >
+                <x-slot:header class="bg-gray-100 max-md:!py-3 max-sm:!py-2">
+                    <p
+                        class="text-base font-medium"
+                        v-pre
+                    >
+                        {{ $extraTab['heading'] }}
+                    </p>
+                </x-slot>
+
+                <x-slot:content class="max-sm:px-0">
+                    <div class="mb-5 text-lg text-zinc-500 max-1180:text-sm max-md:mb-1 max-md:px-4">
+                        {!! $extraTab['content'] !!}
+                    </div>
+                </x-slot>
+            </x-shop::accordion>
+        @endforeach
 
         <!-- Reviews Accordion -->
         <x-shop::accordion
