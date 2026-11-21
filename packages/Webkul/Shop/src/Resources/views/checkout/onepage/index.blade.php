@@ -106,28 +106,73 @@
                         </div>
 
                         <div
-                            class="flex justify-end"
+                            class="grid gap-4"
                             v-if="canPlaceOrder"
                         >
-                            <template v-if="(selectedPaymentMethod || cart.payment_method) == 'paypal_smart_button'">
-                                {!! view_render_event('bagisto.shop.checkout.onepage.summary.paypal_smart_button.before') !!}
+                            @php
+                                $policyLink = fn ($urlKey, $label) => '<a href="'.route('shop.cms.page', $urlKey).'" target="_blank" class="text-black hover:underline">'.e($label).'</a>';
+                            @endphp
 
-                                <!-- Paypal Smart Button Vue Component -->
-                                <v-paypal-smart-button></v-paypal-smart-button>
+                            <!-- Privacy Notice -->
+                            <p class="text-sm leading-6 text-zinc-500">
+                                {!! trans('shop::app.checkout.onepage.summary.privacy-notice', [
+                                    'privacy' => $policyLink('privacy-policy', trans('shop::app.checkout.onepage.summary.privacy-policy')),
+                                ]) !!}
+                            </p>
 
-                                {!! view_render_event('bagisto.shop.checkout.onepage.summary.paypal_smart_button.after') !!}
-                            </template>
+                            <!-- Terms Acceptance -->
+                            <label
+                                for="terms_accepted"
+                                class="flex cursor-pointer select-none items-start gap-2 text-sm leading-6 text-zinc-500"
+                            >
+                                <input
+                                    type="checkbox"
+                                    id="terms_accepted"
+                                    class="mt-1.5 h-4 w-4 shrink-0 cursor-pointer accent-black"
+                                    v-model="termsAccepted"
+                                >
 
-                            <template v-else>
-                                <x-shop::button
-                                    type="button"
-                                    class="primary-button w-max rounded-2xl bg-navyBlue px-11 py-3 max-md:mb-4 max-md:w-full max-md:max-w-full max-md:rounded-lg max-sm:py-1.5"
-                                    :title="trans('shop::app.checkout.onepage.summary.place-order')"
-                                    ::disabled="isPlacingOrder"
-                                    ::loading="isPlacingOrder"
-                                    @click="placeOrder"
-                                />
-                            </template>
+                                <span>
+                                    {!! trans('shop::app.checkout.onepage.summary.terms-agree', [
+                                        'terms'    => $policyLink('terms-conditions', trans('shop::app.checkout.onepage.summary.terms-and-conditions')),
+                                        'returns'  => $policyLink('return-policy', trans('shop::app.checkout.onepage.summary.returns-policy')),
+                                        'shipping' => $policyLink('shipping-policy', trans('shop::app.checkout.onepage.summary.shipping-policy')),
+                                    ]) !!}
+                                    <span class="text-red-500">*</span>
+                                </span>
+                            </label>
+
+                            <div class="flex justify-end">
+                                <template v-if="(selectedPaymentMethod || cart.payment_method) == 'paypal_smart_button'">
+                                    <!-- PayPal opens its own payment window, so it is only rendered once the terms are accepted -->
+                                    <template v-if="termsAccepted">
+                                        {!! view_render_event('bagisto.shop.checkout.onepage.summary.paypal_smart_button.before') !!}
+
+                                        <!-- Paypal Smart Button Vue Component -->
+                                        <v-paypal-smart-button></v-paypal-smart-button>
+
+                                        {!! view_render_event('bagisto.shop.checkout.onepage.summary.paypal_smart_button.after') !!}
+                                    </template>
+
+                                    <p
+                                        class="text-sm text-red-500"
+                                        v-else
+                                    >
+                                        @lang('shop::app.checkout.onepage.summary.terms-required')
+                                    </p>
+                                </template>
+
+                                <template v-else>
+                                    <x-shop::button
+                                        type="button"
+                                        class="primary-button w-full rounded-lg bg-navyBlue px-11 py-3 max-md:mb-4 max-md:max-w-full max-sm:py-1.5"
+                                        :title="trans('shop::app.checkout.onepage.summary.place-order')"
+                                        ::disabled="isPlacingOrder || ! termsAccepted"
+                                        ::loading="isPlacingOrder"
+                                        @click="placeOrder"
+                                    />
+                                </template>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -161,6 +206,8 @@
                         selectedPaymentMethod: null,
 
                         canPlaceOrder: false,
+
+                        termsAccepted: false,
                     }
                 },
 
@@ -226,6 +273,12 @@
 
                     placeOrder() {
                         if ((this.selectedPaymentMethod || this.cart.payment_method) == 'paypal_smart_button') {
+                            return;
+                        }
+
+                        if (! this.termsAccepted) {
+                            this.$emitter.emit('add-flash', { type: 'warning', message: "@lang('shop::app.checkout.onepage.summary.terms-required')" });
+
                             return;
                         }
 
