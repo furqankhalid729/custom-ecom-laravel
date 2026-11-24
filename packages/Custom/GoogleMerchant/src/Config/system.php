@@ -70,9 +70,9 @@ return [
         'sort' => 2,
         'fields' => [
             ['name' => 'website_url', 'title' => "$t.store.website-url", 'type' => 'text', 'default' => '', 'validation' => 'nullable|url'],
-            ['name' => 'country', 'title' => "$t.store.country", 'type' => 'text', 'default' => 'US', 'validation' => 'required|size:2'],
+            ['name' => 'country', 'title' => "$t.store.country", 'type' => 'text', 'default' => 'US', 'validation' => 'required|alpha|min:2|max:2'],
             ['name' => 'language', 'title' => "$t.store.language", 'type' => 'text', 'default' => 'en', 'validation' => 'required'],
-            ['name' => 'currency', 'title' => "$t.store.currency", 'type' => 'text', 'default' => 'USD', 'validation' => 'required|size:3'],
+            ['name' => 'currency', 'title' => "$t.store.currency", 'type' => 'text', 'default' => 'USD', 'validation' => 'required|alpha|min:3|max:3'],
             ['name' => 'return_policy_url', 'title' => "$t.store.return-policy-url", 'type' => 'text', 'default' => '', 'validation' => 'nullable|url'],
             ['name' => 'refund_policy_url', 'title' => "$t.store.refund-policy-url", 'type' => 'text', 'default' => '', 'validation' => 'nullable|url'],
             ['name' => 'terms_url', 'title' => "$t.store.terms-url", 'type' => 'text', 'default' => '', 'validation' => 'nullable|url'],
