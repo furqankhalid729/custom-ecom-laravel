@@ -100,6 +100,10 @@ class GoogleMerchantServiceProvider extends ServiceProvider
             }
         });
 
+        Event::listen('bagisto.admin.layout.vue-app-mount.before', static function (ViewRenderEventManager $manager) {
+            $manager->addTemplate('google_merchant::admin.partials.vee-nullable');
+        });
+
         Event::listen('bagisto.shop.products.view.after', static function (ViewRenderEventManager $manager) {
             if (($manager->getParam('product')?->type) === 'configurable' && request()->query('variant')) {
                 $manager->addTemplate('google_merchant::shop.variant-preselect');
